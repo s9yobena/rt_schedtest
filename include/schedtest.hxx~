@@ -1,0 +1,21 @@
+#ifndef SCHEDTEST_H
+#define SCHEDTEST_H
+
+#include <cstdlib>
+#include <cstdio>
+
+#include "taskset.h"
+#include "overhead.h"
+
+class SchedTest {
+
+ public :
+  SchedTest();
+  ~SchedTest();
+  static int densityTest(const TaskSet&, const Overhead&);
+  static int get_nbr_cpus();
+
+};
+
+
+#endif

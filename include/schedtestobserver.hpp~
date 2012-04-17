@@ -1,0 +1,11 @@
+#ifndef SCHEDTEST_OBSERVER_H
+#define SCHEDTEST_OBSERVER_H
+
+
+class OverheadObserver{
+
+ public :  
+  virtual void updateCXS(int);
+};
+
+#endif

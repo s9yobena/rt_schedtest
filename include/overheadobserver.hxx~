@@ -1,0 +1,11 @@
+#ifndef OVERHEADOBSERVER_H
+#define OVERHEADOBSERVER_H
+
+
+class OverheadObserver{
+
+ public :  
+  virtual void updateOverhead(void);
+};
+
+#endif

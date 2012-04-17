@@ -1,0 +1,15 @@
+#ifndef OVERHEAD_H
+#define OVERHEAD_H
+
+#include "overheadobserver.hxx"
+
+class Overhead: public OverheadObserver {
+
+ public :  
+  int CXS;
+  Overhead();
+  ~Overhead();
+
+};
+
+#endif

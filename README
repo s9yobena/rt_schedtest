@@ -1,0 +1,17 @@
+Overview
+========
+
+rt_schedtest is a user-space tool that implemets onlin  schedulability  
+of real time tasks. It incorporates overhead like context switch overheads and IPI 
+latencies.
+
+Currenntly cache related preemption and migiration delay is given by the user. a default 
+value is set otherwise.
+
+Usage
+=====
+
+* rt_schedtest [--cpmd <CPMD>] <RT_TASK_ID1> <RT_TASK_ID2>...
+  starts online schedulabilty testing of the given real time tasks where RT_TASK_ID
+  is the id of the process implementing RT_TASK with the given (optional) cache related
+  preemption and migration delay.
