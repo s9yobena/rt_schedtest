@@ -7,7 +7,7 @@
 
 #include "cmdlparser.h"
 
-#define MAX_RT_TASK_NR 10
+#define MAX_RT_TASK_NR 100
 
 class TaskSet {
 

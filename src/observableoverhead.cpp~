@@ -1,9 +1,0 @@
-#include "observableoverhead.hpp"
-
-
-void ObservableLitmusOverhead::setObserver(schedTestObserver*) {
-
-}
-void ObservableLitmusOverhead::updateObservers() {
-
-}

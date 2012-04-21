@@ -1,5 +1,0 @@
-#ifndef CMDLPARSER_H
-#define CMDLPARSER_H
-
-class CmdlParser {
-

@@ -11,10 +11,15 @@ value is set otherwise.
 Usage
 =====
 
-* rt_schedtest [--cpmd <CPMD>] <RT_TASK_ID1> <RT_TASK_ID2>...
+* rt_schedtest [--pts] [--cpmd <CPMD>] <RT_TASK_ID1> <RT_TASK_ID2>...
   starts online schedulabilty testing of the given real time tasks where RT_TASK_ID
   is the id of the process implementing RT_TASK with the given (optional) cache related
   preemption and migration delay.
+
+    --pts   Print timestamps.
+    --cpmd  Cache preemption and migration delay.
+
+
 
 CREDIT
 ======

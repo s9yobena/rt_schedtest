@@ -1,4 +1,0 @@
-#include "overheadobserver.hpp"
-
-void OverheadObserver::updateCXS(int){
-}

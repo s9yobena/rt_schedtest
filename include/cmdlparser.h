@@ -7,10 +7,11 @@
 
 
 
-#define MAX_RT_TASK_NR 10
+#define MAX_RT_TASK_NR 100
 
 #define USAGE								\
-	"rt_schedtest [--cpmd <CPMD>] <RT_TASK_ID1> <RT_TASK_ID2>...\n"\
+	"rt_schedtest [--pts] [--cpmd <CPMD>] <RT_TASK_ID1> <RT_TASK_ID2>...\n"\
+	"   -pts: print timestamps \n "					\
 	"   -cpmd: cache related preemption and migration delay \n "	\
 	"   RT_TASK_ID: id of process implementing RT_TASK \n" \
 	""

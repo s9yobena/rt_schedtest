@@ -1,9 +1,0 @@
-#include "observablelitmusoverhead.hpp"
-
-
-void ObservableLitmusOverhead::setObserver(OverheadObserver*) {
-
-}
-void ObservableLitmusOverhead::updateObservers() {
-
-}
