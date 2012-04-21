@@ -70,6 +70,6 @@ const char* task_type2str(int task_type);
 
 #define SINGLE_RECORDS_RANGE		200
 
-#define TS_RELEASE_LATENCY		TIMESTAMP(208)
+#define TS_RELEASE_LATENCY		TIMESTAMP(208) /* not in cycles */
 
 #endif

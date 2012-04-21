@@ -15,3 +15,9 @@ Usage
   starts online schedulabilty testing of the given real time tasks where RT_TASK_ID
   is the id of the process implementing RT_TASK with the given (optional) cache related
   preemption and migration delay.
+
+CREDIT
+======
+
+During the development of rt_schedtest, parsing of timstamps was inspired by ft2csv (B.Brandebburg).
+LIBLITMUS's makefile is also used in rt_schedtest.

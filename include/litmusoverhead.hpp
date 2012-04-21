@@ -2,7 +2,7 @@
 #define LITMUS_OVERHEAD_H
 
 #include "overhead.hpp"
-
+#include "timestampprocessor.hpp"
 
 #include <cstdio>
 #include <cstdlib>
@@ -18,9 +18,11 @@
 
 #define MAX_EVENTS 128
 #define CYCLES_PER_US 2128
-#define TRACE_BUF_SIZE 4096
+#define TRACE_BUF_SIZE 500000
 
 typedef unsigned long long overhead_t;
+
+class TimestampProcessor;
 
 class LitmusOverhead {
 
@@ -33,6 +35,7 @@ private:
 
 
   Overhead* overhead;
+  TimestampProcessor *timestampProcessor;
 
   const char* traceBufferName;
   char *debug;
@@ -45,18 +48,29 @@ private:
   cmd_t  ids[MAX_EVENTS];
   int nbTraceEvents;
 
+  bool printTimestamps;
+
   overhead_t maxCXS;
   overhead_t maxSCHED;
   overhead_t maxSCHED2;
   overhead_t maxRELEASE;
   overhead_t maxRELEASE_LATENCY;
   overhead_t maxSEND_RESCHED;
+  
+  // LitmusTimestamp cxsLT;
+  // LitmusTimestamp schedLT;
+  // LitmusTimestamp sched2LT;
+  // LitmusTimestamp releaseLT;
+  // LitmusTimestamp release_latencyLT;
+  // LitmusTimestamp send_reschedLT;
+
 
   unsigned long long threshold; /* 10 ms == 10 full ticks */
   int wantBestEffort;
   int wantInterleaved;
   void addEvent(char*);
   void startTracing(int);
+
   void updateMaxOverhead(struct timestamp* start, struct timestamp* end, 
 			   unsigned long id);
   void updateMaxOverhead2(struct timestamp* start, struct timestamp* end, 
@@ -70,15 +84,23 @@ private:
   int enableEvent(int,char*);
   int disableAll(int fd);
 
+
+
   void updateLitmusOverheadObservers();
 
 public:
   
   static LitmusOverhead* getInstance();
+  void setParameters(const CmdlParser&);
   int initOverhead(const char*);
   void stopTracing();
   void setLitmusOverheadObserver(Overhead*);
-
+  void checkMaxCXS(overhead_t);
+  void checkMaxSCHED(overhead_t);
+  void checkMaxSCHED2(overhead_t);
+  void checkMaxRELEASE(overhead_t);
+  void checkMaxSEND_RESCHED(overhead_t);
+  void checkMaxRELEASE_LATENCY(overhead_t);
 
 };
 

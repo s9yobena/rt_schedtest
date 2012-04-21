@@ -51,41 +51,32 @@ overhead_t Overhead::getCPMD() {
   return this->CPMD;
 }
 
-
 void Overhead::updateCXS(overhead_t  cxs){
   this->CXS = cxs;
-  this->updateSchedTest();
 }
-
 
 void Overhead::updateSCHED(overhead_t  sched){
   this->SCHED = sched;
-  this->updateSchedTest();
 }
 
 void Overhead::updateSCHED2(overhead_t  sched2){
   this->SCHED2 = sched2;
-  this->updateSchedTest();
 }
 
 void Overhead::updateRELEASE(overhead_t  release){
   this->RELEASE = release;
-  this->updateSchedTest();
 }
 
 void Overhead::updateRELEASE_LATENCY(overhead_t  release_latency){
   this->RELEASE_LATENCY = release_latency;
-  this->updateSchedTest();
 }
 
 void Overhead::updateSEND_RESCHED(overhead_t  send_resched){
   this->SEND_RESCHED = send_resched;
-  this->updateSchedTest();
 }
 
 void Overhead::updateCPMD(overhead_t  cpmd){
   this->CPMD = cpmd;
-  this->updateSchedTest();
 }
 
 void Overhead::setParameters(const CmdlParser& cmdlParser) {

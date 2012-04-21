@@ -1,0 +1,24 @@
+#ifndef LITMUS_TIMESTAMP_H
+#define LITMUS_TIMESTAMP_H
+
+#include <map>
+#include "timestamp.h"
+
+typedef unsigned long long overhead_t;
+
+class LitmusTimestamp {
+
+private:
+  LitmusTimestamp();
+  LitmusTimestamp(const LitmusTimestamp&);
+  LitmusTimestamp & operator=(const LitmusTimestamp&);
+  static LitmusTimestamp* litmusTimestampInstance;
+
+  map<unsigned long,struct timestamp> tsMap;
+
+public:
+  static LitmusTimestamp* getInstance();
+  overhead_t processTS(struct timestamp*, unsigned long&);
+};
+
+#endif

@@ -3,13 +3,11 @@
 
 #include <cstdio>
 
-
 #include "litmus.h"
 
 #include "cmdlparser.h"
 
 #define MAX_RT_TASK_NR 10
-
 
 class TaskSet {
 
@@ -18,8 +16,6 @@ private:
   TaskSet(const TaskSet&);
   TaskSet& operator=(const TaskSet&);
   static TaskSet* taskSetInstance;
-  
-
 
 public :  
   int  rt_task_id[MAX_RT_TASK_NR];

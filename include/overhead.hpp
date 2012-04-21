@@ -29,7 +29,7 @@ private:
   overhead_t SEND_RESCHED;
   overhead_t CPMD;
 
-  void updateSchedTest();
+
 
 public :  
 
@@ -41,6 +41,7 @@ public :
   void updateRELEASE_LATENCY(overhead_t);
   void updateSEND_RESCHED(overhead_t);
   void updateCPMD(overhead_t);
+  void updateSchedTest();
   overhead_t getCXS();
   overhead_t getSCHED();
   overhead_t getSCHED2();

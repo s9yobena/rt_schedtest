@@ -24,6 +24,10 @@ int LitmusOverhead::initOverhead(const char* traceBufferName) {
   maxRELEASE = 0;
   maxRELEASE_LATENCY = 0;
   maxSEND_RESCHED = 0;
+  
+  timestampProcessor = TimestampProcessor::getInstance();
+  timestampProcessor->setPrintTimestamps(printTimestamps);
+  timestampProcessor->setTimestampProcessorObserver(this);
 
   this->traceBufferName = traceBufferName;
 
@@ -34,18 +38,30 @@ int LitmusOverhead::initOverhead(const char* traceBufferName) {
   }
   this->eventCount = 0;
   this->nbTraceEvents = 0;
+  // TODO: only add the start event
   addEvent("CXS_START");
   addEvent("CXS_END");
+  timestampProcessor->registerEvent("CXS_START");
+
   addEvent("SCHED_START");
   addEvent("SCHED_END");
+  timestampProcessor->registerEvent("SCHED_START");
+
   addEvent("SCHED2_START");
   addEvent("SCHED2_END");
-  addEvent("RELEASE_START");
-  addEvent("RELEASE_END");
-  addEvent("RELEASE_LATENCY");
+  timestampProcessor->registerEvent("SCHED2_START");
+
   addEvent("SEND_RESCHED_START");
   addEvent("SEND_RESCHED_END");
+  timestampProcessor->registerEvent("SEND_RESCHED_START");
 
+
+  addEvent("RELEASE_START");
+  addEvent("RELEASE_END");
+  timestampProcessor->registerEvent("RELEASE_START");
+
+  addEvent("RELEASE_LATENCY");
+  timestampProcessor->registerEvent("RELEASE_LATENCY");
 
   for (int ec=0;ec<this->nbTraceEvents;ec++) {
     if (!this->enableEvent(this->traceBufFD, this->traceEvent[ec])) {
@@ -63,6 +79,7 @@ int LitmusOverhead::initOverhead(const char* traceBufferName) {
 
 void LitmusOverhead::addEvent(char* eventID) {
   traceEvent[nbTraceEvents] = eventID;
+
   nbTraceEvents++ ;
 }
 
@@ -71,23 +88,60 @@ void LitmusOverhead::startTracing(int fd)
   int rd;
   size_t size, count;
   struct timestamp *ts, *end;
+  overhead_t currentOverhead;
+  unsigned long currentOverheadId;
 
-  while ((rd = read(fd, this->traceBuffer, 4096)) > 0) {
+  while ((rd = read(fd, this->traceBuffer, TRACE_BUF_SIZE)) > 0) {
     this->bytesRead += rd;
     size = rd;
-    /* fwrite(buf, 1, rd, stdout); */
     ts    = (struct timestamp*) this->traceBuffer;
     count = size / sizeof(struct timestamp);
     end   = ts + count;
 		
-    this->updateMaxOverhead2(ts, end, TS_CXS_START); 
-    this->updateMaxOverhead2(ts, end, TS_SCHED_START); 
-    this->updateMaxOverhead2(ts, end, TS_SCHED2_START); 
-    this->updateMaxOverhead2(ts, end, TS_RELEASE_START); 
-    this->updateMaxOverhead2(ts, end, TS_SEND_RESCHED_START); 
-    this->updateMaxOverhead(ts, end, TS_RELEASE_LATENCY);
+    // this->updateMaxOverhead2(ts, end, TS_CXS_START);
+    // this->updateMaxOverhead2(ts, end, TS_SCHED_START); 
+    // this->updateMaxOverhead2(ts, end, TS_SCHED2_START); 
+    // this->updateMaxOverhead2(ts, end, TS_RELEASE_START); 
+    // this->updateMaxOverhead2(ts, end, TS_SEND_RESCHED_START); 
+    // this->updateMaxOverhead(ts, end, TS_RELEASE_LATENCY);
+    
+    for (; ts != end; ts++){
+      timestampProcessor->processTimestamp(ts);
+    }
+
+
+    // for (; ts != end; ts++){
+    //   currentOverhead = litmusTimestamp->processTS(ts,currentOverheadId);      
+    //   if (currentOverhead != 0){
+    // 	switch (currentOverheadId) {
+    // 	case TS_CXS_START:
+    // 	  if (currentOverhead > this->maxCXS) {
+    // 	    maxCXS = currentOverhead;
+    // 	    this->updateLitmusOverheadObservers();
+    // 	  }
+    // 	  break;
+    // 	}
+    //   }
+    // }
+
+      
+      
+    // for (; ts != end; ts++){
+
+    //   if ( !(ts->task_type != TSK_RT && ts->task_type != TSK_RT) ) {
+    // 	if (ts->event == TS_CXS_START || ts->event == TS_CXS_END ) {
+    // 	  currentOverhead = cxsLT.processTS(ts);
+    // 	  if (maxCXS < currentOverhead) {
+    // 	    maxCXS = currentOverhead;
+    // 	    this->updateLitmusOverheadObservers();
+    // 	  }
+    // 	  continue;
+    // 	}
+    //   }
+    // }
   }
 }
+
 
 
 void LitmusOverhead::updateMaxOverhead(struct timestamp* start, struct timestamp* end,
@@ -136,9 +190,9 @@ void LitmusOverhead::updateMaxOverhead2(struct timestamp* start, struct timestam
       second = next_id(start + 1, end, start->cpu, start->event + 1,
 		       start->event);
       if (second)
-	if ( !(second->timestamp - first->timestamp > threshold) ||
+	if ( // !(second->timestamp - first->timestamp > threshold) ||
 	     !(first->task_type != TSK_RT && second->task_type != TSK_RT && !wantBestEffort) ) {
-	  // if ((overhead_t)(second->timestamp - first->timestamp) > this->maxCXS){
+	  if ((overhead_t)(second->timestamp - first->timestamp) > this->maxCXS){
 	  // printf("current overhead is %llu \n",(overhead_t)(second->timestamp - first->timestamp));
 	  switch (id) {
 	  case TS_CXS_START:
@@ -160,6 +214,7 @@ void LitmusOverhead::updateMaxOverhead2(struct timestamp* start, struct timestam
 	    }
 	    break;
 	  case TS_RELEASE_START:
+	    printf("********************called here***************************************\n");
 	    if ((overhead_t)(second->timestamp - first->timestamp) > this->maxRELEASE) {
 	      maxRELEASE =  (unsigned long long)(second->timestamp - first->timestamp);
 	      this->updateLitmusOverheadObservers();
@@ -174,11 +229,12 @@ void LitmusOverhead::updateMaxOverhead2(struct timestamp* start, struct timestam
 	    break;
 	  default:
 	    break;
-	    
+	  }   
 	  }
 	}		  
     }
 }
+
 
 struct timestamp* LitmusOverhead::next(struct timestamp* start, struct timestamp* end,
 				       int cpu) {
@@ -279,6 +335,7 @@ int LitmusOverhead::disableAll(int fd)
 void LitmusOverhead::setLitmusOverheadObserver(Overhead* overhead) {
   this->overhead = overhead;
 }
+
 void LitmusOverhead::updateLitmusOverheadObservers() {
   this->overhead->updateCXS(this->maxCXS);
   this->overhead->updateSCHED(this->maxSCHED);
@@ -286,5 +343,52 @@ void LitmusOverhead::updateLitmusOverheadObservers() {
   this->overhead->updateRELEASE(this->maxRELEASE);
   this->overhead->updateSEND_RESCHED(this->maxSEND_RESCHED);
   this->overhead->updateRELEASE_LATENCY(this->maxRELEASE_LATENCY);
-  
+  this->overhead->updateSchedTest();
+}
+
+void LitmusOverhead::setParameters(const CmdlParser& cmdlParser) {
+  this->printTimestamps = cmdlParser.printTimestamps;
+}
+
+
+void LitmusOverhead::checkMaxCXS(overhead_t cxsOverhead) {
+  if (this->maxCXS < cxsOverhead){
+    this->maxCXS = cxsOverhead;
+    this->updateLitmusOverheadObservers();
+  }
+}
+
+void LitmusOverhead::checkMaxSCHED(overhead_t schedOverhead) {
+  if (this->maxSCHED < schedOverhead){
+    this->maxSCHED = schedOverhead;
+    this->updateLitmusOverheadObservers();
+  }
+}
+
+void LitmusOverhead::checkMaxSCHED2(overhead_t sched2Overhead) {
+  if (this->maxSCHED2 < sched2Overhead){
+    this->maxSCHED2 = sched2Overhead;
+    this->updateLitmusOverheadObservers();
+  }
+}
+
+void LitmusOverhead::checkMaxRELEASE(overhead_t releaseOverhead) {
+  if (this->maxRELEASE < releaseOverhead){
+    this->maxRELEASE = releaseOverhead;
+    this->updateLitmusOverheadObservers();
+  }
+}
+
+void LitmusOverhead::checkMaxSEND_RESCHED(overhead_t send_reschedOverhead) {
+  if (this->maxSEND_RESCHED < send_reschedOverhead){
+    this->maxSEND_RESCHED = send_reschedOverhead;
+    this->updateLitmusOverheadObservers();
+  }
+}
+
+void LitmusOverhead::checkMaxRELEASE_LATENCY(overhead_t release_latencyOverhead) {
+  if (this->maxRELEASE_LATENCY < release_latencyOverhead){
+    this->maxRELEASE_LATENCY = release_latencyOverhead;
+    this->updateLitmusOverheadObservers();
+  }
 }

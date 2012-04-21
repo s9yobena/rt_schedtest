@@ -1,0 +1,44 @@
+
+
+#ifndef LITMUS_TIMESTAMP_HPP
+#define LITMUS_TIMESTAMP_HPP
+
+#include <iostream>
+#include <vector>
+#include "timestamp.h"
+#include "timestampprocessor.hpp"
+
+using namespace std;
+
+// TODO: remove this
+#define MAX_NBR_CPU 32
+typedef unsigned long long overhead_t;
+class TimestampProcessor;
+
+struct CPUTimestamp {
+  struct timestamp ts;
+  int state;
+  CPUTimestamp() {
+    state = 0;
+  }
+};
+
+class LitmusTimestamp {
+
+private:
+  // struct timestamp currentTimestamp;
+  //  int state;
+  vector<CPUTimestamp> currentTimestamp;
+
+  TimestampProcessor* timestampProcessor;
+public:
+  LitmusTimestamp();
+  LitmusTimestamp(cmd_t);
+  ~LitmusTimestamp();
+  cmd_t startID;    
+  void check(struct timestamp*);
+  void setLitmusTimestampObserver(TimestampProcessor*);
+  void updateLitmusTimestampObservers(overhead_t,cmd_t);
+};
+
+#endif

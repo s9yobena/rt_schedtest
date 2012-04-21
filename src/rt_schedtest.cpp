@@ -1,3 +1,7 @@
+/*    rt_schedtest -- Online overhead aware schedulability testing
+ *      
+ *    Youcef A. Benabbas under the supervision of Dr. Björn B. Brandenburg,
+ */
 #include "cmdlparser.h"
 #include "taskset.hpp"
 #include "overhead.hpp"
@@ -36,8 +40,11 @@ int main(int argc, char **argv) {
   schedTest.setOverhead(overhead);
   overhead->setSchedTestObserver(&schedTest);
   litmusOverhead->setLitmusOverheadObserver(overhead);  
+
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
+  litmusOverhead->setParameters(cmdlParser);
+  
   litmusOverhead->initOverhead("/dev/litmus/ft_trace0");
   return 0;
 }

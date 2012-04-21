@@ -1,0 +1,10 @@
+#ifndef LITMUS_TIMESTAMP_HPP
+#define LITMUS_TIMESTAMP_HPP
+
+class LitmusTimestamp {
+
+
+
+};
+
+#endif

@@ -4,16 +4,21 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 
   this->nb_rts = 0;
   this->cpmd = 5000;
-
+  this->printTimestamps = false;
+  this->printOverheads = false;
   
 
   int c;
   int cpmd_flag = 0;
+  int printTimestamps_flag = 0;
+  int printOverheads_flag = 0;
   while (1)
     {
       static struct option long_options[] =
 	{
-	  {"cpmd", required_argument,&cpmd_flag,1 },
+	  {"cpmd", required_argument, &cpmd_flag,1 },
+	  {"timesstamps", no_argument, &printTimestamps_flag,1 },
+	  {"overheads", no_argument, &printOverheads_flag,1 },
 	  {0, 0, 0, 0}
 	};
       /* getopt_long stores the option index here. */
@@ -50,6 +55,17 @@ CmdlParser::CmdlParser(int argc, char **argv) {
     printf ("CPMD set to: %d \n ",this->cpmd);
   else
     printf ("CPMD set to default: %d \n",this->cpmd);
+
+  if (printTimestamps_flag) {
+    this->printTimestamps = true;
+    printf("Printing all timestamps \n");
+  }
+
+    if (printOverheads_flag) {
+    this->printOverheads = true;
+    printf("Printing all registerd overheads \n");
+  }
+
      
   for(int i = optind; i<argc; i++){
 

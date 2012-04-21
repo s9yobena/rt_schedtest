@@ -21,6 +21,8 @@ class CmdlParser {
   int rt_task_id[MAX_RT_TASK_NR];
   int nb_rts;
   int cpmd;
+  bool printTimestamps;
+  bool printOverheads;
 
 
   CmdlParser(int, char**);

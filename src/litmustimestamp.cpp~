@@ -1,0 +1,6 @@
+#include "litmustimestamp.hpp"
+
+void LitmusTimestamp::check() {
+
+
+}
