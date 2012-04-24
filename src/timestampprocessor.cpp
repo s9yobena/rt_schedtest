@@ -59,6 +59,11 @@ void TimestampProcessor::registerEvent(char* eventID) {
 
 void TimestampProcessor::notifyNewOverhead(overhead_t overhead, cmd_t id) {
   
+  if (printOverheads) {
+     
+    std::cout<<"current overhead for "<<id<<" is: \t"<<overhead<<std::endl;
+  }
+  
   switch(id){
   case TS_CXS_START:
     litmusOverhead->checkMaxCXS(overhead);
@@ -88,4 +93,8 @@ void TimestampProcessor::notifyNewOverhead(overhead_t overhead, cmd_t id) {
 void TimestampProcessor::setPrintTimestamps(bool printTimestamps) {
 
   this->printTimestamps = printTimestamps;
+}
+
+void TimestampProcessor::setPrintOverheads(bool printOverheads) {
+  this->printOverheads = printOverheads;
 }

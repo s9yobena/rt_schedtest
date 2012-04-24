@@ -49,6 +49,7 @@ private:
   int nbTraceEvents;
 
   bool printTimestamps;
+  bool printOverheads;
 
   overhead_t maxCXS;
   overhead_t maxSCHED;

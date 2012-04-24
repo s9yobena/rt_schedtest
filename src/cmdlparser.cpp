@@ -17,7 +17,7 @@ CmdlParser::CmdlParser(int argc, char **argv) {
       static struct option long_options[] =
 	{
 	  {"cpmd", required_argument, &cpmd_flag,1 },
-	  {"timesstamps", no_argument, &printTimestamps_flag,1 },
+	  {"timestamps", no_argument, &printTimestamps_flag,1 },
 	  {"overheads", no_argument, &printOverheads_flag,1 },
 	  {0, 0, 0, 0}
 	};

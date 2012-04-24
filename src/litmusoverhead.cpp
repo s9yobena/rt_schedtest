@@ -27,6 +27,7 @@ int LitmusOverhead::initOverhead(const char* traceBufferName) {
   
   timestampProcessor = TimestampProcessor::getInstance();
   timestampProcessor->setPrintTimestamps(printTimestamps);
+  timestampProcessor->setPrintOverheads(printOverheads);
   timestampProcessor->setTimestampProcessorObserver(this);
 
   this->traceBufferName = traceBufferName;
@@ -348,6 +349,7 @@ void LitmusOverhead::updateLitmusOverheadObservers() {
 
 void LitmusOverhead::setParameters(const CmdlParser& cmdlParser) {
   this->printTimestamps = cmdlParser.printTimestamps;
+  this->printOverheads = cmdlParser.printOverheads;
 }
 
 

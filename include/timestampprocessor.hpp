@@ -25,6 +25,7 @@ private:
   static TimestampProcessor* timestampProcessorInstance;
   LitmusOverhead* litmusOverhead;
   bool printTimestamps;
+  bool printOverheads;
   set<cmd_t> registeredEvents;
   map<cmd_t,LitmusTimestamp*> registeredLitmusTimestamps;
 
@@ -35,6 +36,7 @@ public:
   void registerEvent(char*);
   void notifyNewOverhead(overhead_t,cmd_t);
   void setPrintTimestamps(bool);
+  void setPrintOverheads(bool);
   
 };
 

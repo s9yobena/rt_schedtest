@@ -36,7 +36,7 @@ void PairLitmusTimestamp::check(struct timestamp* ts) {
 	   &&(currentTimestamp[ts->cpu].ts.seq_no < ts->seq_no)) {
 
     currentTimestamp[ts->cpu].state=0;
-    std::cout<<"current overhead for "<<this->startID<<" is: \t"<<(ts->timestamp - currentTimestamp[ts->cpu].ts.timestamp)<<std::endl;
+    
     updateLitmusTimestampObservers((ts->timestamp - currentTimestamp[ts->cpu].ts.timestamp),
 				   currentTimestamp[ts->cpu].ts.event );
   }
