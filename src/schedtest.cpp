@@ -43,7 +43,8 @@ int SchedTest::densityTest() {
   
   inflation = (long double)(overhead->getCXS()+ overhead->getSCHED()
 			    + overhead->getRELEASE() + overhead->getSEND_RESCHED()
-			    + overhead->getRELEASE_LATENCY() + overhead->getCPMD()) ;
+			    + (overhead->getRELEASE_LATENCY()/__NS_PER_MS)
+			    + overhead->getCPMD()) ;
 
   for (i=0; i< this->taskSet->nb_rts; i++) {
     cur_density = 0.0;
@@ -60,11 +61,6 @@ int SchedTest::densityTest() {
   }
   printf("\n");
   printf("******************************Testing schedulability********************************************\n");
-  // printf("\n sum_density  ?< nbr_cpu - (nbr_cpu-1)*max_density: %Lf ?< %Lf",sum_density,nbr_cpu-(nbr_cpu-1)*max_density);
-  // printf("\n sum_density: %Lf; \t nbr_cpu: %d: \t max_density: %Lf \n",sum_density, nbr_cpu, max_density);
-  // printf("\n CXS(CYCLES): %llu; \t SCHED(CYCLES): %llu; \t SCHED2(CYCLES): %llu; \t RELEASE(CYCLES): %llu; \t SEND_RESCHED(CYCLES): %llu; \t RELEASE_LATENCY(CYCLES): %llu; \t CPMD(MS): %llu;\n",
-  // 	 overhead->getCXS(), overhead->getSCHED(), overhead->getSCHED2(), overhead->getRELEASE(),
-  // 	 overhead->getSEND_RESCHED(), overhead->getRELEASE_LATENCY(), overhead->getCPMD());
 
   std::cout<<"sum_density  ?< nbr_cpu - (nbr_cpu-1)*max_density:  "
 	   <<sum_density
@@ -86,7 +82,7 @@ int SchedTest::densityTest() {
     	   <<std::endl;
   std::cout <<"RELEASE(Cycles): "<<overhead->getRELEASE() <<"\t"
     	   <<"SEND_RESCHED(Cycles): "<<overhead->getSEND_RESCHED() <<"\t"
-    	   <<"RELEASE_LATENCY(Cycles): "<<overhead->getRELEASE_LATENCY() <<"\t"
+    	   <<"RELEASE_LATENCY(NS): "<<overhead->getRELEASE_LATENCY() <<"\t"
 	   <<std::endl;  
 
   cout<<endl;
@@ -103,7 +99,7 @@ int SchedTest::densityTest() {
 	   <<std::endl;
   std::cout<<"RELEASE(MS): "<<overhead->getRELEASE()*(long double)getMsPerCycle()<<"\t"
     	   <<"SEND_RESCHED(MS): "<<overhead->getSEND_RESCHED()*(long double)getMsPerCycle()<<"\t"
-    	   <<"RELEASE_LATENCY(MS): "<<overhead->getRELEASE_LATENCY()*(long double)getMsPerCycle()<<"\t"
+    	   <<"RELEASE_LATENCY(MS): "<<overhead->getRELEASE_LATENCY()/(long double)(__NS_PER_MS)<<"\t"
 	   <<std::endl;
 
   cout<<endl;

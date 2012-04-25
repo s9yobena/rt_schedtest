@@ -13,6 +13,9 @@
 #define __Hz_PER_MHz 1000000.0
 #define __MS_PER_S 1000.0
 
+#ifndef LITMUS_H
+#define __NS_PER_MS 1000000
+#endif
 
 using namespace std;
 
