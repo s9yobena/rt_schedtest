@@ -42,27 +42,20 @@ int LitmusOverhead::initOverhead(const char* traceBufferName) {
   // TODO: only add the start event
   addEvent("CXS_START");
   addEvent("CXS_END");
-  timestampProcessor->registerEvent("CXS_START");
 
   addEvent("SCHED_START");
   addEvent("SCHED_END");
-  timestampProcessor->registerEvent("SCHED_START");
 
   addEvent("SCHED2_START");
   addEvent("SCHED2_END");
-  timestampProcessor->registerEvent("SCHED2_START");
 
   addEvent("SEND_RESCHED_START");
   addEvent("SEND_RESCHED_END");
-  timestampProcessor->registerEvent("SEND_RESCHED_START");
-
 
   addEvent("RELEASE_START");
   addEvent("RELEASE_END");
-  timestampProcessor->registerEvent("RELEASE_START");
 
   addEvent("RELEASE_LATENCY");
-  timestampProcessor->registerEvent("RELEASE_LATENCY");
 
   for (int ec=0;ec<this->nbTraceEvents;ec++) {
     if (!this->enableEvent(this->traceBufFD, this->traceEvent[ec])) {

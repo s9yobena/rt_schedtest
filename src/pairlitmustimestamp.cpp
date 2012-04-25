@@ -3,41 +3,52 @@
 PairLitmusTimestamp::PairLitmusTimestamp(cmd_t id) 
   : LitmusTimestamp(id) {
 
-  this->currentTimestamp.resize(MAX_NBR_CPU,CPUTimestamp());
+  state =  WAIT_FOR_START_EVENT;
 }
 
+
+// The "state machine" can be in two states:
+
+// in the beggining, it is in the WAIT_FOR_START_EVENT in which 
+// the first start event takes the  "machine" to the WAIT_FOR_MATCH state.
+
+// In WAIT_FOR_MATCH, the machine looks for a matching timesatmp for the one 
+// set in the WAIT_FOR_START_EVENT state; There are two possibilites: 1) either
+// a timestamp with an end event is found, in which case a new overhead is 
+// generated. 2) another start event is found, in which case it overwrites the 
+// previous begin event(see below for the condition).
+
 void PairLitmusTimestamp::check(struct timestamp* ts) {
-  // Check if we are in the default state and store ts if it is a start event
-  if ( (currentTimestamp[ts->cpu].state==0) && 
+  // Check if we are in WAIT_FOR_START_EVENT state; store the timestamp ts
+  if ( (state == WAIT_FOR_START_EVENT) && 
        (ts->event == this->startID)) {
 
-    currentTimestamp[ts->cpu].state=1;
-    currentTimestamp[ts->cpu].ts = *ts;
+    state = WAIT_FOR_MATCH;
+    currentTimestamp = *ts;
   }
 
-  // Here currentTimestamp already contains a start event,
-  // check if ts is a begin event; if so make sure it was generated 
+  // Here currentTimestamp contains a start event and ts 
+  // is begin event; Make sure ts was generated 
   // after currentTimestamp and set currentTimestamp to ts
-  else if ((currentTimestamp[ts->cpu].ts.event == startID)
+  else if ((currentTimestamp.event == startID)
 	     &&( ts->event == startID)
-	     &&(currentTimestamp[ts->cpu].ts.seq_no < ts->seq_no)) {
+	     &&(currentTimestamp.seq_no < ts->seq_no)) {
 
-    currentTimestamp[ts->cpu].state=1;
-    currentTimestamp[ts->cpu].ts = *ts;
+    state = WAIT_FOR_MATCH;
+    currentTimestamp = *ts;
   }
 
   // Here currentTimestamp contains a start event and 
   // ts is an end event. Make sure ts was generated afer 
   // currentTimestamp and its task_type ==TSK_RT. Then 
   // generate a new overhead value
-  else if ((currentTimestamp[ts->cpu].ts.event == startID)
+  else if ((currentTimestamp.event == startID)
 	   &&(ts->event == startID+1)
 	   &&(ts->task_type == TSK_RT)
-	   &&(currentTimestamp[ts->cpu].ts.seq_no < ts->seq_no)) {
+	   &&(currentTimestamp.seq_no < ts->seq_no)) {
 
-    currentTimestamp[ts->cpu].state=0;
-    
-    updateLitmusTimestampObservers((ts->timestamp - currentTimestamp[ts->cpu].ts.timestamp),
-				   currentTimestamp[ts->cpu].ts.event );
+    state = WAIT_FOR_START_EVENT;
+    updateLitmusTimestampObservers((ts->timestamp - currentTimestamp.timestamp),
+				   currentTimestamp.event );
   }
 }

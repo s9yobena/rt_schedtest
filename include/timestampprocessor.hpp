@@ -27,13 +27,16 @@ private:
   bool printTimestamps;
   bool printOverheads;
   set<cmd_t> registeredEvents;
-  map<cmd_t,LitmusTimestamp*> registeredLitmusTimestamps;
+  map<pair<cmd_t,uint8_t>,LitmusTimestamp*> registeredLitmusTimestamps;
+
+  bool isRegisteredTimestamp(struct timestamp*);
+  void registerTimestamp(struct timestamp*);
+  void processRegisteredTimestamp(struct timestamp*);
 
 public:
   static TimestampProcessor* getInstance();
   void processTimestamp(struct timestamp*);
   void setTimestampProcessorObserver(LitmusOverhead*);
-  void registerEvent(char*);
   void notifyNewOverhead(overhead_t,cmd_t);
   void setPrintTimestamps(bool);
   void setPrintOverheads(bool);

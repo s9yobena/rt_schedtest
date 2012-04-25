@@ -14,6 +14,12 @@ TimestampProcessor* TimestampProcessor::getInstance(){
 }
 
 void TimestampProcessor::processTimestamp(struct timestamp* ts) {
+
+  if (!isRegisteredTimestamp(ts))
+    registerTimestamp(ts);
+
+  processRegisteredTimestamp(ts);
+
   if (printTimestamps) {
   cout<<"timestamp: "<<(uint64_t)ts->timestamp<<"\t"
       <<"seq_no: "<<(int)ts->seq_no<<"\t"
@@ -23,39 +29,61 @@ void TimestampProcessor::processTimestamp(struct timestamp* ts) {
       <<endl;     	  
   }
 
-    registeredLitmusTimestamps[ts->event]->check(ts); // polymorphism is cool!
 }
 
 void TimestampProcessor::setTimestampProcessorObserver(LitmusOverhead* litmusOverhead) {
   this->litmusOverhead = litmusOverhead;
 }
 
-void TimestampProcessor::registerEvent(char* eventID) {
-  
-  cmd_t id;
+bool TimestampProcessor::isRegisteredTimestamp(struct timestamp* ts) {
+
+  if (registeredLitmusTimestamps.find(pair<cmd_t,uint8_t>(ts->event,ts->cpu))!=registeredLitmusTimestamps.end())
+    return true;
+  else
+    return false;
+
+}
+void TimestampProcessor::registerTimestamp(struct timestamp* ts) {
+
   LitmusTimestamp *litmusTimestamp;
   SingleLitmusTimestamp* singleLitmusTimestamp;
   PairLitmusTimestamp* pairLitmusTimestamp;
-  if (!str2event(eventID, &id)) {
-    errno = EINVAL;
-    // return 0; TODO: handle this case
-  }
-  registeredEvents.insert(id);
-  if (id < SINGLE_RECORDS_RANGE) {
-    litmusTimestamp = new PairLitmusTimestamp(id);
+  map<pair<cmd_t,uint8_t>,LitmusTimestamp*>::iterator it;
+
+  if (ts->event < SINGLE_RECORDS_RANGE && 
+      // only look if this is a start event, by convention, 
+      // the id of the start event is always even
+      ts->event % 2 == 0) {
+    
+    litmusTimestamp = new PairLitmusTimestamp(ts->event);
+
     // The start and end timestamps share the same state
-    registeredLitmusTimestamps.insert(pair<cmd_t,LitmusTimestamp*>(id,litmusTimestamp)); // polymorphism is cool!
-    registeredLitmusTimestamps.insert(pair<cmd_t,LitmusTimestamp*>((id+1),litmusTimestamp)); // polymorphism is cool!
+
+    // register the start event
+    it = registeredLitmusTimestamps.begin();
+    registeredLitmusTimestamps.insert(it, pair<pair<cmd_t,uint8_t>,LitmusTimestamp*>
+      (pair<cmd_t,uint8_t>(ts->event,ts->cpu),litmusTimestamp));
+
+    // register the end event, which is start event +1; notice that litmusTimestamp is the same
+    it = registeredLitmusTimestamps.begin();
+    registeredLitmusTimestamps.insert(it, pair<pair<cmd_t,uint8_t>,LitmusTimestamp*>
+      (pair<cmd_t,uint8_t>(ts->event+1,ts->cpu),litmusTimestamp));
   } else {
-    litmusTimestamp = new SingleLitmusTimestamp(id);
-    registeredLitmusTimestamps.insert(pair<cmd_t,LitmusTimestamp*>(id,litmusTimestamp)); // polymorphism is cool!
+    
+    it = registeredLitmusTimestamps.begin();
+    litmusTimestamp = new SingleLitmusTimestamp(ts->event);
+    registeredLitmusTimestamps.insert(it, pair<pair<cmd_t,uint8_t>,LitmusTimestamp*>
+      (pair<cmd_t,uint8_t>(ts->event,ts->cpu),litmusTimestamp));
   }
-  
-  // Wait for new overheads from this timestamp
+
   litmusTimestamp->setLitmusTimestampObserver(this);
+}
+void TimestampProcessor::processRegisteredTimestamp(struct timestamp* ts) {
   
-  std::cout<<"TimestampProcessor::registerEvent: added event "<<id<<std::endl;
-} 
+  registeredLitmusTimestamps[pair<cmd_t,uint8_t>(ts->event, ts->cpu)]->check(ts);
+}
+
+
 
 void TimestampProcessor::notifyNewOverhead(overhead_t overhead, cmd_t id) {
   
@@ -96,5 +124,6 @@ void TimestampProcessor::setPrintTimestamps(bool printTimestamps) {
 }
 
 void TimestampProcessor::setPrintOverheads(bool printOverheads) {
+
   this->printOverheads = printOverheads;
 }
