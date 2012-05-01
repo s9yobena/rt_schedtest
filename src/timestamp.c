@@ -1,3 +1,5 @@
+/* File copied from ft_tools  */
+
 #include <stdio.h>
 #include <string.h>
 

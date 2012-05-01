@@ -1,3 +1,5 @@
+/* File copied from ft_tools  */
+
 #ifndef TIMESTAMP_H
 #define TIMESTAMP_H
 
