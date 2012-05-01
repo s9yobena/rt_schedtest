@@ -14,13 +14,15 @@
 
 
 LitmusOverhead *litmusOverhead;
-LitmusSchedulingTrace *litmusSchedulingTrace;
+LitmusSchedulingTrace *litmusSchedulingTrace0;
+LitmusSchedulingTrace *litmusSchedulingTrace1;
 
 
 void finishTesting(int sig)
 {
   litmusOverhead->stopTracing();
-  litmusSchedulingTrace->stopTracing();
+  litmusSchedulingTrace0->stopTracing();
+  litmusSchedulingTrace1->stopTracing();
   exit(0);
 }
 
@@ -32,7 +34,8 @@ int main(int argc, char **argv) {
   CmdlParser cmdlParser(argc, argv);    
 
   litmusOverhead = LitmusOverhead::getInstance();
-  litmusSchedulingTrace = new LitmusSchedulingTrace;
+  litmusSchedulingTrace0 = new LitmusSchedulingTrace;
+  litmusSchedulingTrace1 = new LitmusSchedulingTrace;
 
   overhead = Overhead::getInstance();
   taskSet = TaskSet::getInstance();
@@ -49,13 +52,15 @@ int main(int argc, char **argv) {
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
   litmusOverhead->setParameters(cmdlParser);
-  litmusSchedulingTrace->setParameters(cmdlParser);
+  litmusSchedulingTrace0->setParameters(cmdlParser);
+  litmusSchedulingTrace1->setParameters(cmdlParser);
   
-  litmusSchedulingTrace->initDev("/dev/litmus/sched_trace0");
+  litmusSchedulingTrace0->initDev("/dev/litmus/sched_trace0");
+  litmusSchedulingTrace1->initDev("/dev/litmus/sched_trace1");
   litmusOverhead->initDev("/dev/litmus/ft_trace0");
 
-  litmusSchedulingTrace->startTracing();
-
+  litmusSchedulingTrace0->startTracing();
+  litmusSchedulingTrace1->startTracing();
   litmusOverhead->startTracing();
   
   return 0;

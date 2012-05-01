@@ -14,6 +14,7 @@
 	"   --timestamps: print timestamps \n"			\
 	"   --overheads:  print overheads \n"			\
 	"   --exectimes: print execution times \n"              \
+	"   --schedtraces: print scheduling traces \n"		\
 	"   -cpmd: cache related preemption and migration delay \n " \
 	"   RT_TASK_ID: id of process implementing RT_TASK \n" \
 	""

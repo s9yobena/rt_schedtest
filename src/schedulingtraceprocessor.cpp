@@ -6,12 +6,6 @@ SchedulingTraceProcessor::SchedulingTraceProcessor(){
 
 void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* ster) {
 
-  if (!isRegisteredSchedulingTrace(ster))
-    registerSchedulingTrace(ster);
-
-  processRegisteredSchedulingTrace(ster);
-
-
   if (printSchedulingTraces) {
   
     cout<<"Printting info for st_event_record: \n"<<endl;
@@ -23,23 +17,21 @@ void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* st
 
     switch(ster->hdr.type) {
     case STER_RELEASE:
-      cout<<"type: "<<(int)ster->hdr.type<<"\t"
-	  <<"cpu: "<<(int)ster->hdr.cpu<<"\t"
-	  <<"pid: "<<(int)ster->hdr.pid<<"\t"
-	  <<"job: "<<(int)ster->hdr.job<<"\t"
-	  <<"when: "<<ster->data.release.release<<"\t"
+      cout<<"job released at: "<<ster->data.release.release<<"\t"
 	  <<endl;
       break;
     case STER_COMPLETION:
-      cout<<"type: "<<(int)ster->hdr.type<<"\t"
-	  <<"cpu: "<<(int)ster->hdr.cpu<<"\t"
-	  <<"pid: "<<(int)ster->hdr.pid<<"\t"
-	  <<"job: "<<(int)ster->hdr.job<<"\t"
-	  <<"when: "<<ster->data.completion.when<<"\t"
+      cout<<"job completed at: "<<ster->data.completion.when<<"\t"
 	  <<endl;
       break;
     }
   }
+
+  if (!isRegisteredSchedulingTrace(ster))
+    registerSchedulingTrace(ster);
+
+  processRegisteredSchedulingTrace(ster);
+
 }
 
 

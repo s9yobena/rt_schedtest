@@ -6,6 +6,9 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   this->cpmd = 5000;
   this->printTimestamps = false;
   this->printOverheads = false;
+  this->printSchedulingTraces = false;
+  this->printExecutionTimes = false;
+
   
 
   int c;

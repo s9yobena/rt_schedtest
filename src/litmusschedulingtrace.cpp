@@ -7,7 +7,9 @@ LitmusSchedulingTrace::LitmusSchedulingTrace()
 
 void LitmusSchedulingTrace::setDefaultConfig() {
    enableEvent("503");
-  enableEvent("506");		// 506 enables event event 7 (ST_COMPLETION ?!!
+   enableEvent("506");		// 506 enables event event 7 (ST_COMPLETION ?!!
+   schedulingTraceProcessor.setPrintSchedulingTraces(printSchedulingTraces);
+   schedulingTraceProcessor.setPrintExecutionTimes(printExecutionTimes);
 }
 
 // void LitmusSchedulingTrace::startTracing() {
