@@ -50,6 +50,7 @@ public:
   void startTracing();
   void stopTracing();
   void scheduleTrace();
+
 };
 
 #endif

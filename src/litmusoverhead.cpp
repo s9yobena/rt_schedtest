@@ -28,6 +28,8 @@ void LitmusOverhead::setDefaultConfig() {
   timestampProcessor->setPrintOverheads(printOverheads);
   timestampProcessor->setTimestampProcessorObserver(this);
 
+  setLitmusOverheadObserver(Overhead::getInstance());  
+
   enableEvent("CXS_START");
   enableEvent("CXS_END");
 

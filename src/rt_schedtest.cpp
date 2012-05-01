@@ -47,7 +47,6 @@ int main(int argc, char **argv) {
   schedTest.setTaskSet(taskSet);
   schedTest.setOverhead(overhead);
   overhead->setSchedTestObserver(&schedTest);
-  litmusOverhead->setLitmusOverheadObserver(overhead);  
 
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
