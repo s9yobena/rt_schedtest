@@ -83,22 +83,11 @@ struct st_event_record {
   union {
     u64 raw[2];
 
-    // DATA(name);
-    // DATA(param);
     struct st_param_data param;
-    // DATA(release);
     struct st_release_data release;
-    // DATA(assigned);
-    // DATA(switch_to);
     struct st_switch_to_data switch_to;
-    // DATA(switch_away);
     struct st_switch_away_data switch_away;
-    // DATA(completion);
     struct st_completion_data completion;
-    // DATA(block);
-    // DATA(resume);
-    // DATA(action);
-    // DATA(sys_release);
   } data;
 };
 

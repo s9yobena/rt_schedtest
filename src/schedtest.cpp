@@ -126,7 +126,6 @@ int SchedTest::get_nbr_cpus(){
   fp = popen("/bin/cat /proc/cpuinfo |grep -c '^processor'","r");
   fread(res, 1, sizeof(res)-1, fp);
   pclose(fp);
-  /* printf("nbr of cpus: %c \n",res[0]); */
   return atoi(&res[0]);
 }
 

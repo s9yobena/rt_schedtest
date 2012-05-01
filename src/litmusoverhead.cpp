@@ -48,12 +48,6 @@ void LitmusOverhead::setDefaultConfig() {
   enableEvent("RELEASE_LATENCY");
 }
 
-// void LitmusOverhead::startTracing() {
-
-//   setDefaultConfig();
-//   trace();
-// }
-
 void LitmusOverhead::trace() {
 
   int rd;
@@ -74,7 +68,7 @@ void LitmusOverhead::trace() {
     }
   }
   
-    // the base class LitmusDevie has a queue of devices, from which another device is scheduled to trace
+  // the base class LitmusDevie has a queue of devices, from which another device is scheduled to trace
   scheduleTrace();
 
 }
@@ -84,7 +78,6 @@ void LitmusOverhead::trace() {
 void LitmusOverhead::updateMaxOverhead(struct timestamp* start, struct timestamp* end,
 				       unsigned long id) {
   
-  // printf(" \n Debug maxRELEASE_LATENCY %llu \n", this->maxRELEASE_LATENCY);
   struct timestamp *first;
   
   for (; start != end; start++)
@@ -93,7 +86,7 @@ void LitmusOverhead::updateMaxOverhead(struct timestamp* start, struct timestamp
       if (first)
 	if ( !(first->task_type != TSK_RT && first->task_type != TSK_RT && !wantBestEffort) ) {
 	  if ((overhead_t)(first->timestamp) > this->maxRELEASE_LATENCY){
-	    // printf("current overhead is %llu \n",(overhead_t)(first->timestamp - first->timestamp));
+
 	    switch (id) {
 	    case TS_RELEASE_LATENCY:
 	      maxRELEASE_LATENCY =  (overhead_t)(first->timestamp);
@@ -109,11 +102,6 @@ void LitmusOverhead::updateMaxOverhead(struct timestamp* start, struct timestamp
 void LitmusOverhead::updateMaxOverhead2(struct timestamp* start, struct timestamp* end,
 					unsigned long id) {
 
-  // printf(" \n Debug maxCXS %llu \n",this->maxCXS);
-  // printf(" \n Debug maxSCHED %llu \n",this->maxSCHED);
-  // printf(" \n Debug maxSCHED2 %llu \n",this->maxSCHED2);
-  // printf(" \n Debug maxRELEASE %llu \n",this->maxRELEASE);
-  // printf(" \n Debug maxRESCHED_SEND %llu \n",this->maxRELEASE);
   struct timestamp *first;
   struct timestamp *second;
 
@@ -127,11 +115,9 @@ void LitmusOverhead::updateMaxOverhead2(struct timestamp* start, struct timestam
       second = next_id(start + 1, end, start->cpu, start->event + 1,
 		       start->event);
       if (second)
-	if ( // !(second->timestamp - first->timestamp > threshold) ||
-	     !(first->task_type != TSK_RT && second->task_type != TSK_RT && !wantBestEffort) ) {
+	if ( !(first->task_type != TSK_RT && second->task_type != TSK_RT && !wantBestEffort) ) {
 	  if ((overhead_t)(second->timestamp - first->timestamp) > this->maxCXS){
-	  // printf("current overhead is %llu \n",(overhead_t)(second->timestamp - first->timestamp));
-	  switch (id) {
+	    switch (id) {
 	  case TS_CXS_START:
 	    if ((overhead_t)(second->timestamp - first->timestamp) > this->maxCXS) {
 	      maxCXS =  (unsigned long long)(second->timestamp - first->timestamp);

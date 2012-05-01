@@ -89,32 +89,6 @@ void SchedulingTraceProcessor::notifyNewExecutionTime(exec_time_t exec_time, tas
   }
 
   taskSet->updateTaskExecCost(exec_time, task_id);
-  
-  
-  // switch(id){
-  // case TS_CXS_START:
-  //   litmusOverhead->checkMaxCXS(overhead);
-  //   break;
-  // case TS_SCHED_START:
-  //   litmusOverhead->checkMaxSCHED(overhead);
-  //   break;
-  // case TS_SCHED2_START:
-  //   litmusOverhead->checkMaxSCHED2(overhead);
-  //   break;
-  // case TS_RELEASE_START:
-  //   litmusOverhead->checkMaxRELEASE(overhead);
-  //   break;
-  // case TS_SEND_RESCHED_START:
-  //   litmusOverhead->checkMaxSEND_RESCHED(overhead);
-  //   break;
-  // case TS_RELEASE_LATENCY:
-  //   litmusOverhead->checkMaxRELEASE_LATENCY(overhead);
-  //   break;
-    
-  // default:
-  //   cout<<"WARNING: case not handeled"<<endl;
-  // }
-
 }
 
 void SchedulingTraceProcessor::setPrintSchedulingTraces(bool printSchedulingTraces) {

@@ -12,12 +12,6 @@ void LitmusSchedulingTrace::setDefaultConfig() {
    schedulingTraceProcessor.setPrintExecutionTimes(printExecutionTimes);
 }
 
-// void LitmusSchedulingTrace::startTracing() {
-  
-//   setDefaultConfig();
-//   trace();
-// }
-
 void LitmusSchedulingTrace::trace() {
 
   int rd;

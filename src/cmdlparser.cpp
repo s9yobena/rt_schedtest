@@ -53,11 +53,6 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	}
     }
 
-  // if (argc - optind < 1){
-  //   fprintf(stderr, "%s", USAGE);
-  //   exit(1);
-  // }
-
 
   if (cpmd_flag)
     printf ("CPMD set to: %d \n ",this->cpmd);
@@ -83,7 +78,6 @@ CmdlParser::CmdlParser(int argc, char **argv) {
     this->printExecutionTimes = true;
     printf("Printing execution times \n");
   }
-
      
   for(int i = optind; i<argc; i++){
 

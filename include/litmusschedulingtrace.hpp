@@ -22,7 +22,6 @@ private:
 
 public:
   LitmusSchedulingTrace();
-  // void startTracing();
   void setParameters(const CmdlParser&);
 
 };

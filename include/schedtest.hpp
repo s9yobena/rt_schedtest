@@ -8,7 +8,6 @@
 #include "taskset.hpp"
 #include "overhead.hpp"
 
-// #define __CPU_CLOCK_MHz 2267.0
 #define __CPU_CLOCK_MHz 10000.0
 #define __Hz_PER_MHz 1000000.0
 #define __MS_PER_S 1000.0
@@ -34,7 +33,7 @@ class SchedTest{
 
   int nbr_cpu;
   long double msPerCycle;
-  int get_nbr_cpus();
+  static int get_nbr_cpus();
   long double getMsPerCycle();
   long double getNsPerCycle();
 

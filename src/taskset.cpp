@@ -54,11 +54,6 @@ void TaskSet::updateExecCost(exec_time_t exec_time, task_id_t task_id) {
 
 void TaskSet::setParameters(const CmdlParser& cmdlParser) {
   
-  // this->nb_rts = cmdlParser.nb_rts;
-  // for (int i=0; i< this->nb_rts; i++) {
-  //   this->rt_task_id[i] = cmdlParser.rt_task_id[i];
-  //   get_rt_task_param(this->rt_task_id[i],&this->rt_task_param[i]);
-  // }
   printExecutionTimes = cmdlParser.printExecutionTimes;
 }
 
