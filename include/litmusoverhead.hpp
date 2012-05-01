@@ -21,8 +21,6 @@ private:
   LitmusOverhead(const LitmusOverhead&);
   LitmusOverhead & operator=(const LitmusOverhead&);
   static LitmusOverhead* litmusOverheadInstance;
-
-
   Overhead* overhead;
   TimestampProcessor *timestampProcessor;
 
@@ -35,25 +33,8 @@ private:
   overhead_t maxRELEASE;
   overhead_t maxRELEASE_LATENCY;
   overhead_t maxSEND_RESCHED;
-  
-  unsigned long long threshold; /* 10 ms == 10 full ticks */
-  int wantBestEffort;
-  int wantInterleaved;
-
-  void updateMaxOverhead(struct timestamp* start, struct timestamp* end, 
-			   unsigned long id);
-  void updateMaxOverhead2(struct timestamp* start, struct timestamp* end, 
-			   unsigned long id);
-  
-  struct timestamp* next(struct timestamp* start, struct timestamp* end,
-			 int cpu);
-  struct timestamp* next_id(struct timestamp* start, struct timestamp* end,
-			    int cpu, unsigned long id,
-			    unsigned long stop_id);
 
   int eventStrToEventId(const char* eventStr, EventId *eventId);
-
-
   void setDefaultConfig();
   void trace();
   void updateLitmusOverheadObservers();
