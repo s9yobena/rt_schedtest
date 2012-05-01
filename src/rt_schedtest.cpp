@@ -11,18 +11,42 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <sstream>
+
+int getNbrCpus(){
+  FILE * fp;
+  char res[128];
+  fp = popen("/bin/cat /proc/cpuinfo |grep -c '^processor'","r");
+  fread(res, 1, sizeof(res)-1, fp);
+  pclose(fp);
+  return atoi(&res[0]);
+}
 
 
-LitmusOverhead *litmusOverhead;
-LitmusSchedulingTrace *litmusSchedulingTrace0;
-LitmusSchedulingTrace *litmusSchedulingTrace1;
+static void setDevices(const CmdlParser& cmdlParser) {
 
+  LitmusDevice *litmusDevice;
+  stringstream litmusDeviceName;
+
+  litmusDevice = LitmusOverhead::getInstance();  
+  litmusDeviceName.str("/dev/litmus/ft_trace0");  
+  litmusDevice->setParameters(cmdlParser);  
+  litmusDevice->initDev(litmusDeviceName.str().c_str());
+
+  int nbrCPUs = getNbrCpus();
+  
+  for (int i=0; i<nbrCPUs; i++) {
+    litmusDeviceName.str("");
+    litmusDevice = new LitmusSchedulingTrace();
+    litmusDeviceName<<"/dev/litmus/sched_trace"<<i;
+    litmusDevice->setParameters(cmdlParser);
+    litmusDevice->initDev(litmusDeviceName.str().c_str());
+  }
+}
 
 void finishTesting(int sig)
 {
-  litmusOverhead->stopTracing();
-  litmusSchedulingTrace0->stopTracing();
-  litmusSchedulingTrace1->stopTracing();
+  LitmusDevice::stopAllDevices();
   exit(0);
 }
 
@@ -33,9 +57,9 @@ int main(int argc, char **argv) {
   SchedTest schedTest;  
   CmdlParser cmdlParser(argc, argv);    
 
-  litmusOverhead = LitmusOverhead::getInstance();
-  litmusSchedulingTrace0 = new LitmusSchedulingTrace;
-  litmusSchedulingTrace1 = new LitmusSchedulingTrace;
+  // litmusOverhead = LitmusOverhead::getInstance();
+  // litmusSchedulingTrace0 = new LitmusSchedulingTrace;
+  // litmusSchedulingTrace1 = new LitmusSchedulingTrace;
 
   overhead = Overhead::getInstance();
   taskSet = TaskSet::getInstance();
@@ -50,17 +74,9 @@ int main(int argc, char **argv) {
 
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
-  litmusOverhead->setParameters(cmdlParser);
-  litmusSchedulingTrace0->setParameters(cmdlParser);
-  litmusSchedulingTrace1->setParameters(cmdlParser);
-  
-  litmusSchedulingTrace0->initDev("/dev/litmus/sched_trace0");
-  litmusSchedulingTrace1->initDev("/dev/litmus/sched_trace1");
-  litmusOverhead->initDev("/dev/litmus/ft_trace0");
 
-  litmusSchedulingTrace0->startTracing();
-  litmusSchedulingTrace1->startTracing();
-  litmusOverhead->startTracing();
+  setDevices(cmdlParser);
+  LitmusDevice::startTracingAllDevices();
   
   return 0;
 }

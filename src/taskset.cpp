@@ -66,5 +66,3 @@ void TaskSet::printParameters() {
   	   (int)this->rt_task_param[i].period);
   }
 }
-
- 

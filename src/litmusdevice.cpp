@@ -9,8 +9,8 @@ LitmusDevice::LitmusDevice() {
 }
 
 int LitmusDevice::initDev(const char* devName) {
-  
-  this->devName = devName;
+
+  strcpy(this->devName,devName);
   devFD = open(devName, O_RDWR);
   if (devFD < 0) {
     perror("could not open feathertrace");
@@ -75,4 +75,19 @@ int LitmusDevice::disableAllEvents() {
     }
   }
   return  disabled == this->nbrEvents;
+}
+
+void LitmusDevice::startTracingAllDevices() {
+
+  // notice that starting to trace on one device
+  // is enough since it will eventually call scheduleTrace()
+  devQueue.front()->startTracing();
+}
+
+void  LitmusDevice::stopAllDevices() {
+  do {
+    devQueue.front()->stopTracing();
+    delete devQueue.front();
+    devQueue.pop();
+  } while(devQueue.size()!=0);
 }

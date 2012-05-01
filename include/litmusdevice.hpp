@@ -21,6 +21,7 @@ using namespace std;
 
 typedef unsigned int EventId;
 
+class CmdlParser;
 class LitmusDevice {
 
 protected:
@@ -28,7 +29,7 @@ protected:
   LitmusDevice(const LitmusDevice&);
   LitmusDevice & operator=(const LitmusDevice&);
  
-  const char* devName;
+  char devName[100];
   int devFD;
   char devBuffer[DEV_BUF_SIZE];
   EventId devEvents[MAX_EVENTS];
@@ -50,6 +51,11 @@ public:
   void startTracing();
   void stopTracing();
   void scheduleTrace();
+
+  virtual void setParameters(const CmdlParser&)=0;
+
+  static void startTracingAllDevices();
+  static void stopAllDevices();
 
 };
 
