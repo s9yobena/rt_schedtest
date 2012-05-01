@@ -7,17 +7,20 @@
 #include "overhead.hpp"
 #include "schedtest.hpp"
 #include "litmusoverhead.hpp"
+#include "litmusschedulingtrace.hpp"
 
 #include <cstdlib>
 #include <cstdio>
 
 
 LitmusOverhead *litmusOverhead;
+LitmusSchedulingTrace *litmusSchedulingTrace;
 
 
 void finishTesting(int sig)
 {
   litmusOverhead->stopTracing();
+  litmusSchedulingTrace->stopTracing();
   exit(0);
 }
 
@@ -29,6 +32,8 @@ int main(int argc, char **argv) {
   CmdlParser cmdlParser(argc, argv);    
 
   litmusOverhead = LitmusOverhead::getInstance();
+  litmusSchedulingTrace = new LitmusSchedulingTrace;
+
   overhead = Overhead::getInstance();
   taskSet = TaskSet::getInstance();
 
@@ -44,7 +49,14 @@ int main(int argc, char **argv) {
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
   litmusOverhead->setParameters(cmdlParser);
+  litmusSchedulingTrace->setParameters(cmdlParser);
   
-  litmusOverhead->initOverhead("/dev/litmus/ft_trace0");
+  litmusSchedulingTrace->initDev("/dev/litmus/sched_trace0");
+  litmusOverhead->initDev("/dev/litmus/ft_trace0");
+
+  litmusSchedulingTrace->startTracing();
+
+  litmusOverhead->startTracing();
+  
   return 0;
 }

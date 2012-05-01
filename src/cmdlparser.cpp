@@ -12,6 +12,9 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   int cpmd_flag = 0;
   int printTimestamps_flag = 0;
   int printOverheads_flag = 0;
+  int printSchedulingTraces_flag = 0;
+  int printExecutionTimes_flag = 0;
+  
   while (1)
     {
       static struct option long_options[] =
@@ -19,6 +22,8 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	  {"cpmd", required_argument, &cpmd_flag,1 },
 	  {"timestamps", no_argument, &printTimestamps_flag,1 },
 	  {"overheads", no_argument, &printOverheads_flag,1 },
+	  {"schedtraces", no_argument, &printSchedulingTraces_flag,1 },
+	  {"exectimes", no_argument, &printExecutionTimes_flag,1 },
 	  {0, 0, 0, 0}
 	};
       /* getopt_long stores the option index here. */
@@ -45,10 +50,10 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	}
     }
 
-  if (argc - optind < 1){
-    fprintf(stderr, "%s", USAGE);
-    exit(1);
-  }
+  // if (argc - optind < 1){
+  //   fprintf(stderr, "%s", USAGE);
+  //   exit(1);
+  // }
 
 
   if (cpmd_flag)
@@ -61,9 +66,19 @@ CmdlParser::CmdlParser(int argc, char **argv) {
     printf("Printing all timestamps \n");
   }
 
-    if (printOverheads_flag) {
+  if (printOverheads_flag) {
     this->printOverheads = true;
     printf("Printing all registerd overheads \n");
+  }
+
+  if (printSchedulingTraces_flag) {
+    this->printSchedulingTraces = true;
+    printf("Printing scheduling traces \n");
+  }
+
+  if (printExecutionTimes_flag) {
+    this->printExecutionTimes = true;
+    printf("Printing execution times \n");
   }
 
      

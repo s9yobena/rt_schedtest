@@ -13,6 +13,7 @@
 	"rt_schedtest [--timestamps] [--overheads] [--cpmd <CPMD>] <RT_TASK_ID1> <RT_TASK_ID2>...\n" \
 	"   --timestamps: print timestamps \n"			\
 	"   --overheads:  print overheads \n"			\
+	"   --exectimes: print execution times \n"              \
 	"   -cpmd: cache related preemption and migration delay \n " \
 	"   RT_TASK_ID: id of process implementing RT_TASK \n" \
 	""
@@ -25,6 +26,8 @@ class CmdlParser {
   int cpmd;
   bool printTimestamps;
   bool printOverheads;
+  bool printSchedulingTraces;
+  bool printExecutionTimes;
 
 
   CmdlParser(int, char**);

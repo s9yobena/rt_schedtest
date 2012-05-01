@@ -3,28 +3,29 @@
 
 #include "overhead.hpp"
 #include "timestampprocessor.hpp"
-
-#include <cstdio>
-#include <cstdlib>
-#include <fcntl.h>
-#include <signal.h>
-#include <errno.h>
-#include <cstring>
-#include <unistd.h>
-#include <sys/ioctl.h>
+#include "cmdlparser.h"
+#include "litmusdevice.hpp"
+// #include <cstdio>
+// #include <cstdlib>
+// #include <fcntl.h>
+// #include <signal.h>
+// #include <errno.h>
+// #include <cstring>
+// #include <unistd.h>
+// #include <sys/ioctl.h>
 #include "timestamp.h"
 // #include <arpa/inet.h>
 // #include "mapping.h"
 
-#define MAX_EVENTS 128
-#define CYCLES_PER_US 2128
-#define TRACE_BUF_SIZE 500000
+// #define MAX_EVENTS 128
+// #define CYCLES_PER_US 2128
+// #define TRACE_BUF_SIZE 500000
 
 typedef unsigned long long overhead_t;
 
 class TimestampProcessor;
 
-class LitmusOverhead {
+class LitmusOverhead : public LitmusDevice {
 
 private:
 
@@ -37,16 +38,16 @@ private:
   Overhead* overhead;
   TimestampProcessor *timestampProcessor;
 
-  const char* traceBufferName;
-  char *debug;
-  int traceBufFD;
-  char traceBuffer[TRACE_BUF_SIZE];
-  unsigned long bytesRead;
-  char* traceEvent[MAX_EVENTS];
-  int eventCount;
+  // const char* traceBufferName;
+  // char *debug;
+  // int traceBufFD;
+  // char traceBuffer[TRACE_BUF_SIZE];
+  // unsigned long bytesRead;
+  // char* traceEvent[MAX_EVENTS];
+  // int eventCount;
 
-  cmd_t  ids[MAX_EVENTS];
-  int nbTraceEvents;
+  // cmd_t  ids[MAX_EVENTS];
+  // int nbTraceEvents;
 
   bool printTimestamps;
   bool printOverheads;
@@ -69,8 +70,8 @@ private:
   unsigned long long threshold; /* 10 ms == 10 full ticks */
   int wantBestEffort;
   int wantInterleaved;
-  void addEvent(char*);
-  void startTracing(int);
+  // void addEvent(char*);
+  // void startTracing(int);
 
   void updateMaxOverhead(struct timestamp* start, struct timestamp* end, 
 			   unsigned long id);
@@ -82,19 +83,22 @@ private:
   struct timestamp* next_id(struct timestamp* start, struct timestamp* end,
 			    int cpu, unsigned long id,
 			    unsigned long stop_id);
-  int enableEvent(int,char*);
-  int disableAll(int fd);
+  // int enableEvent(int,char*);
+  // int disableAll(int fd);
+  int eventStrToEventId(const char* eventStr, EventId *eventId);
 
 
-
+  void setDefaultConfig();
+  void trace();
   void updateLitmusOverheadObservers();
 
 public:
   
   static LitmusOverhead* getInstance();
+  // void startTracing();
   void setParameters(const CmdlParser&);
-  int initOverhead(const char*);
-  void stopTracing();
+  // int initOverhead(const char*);
+  // void stopTracing();
   void setLitmusOverheadObserver(Overhead*);
   void checkMaxCXS(overhead_t);
   void checkMaxSCHED(overhead_t);

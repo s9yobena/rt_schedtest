@@ -36,6 +36,7 @@ class SchedTest{
   long double msPerCycle;
   int get_nbr_cpus();
   long double getMsPerCycle();
+  long double getNsPerCycle();
 
 
  public :
