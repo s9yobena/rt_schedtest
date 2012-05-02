@@ -13,16 +13,6 @@
 #include <cstdio>
 #include <sstream>
 
-int getNbrCpus(){
-  FILE * fp;
-  char res[128];
-  fp = popen("/bin/cat /proc/cpuinfo |grep -c '^processor'","r");
-  fread(res, 1, sizeof(res)-1, fp);
-  pclose(fp);
-  return atoi(&res[0]);
-}
-
-
 static void setDevices(const CmdlParser& cmdlParser) {
 
   LitmusDevice *litmusDevice;
@@ -33,8 +23,9 @@ static void setDevices(const CmdlParser& cmdlParser) {
   litmusDevice->setParameters(cmdlParser);  
   litmusDevice->initDev(litmusDeviceName.str().c_str());
 
-  int nbrCPUs = getNbrCpus();
-  
+  long nbrCPUs;
+  nbrCPUs = sysconf(_SC_NPROCESSORS_ONLN);
+
   for (int i=0; i<nbrCPUs; i++) {
     litmusDeviceName.str("");
     litmusDevice = new LitmusSchedulingTrace();

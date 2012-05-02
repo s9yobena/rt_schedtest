@@ -2,7 +2,7 @@
 
 SchedTest::SchedTest() {
   this->schedTestName = DENSITY_TEST;
-  this->nbr_cpu =  get_nbr_cpus();
+  this->nbr_cpu = sysconf(_SC_NPROCESSORS_ONLN);
 }
 
 SchedTest::~SchedTest() {
@@ -117,16 +117,6 @@ int SchedTest::densityTest() {
   printf("\n");
   printf("\n");
 
-}
-
-
-int SchedTest::get_nbr_cpus(){
-  FILE * fp;
-  char res[128];
-  fp = popen("/bin/cat /proc/cpuinfo |grep -c '^processor'","r");
-  fread(res, 1, sizeof(res)-1, fp);
-  pclose(fp);
-  return atoi(&res[0]);
 }
 
 long double SchedTest::getMsPerCycle() {

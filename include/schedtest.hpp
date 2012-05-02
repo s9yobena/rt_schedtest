@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
-
+#include <unistd.h>
 #include "taskset.hpp"
 #include "overhead.hpp"
 
@@ -33,7 +33,6 @@ class SchedTest{
 
   int nbr_cpu;
   long double msPerCycle;
-  static int get_nbr_cpus();
   long double getMsPerCycle();
   long double getNsPerCycle();
 
