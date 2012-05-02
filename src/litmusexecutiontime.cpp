@@ -32,7 +32,7 @@ void LitmusExecutionTime::check(struct st_event_record* ster) {
   // ster is a completion event. Make sure ster's job matches 
   // currentStEventRecord's one. Then generate a new execution time value
   else if ((currentStEventRecord.hdr.type == startID)	   
-	   && (ster->hdr.type == STER_COMPLETION)
+	   && (ster->hdr.type == ST_COMPLETION)
 	   && (ster->hdr.job == currentStEventRecord.hdr.job )) {
 
     state = WAIT_FOR_RELEASE_EVENT;

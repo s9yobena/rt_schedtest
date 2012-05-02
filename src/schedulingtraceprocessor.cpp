@@ -16,11 +16,11 @@ void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* st
 	<<endl;
 
     switch(ster->hdr.type) {
-    case STER_RELEASE:
+    case ST_RELEASE:
       cout<<"job released at: "<<ster->data.release.release<<"\t"
 	  <<endl;
       break;
-    case STER_COMPLETION:
+    case ST_COMPLETION:
       cout<<"job completed at: "<<ster->data.completion.when<<"\t"
 	  <<endl;
       break;
@@ -54,18 +54,18 @@ bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* s
   LitmusExecutionTime *litmusExecutionTime;
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
-  if (ster->hdr.type ==	STER_RELEASE || ster->hdr.type == STER_COMPLETION) {
+  if (ster->hdr.type ==	ST_RELEASE || ster->hdr.type == ST_COMPLETION) {
     
-    litmusSchedulingTraceRecord = new LitmusExecutionTime(STER_RELEASE);
+    litmusSchedulingTraceRecord = new LitmusExecutionTime(ST_RELEASE);
 
     it = registeredTraceRecords.begin();
     registeredTraceRecords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				  (pair<int,int>(STER_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
+				  (pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
 
     // register the completion scheduling trace; notice that LitmusSchedulingTraceRecord is the same
     it = registeredTraceRecords.begin();
     registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				  (pair<int,int>(STER_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
+				  (pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
 
     litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(this);
     
