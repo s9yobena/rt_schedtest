@@ -48,29 +48,34 @@ bool SchedulingTraceProcessor::isRegisteredSchedulingTrace(struct st_event_recor
     return false;
 }
 
-bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* ster) {
+void SchedulingTraceProcessor::registerLitmusExecutionTime(struct st_event_record* ster) {
 
   LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
   LitmusExecutionTime *litmusExecutionTime;
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
+  litmusSchedulingTraceRecord = new LitmusExecutionTime(ST_RELEASE);
+
+  it = registeredTraceRecords.begin();
+  registeredTraceRecords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+				(pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
+
+  // register the completion scheduling trace; notice that LitmusSchedulingTraceRecord is the same
+  it = registeredTraceRecords.begin();
+  registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+				(pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
+
+  litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(this);
+}
+
+bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* ster) {
+
   if (ster->hdr.type ==	ST_RELEASE || ster->hdr.type == ST_COMPLETION) {
     
-    litmusSchedulingTraceRecord = new LitmusExecutionTime(ST_RELEASE);
-
-    it = registeredTraceRecords.begin();
-    registeredTraceRecords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				  (pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
-
-    // register the completion scheduling trace; notice that LitmusSchedulingTraceRecord is the same
-    it = registeredTraceRecords.begin();
-    registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				  (pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
-
-    litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(this);
-    
+    registerLitmusExecutionTime(ster);
     return true;
   } else {
+    
     return false;
   }
 
