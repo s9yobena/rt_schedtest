@@ -85,7 +85,7 @@ void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_re
   registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
 				(pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
 
-  litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(this);
+  litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(taskSet);
 }
 
 bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* ster) {

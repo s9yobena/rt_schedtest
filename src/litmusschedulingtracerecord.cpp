@@ -9,8 +9,8 @@ LitmusSchedulingTraceRecord::LitmusSchedulingTraceRecord(ster_t schedulingTraceE
   this->startID = schedulingTraceEventRecordID;
 }
 
-void LitmusSchedulingTraceRecord::setLitmusSchedulingTraceRecordObserver(SchedulingTraceProcessor* schedulingTraceProcessor) {
-  this->schedulingTraceProcessor = schedulingTraceProcessor;
+void LitmusSchedulingTraceRecord::setLitmusSchedulingTraceRecordObserver(TaskSet* taskSet) {
+  this->taskSet = taskSet;
 }
 
 void LitmusSchedulingTraceRecord::updateLitmusSchedulingTraceRecordObservers(exec_time_t exec_time, task_id_t task_id) {

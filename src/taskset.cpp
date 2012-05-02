@@ -23,6 +23,14 @@ void TaskSet::updateTaskExecCost(exec_time_t exec_time, task_id_t task_id) {
   updateMaxExecCost(exec_time, task_id);  
 }
 
+void TaskSet::updateTaskInterArrivalTime(exec_time_t inter_arrival_time, task_id_t task_id) {
+
+  if (isNewTask(task_id))
+    addTask(task_id);
+
+  updateMinInterArrivalTime(inter_arrival_time, task_id);  
+}
+
 bool TaskSet::isNewTask(task_id_t task_id) {
   
   for (int i=0; i< nb_rts; i++){
@@ -54,6 +62,20 @@ void TaskSet::updateMaxExecCost(exec_time_t exec_time, task_id_t task_id) {
       if (printExecutionTimes) 
 	printf("rt_task %d: Max. exec_time = %d \n",this->rt_task_id[i], 
 	       (int)this->rt_task_param[i].exec_cost);
+    }
+  }
+}
+
+void updateMinInterArrivalTime(exec_time_t inter_arrival_time, task_id_t task_id) {
+  for (int i=0; i< nb_rts; i++){
+    // IMPORTANT: it is assumed that period cannot be arbitrarly small. i.e litmus will
+    // not execute the corresponding task.
+    if (task_id == rt_task_id[i] && inter_arrival_time < rt_task_param[i].period ) {
+      
+      rt_task_param[i].period = inter_arrival_time;
+      if (printExecutionTimes) 
+	printf("rt_task %d: Min. inter_arrival_time = %d \n",this->rt_task_id[i], 
+	       (int)this->rt_task_param[i].period);
     }
   }
 }

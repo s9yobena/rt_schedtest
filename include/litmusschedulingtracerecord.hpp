@@ -11,7 +11,7 @@ class LitmusSchedulingTraceRecord {
 
 private:
 
-  SchedulingTraceProcessor* schedulingTraceProcessor;
+  TaskSet *taskSet;
   ster_t schedulingTraceEventRecordID;    
 
 public:
@@ -20,7 +20,7 @@ public:
   LitmusSchedulingTraceRecord(ster_t);
   ster_t startID;    
   virtual void check(struct st_event_record*)=0;
-  void setLitmusSchedulingTraceRecordObserver(SchedulingTraceProcessor*);
+  void setLitmusSchedulingTraceRecordObserver(TaskSet*);
   void updateLitmusSchedulingTraceRecordObservers(exec_time_t, task_id_t);
 
 };

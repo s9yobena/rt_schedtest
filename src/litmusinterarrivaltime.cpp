@@ -2,8 +2,9 @@
 
 LitmusInterArrivalTime::LitmusInterArrivalTime(ster_t sterType) 
   : LitmusSchedulingTraceRecord(sterType) {
-
+  
   state = WAIT_FOR_COMPLETION_EVENT;
+  taskSet = TaskSet::getInstance();
 }
 
 
@@ -41,4 +42,11 @@ void LitmusInterArrivalTime::check(struct st_event_record* ster) {
     updateLitmusSchedulingTraceRecordObservers((uint64_t)(ster->data.completion.when) - (uint64_t)(currentStEventRecord.data.release.release), currentStEventRecord.hdr.pid );
   }
 }
+
+void LitmusInterArrivalTime::updateLitmusSchedulingTraceRecordObservers(exec_time_t inter_arrival_time, task_id_t task_id) {
+  taskSet->updateTaskInterArrivalTime(inter_arrival_time,task_id);
+}
+
+
+
 
