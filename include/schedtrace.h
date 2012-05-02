@@ -1,3 +1,5 @@
+/* Copied from /include/litmus/sched_trace.h */
+
 #ifndef SCHED_TRACE_H
 #define SCHED_TRACE_H
 
