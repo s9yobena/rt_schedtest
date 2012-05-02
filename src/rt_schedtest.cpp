@@ -57,10 +57,6 @@ int main(int argc, char **argv) {
   SchedTest schedTest;  
   CmdlParser cmdlParser(argc, argv);    
 
-  // litmusOverhead = LitmusOverhead::getInstance();
-  // litmusSchedulingTrace0 = new LitmusSchedulingTrace;
-  // litmusSchedulingTrace1 = new LitmusSchedulingTrace;
-
   overhead = Overhead::getInstance();
   taskSet = TaskSet::getInstance();
 
