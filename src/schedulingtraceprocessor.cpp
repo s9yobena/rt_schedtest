@@ -8,8 +8,8 @@ void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* st
 
   if (printSchedulingTraces) {
   
-    cout<<"Printting info for st_event_record: \n"<<endl;
-    cout<<"type: "<<(int)ster->hdr.type<<"\t"
+    std::cout<<"Printting info for st_event_record: \n"<<endl;
+    std::cout<<"type: "<<(int)ster->hdr.type<<"\t"
 	<<"cpu: "<<(int)ster->hdr.cpu<<"\t"
 	<<"pid: "<<(int)ster->hdr.pid<<"\t"
 	<<"job: "<<(int)ster->hdr.job<<"\t"
@@ -17,11 +17,11 @@ void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* st
 
     switch(ster->hdr.type) {
     case ST_RELEASE:
-      cout<<"job released at: "<<ster->data.release.release<<"\t"
+      std::cout<<"job released at: "<<ster->data.release.release<<"\t"
 	  <<endl;
       break;
     case ST_COMPLETION:
-      cout<<"job completed at: "<<ster->data.completion.when<<"\t"
+      std::cout<<"job completed at: "<<ster->data.completion.when<<"\t"
 	  <<endl;
       break;
     }
@@ -42,7 +42,9 @@ void SchedulingTraceProcessor::setSchedulingTraceProcessorObserver(TaskSet* task
 bool SchedulingTraceProcessor::isRegisteredSchedulingTrace(struct st_event_record* ster) {
 
   if (registeredTraceRecords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-      !=registeredTraceRecords.end())
+      !=registeredTraceRecords.end()
+      &&registeredInterArrivalTimeTraceRocords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
+      !=registeredInterArrivalTimeTraceRocords.end())
     return true;
   else
     return false;
@@ -64,8 +66,6 @@ void SchedulingTraceProcessor::registerLitmusExecutionTime(struct st_event_recor
   it = registeredTraceRecords.begin();
   registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
 				(pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
-
-  litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(this);
 }
 
 void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_record* ster) {
@@ -76,16 +76,15 @@ void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_re
 
   litmusSchedulingTraceRecord = new LitmusInterArrivalTime(ST_COMPLETION);
 
-  it = registeredTraceRecords.begin();
-  registeredTraceRecords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				(pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
+  it = registeredInterArrivalTimeTraceRocords.begin();
+  registeredInterArrivalTimeTraceRocords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+  				(pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
 
   // register the release scheduling trace; notice that LitmusSchedulingTraceRecord is the same
-  it = registeredTraceRecords.begin();
-  registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				(pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
+  it = registeredInterArrivalTimeTraceRocords.begin();
+  registeredInterArrivalTimeTraceRocords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+  				(pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
 
-  litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(taskSet);
 }
 
 bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* ster) {
@@ -104,6 +103,7 @@ bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* s
 void SchedulingTraceProcessor::processRegisteredSchedulingTrace(struct st_event_record* ster) {
   
   this->registeredTraceRecords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
+  this->registeredInterArrivalTimeTraceRocords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
 }
 
 

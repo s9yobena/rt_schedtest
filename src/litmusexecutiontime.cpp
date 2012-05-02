@@ -36,6 +36,10 @@ void LitmusExecutionTime::check(struct st_event_record* ster) {
 	   && (ster->hdr.job == currentStEventRecord.hdr.job )) {
 
     state = WAIT_FOR_RELEASE_EVENT;
-    updateLitmusSchedulingTraceRecordObservers((uint64_t)(ster->data.completion.when) - (uint64_t)(currentStEventRecord.data.release.release), currentStEventRecord.hdr.pid );
+    updateTaskSet((uint64_t)(ster->data.completion.when) - (uint64_t)(currentStEventRecord.data.release.release), currentStEventRecord.hdr.pid );
   }
+}
+
+void LitmusExecutionTime::updateTaskSet(exec_time_t exec_time, task_id_t task_id) {
+  taskSet->updateTaskExecCost(exec_time, task_id);
 }

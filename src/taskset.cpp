@@ -66,7 +66,7 @@ void TaskSet::updateMaxExecCost(exec_time_t exec_time, task_id_t task_id) {
   }
 }
 
-void updateMinInterArrivalTime(exec_time_t inter_arrival_time, task_id_t task_id) {
+void TaskSet::updateMinInterArrivalTime(exec_time_t inter_arrival_time, task_id_t task_id) {
   for (int i=0; i< nb_rts; i++){
     // IMPORTANT: it is assumed that period cannot be arbitrarly small. i.e litmus will
     // not execute the corresponding task.

@@ -1,15 +1,12 @@
-#include "schedtrace.h"
-#include "schedulingtraceprocessor.hpp"
+#include "taskset.hpp"
 
 #ifndef LITMUS_SCHEDULING_TRACE_RECORD_HPP
 #define LITMUS_SCHEDULING_TRACE_RECORD_HPP
 
 
-class SchedulingTraceProcessor;
-
 class LitmusSchedulingTraceRecord {
 
-private:
+protected:
 
   TaskSet *taskSet;
   ster_t schedulingTraceEventRecordID;    
@@ -20,9 +17,7 @@ public:
   LitmusSchedulingTraceRecord(ster_t);
   ster_t startID;    
   virtual void check(struct st_event_record*)=0;
-  void setLitmusSchedulingTraceRecordObserver(TaskSet*);
-  void updateLitmusSchedulingTraceRecordObservers(exec_time_t, task_id_t);
-
+  virtual void updateTaskSet(exec_time_t exec_time, task_id_t task_id)=0;
 };
 
 #endif

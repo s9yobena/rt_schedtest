@@ -4,6 +4,7 @@
 
 #include "schedtrace.h"
 #include "litmusexecutiontime.hpp"
+#include "litmusinterarrivaltime.hpp"
 #include "taskset.hpp"
 #include <inttypes.h>
 #include <iostream>
@@ -23,6 +24,7 @@ private:
   bool printSchedulingTraces;
   bool printExecutionTimes;
   map<pair<int,int>,LitmusSchedulingTraceRecord*> registeredTraceRecords;
+  map<pair<int,int>,LitmusSchedulingTraceRecord*> registeredInterArrivalTimeTraceRocords;  
 
   bool isRegisteredSchedulingTrace(struct st_event_record*);
   bool registerSchedulingTrace(struct st_event_record*);

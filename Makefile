@@ -39,7 +39,7 @@ clean:
 # obj-online_schedtest = online_schedtest.o schedulability_test.o timestamp.o mapping.o
 # online_schedtest: ${obj-online_schedtest}
 
-obj-rt_schedtest = rt_schedtest.o cmdlparser.o taskset.o overhead.o litmusdevice.o litmusoverhead.o timestampprocessor.o  schedtest.o timestamp.o litmustimestamp.o singlelitmustimestamp.o pairlitmustimestamp.o schedtrace.o litmusschedulingtrace.o schedulingtraceprocessor.o litmusschedulingtracerecord.o litmusexecutiontime.o 
+obj-rt_schedtest = rt_schedtest.o cmdlparser.o taskset.o overhead.o litmusdevice.o litmusoverhead.o timestampprocessor.o  schedtest.o timestamp.o litmustimestamp.o singlelitmustimestamp.o pairlitmustimestamp.o schedtrace.o litmusschedulingtrace.o schedulingtraceprocessor.o litmusschedulingtracerecord.o litmusexecutiontime.o litmusinterarrivaltime.o
 
   # litmusoverheadobserver.o observableoverhead.o observablelitmusoverhead.o  schedtestobserver.o
 rt_schedtest: ${obj-rt_schedtest}

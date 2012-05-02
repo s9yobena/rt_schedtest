@@ -3,11 +3,7 @@
 #ifndef LITMUS_EXECUTION_TIME_HPP
 #define LITMUS_EXECUTION_TIME_HPP
 
-#include <iostream>
-#include "schedtrace.h"
 #include "litmusschedulingtracerecord.hpp"
-
-using namespace std;
 
 
 enum LitmusExecutionTimeState {
@@ -27,6 +23,7 @@ public:
 
   LitmusExecutionTime(ster_t);
   void check(struct st_event_record*);
+  void updateTaskSet(exec_time_t exec_time, task_id_t task_id);
 };
 
 #endif

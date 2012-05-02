@@ -3,17 +3,16 @@
 LitmusInterArrivalTime::LitmusInterArrivalTime(ster_t sterType) 
   : LitmusSchedulingTraceRecord(sterType) {
   
-  state = WAIT_FOR_COMPLETION_EVENT;
-  taskSet = TaskSet::getInstance();
+  state = IAT_WAIT_FOR_COMPLETION_EVENT;
 }
 
 
 void LitmusInterArrivalTime::check(struct st_event_record* ster) {
   // Check if we are in WAIT_FOR_COMPLETION_EVENT state; store st_event_record 
-  if ( (state == WAIT_FOR_COMPLETION_EVENT)
+  if ( (state == IAT_WAIT_FOR_COMPLETION_EVENT)
        && (ster->hdr.type == this->startID)) {
 
-    state = WAIT_FOR_RELEASE_EVENT;
+    state = IAT_WAIT_FOR_RELEASE_EVENT;
     currentStEventRecord = *ster;
   }
 
@@ -26,7 +25,7 @@ void LitmusInterArrivalTime::check(struct st_event_record* ster) {
 	   && (ster->hdr.type == startID)
     	   && (ster->hdr.job > currentStEventRecord.hdr.job )) {
 
-    state = WAIT_FOR_RELEASE_EVENT;
+    state = IAT_WAIT_FOR_RELEASE_EVENT;
     currentStEventRecord = *ster;
   }
 
@@ -38,15 +37,14 @@ void LitmusInterArrivalTime::check(struct st_event_record* ster) {
 	   && (ster->hdr.type == ST_RELEASE)
 	   && (ster->hdr.job == currentStEventRecord.hdr.job + 1)) {
 
-    state = WAIT_FOR_COMPLETION_EVENT;
-    updateLitmusSchedulingTraceRecordObservers((uint64_t)(ster->data.completion.when) - (uint64_t)(currentStEventRecord.data.release.release), currentStEventRecord.hdr.pid );
+    state = IAT_WAIT_FOR_COMPLETION_EVENT;
+    taskSet->updateTaskInterArrivalTime((uint64_t)(ster->data.release.release) - (uint64_t)(currentStEventRecord.data.completion.when), currentStEventRecord.hdr.pid );
   }
 }
 
-void LitmusInterArrivalTime::updateLitmusSchedulingTraceRecordObservers(exec_time_t inter_arrival_time, task_id_t task_id) {
-  taskSet->updateTaskInterArrivalTime(inter_arrival_time,task_id);
+void LitmusInterArrivalTime::updateTaskSet(exec_time_t inter_arrival_time, task_id_t task_id) {
+
+  taskSet->updateTaskInterArrivalTime(inter_arrival_time, task_id);
 }
-
-
 
 
