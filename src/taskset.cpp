@@ -20,7 +20,7 @@ void TaskSet::updateTaskExecCost(exec_time_t exec_time, task_id_t task_id) {
   if (isNewTask(task_id))
     addTask(task_id);
 
-  updateExecCost(exec_time, task_id);  
+  updateMaxExecCost(exec_time, task_id);  
 }
 
 bool TaskSet::isNewTask(task_id_t task_id) {
@@ -37,16 +37,22 @@ void TaskSet::addTask(task_id_t task_id) {
   
   rt_task_id[nb_rts] = task_id;
   get_rt_task_param(rt_task_id[nb_rts],&rt_task_param[nb_rts]); 
+
+  // set exec_cost to 0 to be able to check for the current maximum value
+  // even if the user defined one is arbitrarly large
+  rt_task_param[nb_rts].exec_cost = 0;
+
   nb_rts++;
 }
 
-void TaskSet::updateExecCost(exec_time_t exec_time, task_id_t task_id) {
+void TaskSet::updateMaxExecCost(exec_time_t exec_time, task_id_t task_id) {
 
   for (int i=0; i< nb_rts; i++){
-    if (task_id == rt_task_id[i]) {
+    if (task_id == rt_task_id[i] && exec_time > rt_task_param[i].exec_cost ) {
+      
       rt_task_param[i].exec_cost = exec_time;
       if (printExecutionTimes) 
-	printf("rt_task %d: exec_time = %d \n",this->rt_task_id[i], 
+	printf("rt_task %d: Max. exec_time = %d \n",this->rt_task_id[i], 
 	       (int)this->rt_task_param[i].exec_cost);
     }
   }

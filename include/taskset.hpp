@@ -22,7 +22,7 @@ private:
 
   bool isNewTask(task_id_t task_id);
   void addTask(task_id_t task_id);
-  void updateExecCost(exec_time_t exec_time, task_id_t task_id); // exec_time in NS
+  void updateMaxExecCost(exec_time_t exec_time, task_id_t task_id); // exec_time in NS
 
 public :  
   int  rt_task_id[MAX_RT_TASK_NR];
