@@ -68,11 +68,32 @@ void SchedulingTraceProcessor::registerLitmusExecutionTime(struct st_event_recor
   litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(this);
 }
 
+void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_record* ster) {
+
+  LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
+  LitmusInterArrivalTime *litmusInterArrivalTime;
+  map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
+
+  litmusSchedulingTraceRecord = new LitmusInterArrivalTime(ST_COMPLETION);
+
+  it = registeredTraceRecords.begin();
+  registeredTraceRecords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+				(pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
+
+  // register the release scheduling trace; notice that LitmusSchedulingTraceRecord is the same
+  it = registeredTraceRecords.begin();
+  registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+				(pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
+
+  litmusSchedulingTraceRecord->setLitmusSchedulingTraceRecordObserver(this);
+}
+
 bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* ster) {
 
   if (ster->hdr.type ==	ST_RELEASE || ster->hdr.type == ST_COMPLETION) {
     
     registerLitmusExecutionTime(ster);
+    registerLitmusInterArrivalTime(ster);
     return true;
   } else {
     

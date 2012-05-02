@@ -27,6 +27,7 @@ private:
   bool isRegisteredSchedulingTrace(struct st_event_record*);
   bool registerSchedulingTrace(struct st_event_record*);
   void registerLitmusExecutionTime(struct st_event_record* ster);
+  void registerLitmusInterArrivalTime(struct st_event_record* ster);
   void processRegisteredSchedulingTrace(struct st_event_record*);
 
 public:
