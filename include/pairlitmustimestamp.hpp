@@ -5,16 +5,8 @@
 
 using namespace std;
 
-
 #ifndef PAIR_LITMUS_TIMESTAMP_HPP
 #define PAIR_LITMUS_TIMESTAMP_HPP
-
-enum LitmusTimestampState {
-  
-  WAIT_FOR_START_EVENT,
-  WAIT_FOR_MATCH
-};
-  
 
 class PairLitmusTimestamp : public LitmusTimestamp {
 
