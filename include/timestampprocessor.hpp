@@ -31,6 +31,8 @@ private:
 
   bool isRegisteredTimestamp(struct timestamp*);
   void registerTimestamp(struct timestamp*);
+  void registerPairLitmusTimestamp(struct timestamp*);
+  void registerSingleLitmusTimestamp(struct timestamp*);
   void processRegisteredTimestamp(struct timestamp*);
 
 public:

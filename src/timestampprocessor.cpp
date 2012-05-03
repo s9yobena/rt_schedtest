@@ -50,34 +50,56 @@ void TimestampProcessor::registerTimestamp(struct timestamp* ts) {
   PairLitmusTimestamp* pairLitmusTimestamp;
   map<pair<cmd_t,uint8_t>,LitmusTimestamp*>::iterator it;
 
-  if (ts->event < SINGLE_RECORDS_RANGE && 
-      // only look if this is a start event, by convention, 
-      // the id of the start event is always even
-      ts->event % 2 == 0) {
+  if (ts->event < SINGLE_RECORDS_RANGE) {
+    
+    registerPairLitmusTimestamp(ts);
+  } else {
+    
+    registerSingleLitmusTimestamp(ts);
+  }
+}
+
+void TimestampProcessor::registerPairLitmusTimestamp(struct timestamp* ts) {
+  LitmusTimestamp *litmusTimestamp;
+  PairLitmusTimestamp* pairLitmusTimestamp;
+  map<pair<cmd_t,uint8_t>,LitmusTimestamp*>::iterator it;
+
+  // only look if this is a start event, by convention, 
+  // the id of the start event is always even
+  if (ts->event % 2 == 0) {
     
     litmusTimestamp = new PairLitmusTimestamp(ts->event);
 
-    // The start and end timestamps share the same state
+    // The start and end timestamps share the same state:
 
     // register the start event
     it = registeredLitmusTimestamps.begin();
     registeredLitmusTimestamps.insert(it, pair<pair<cmd_t,uint8_t>,LitmusTimestamp*>
-      (pair<cmd_t,uint8_t>(ts->event,ts->cpu),litmusTimestamp));
+				      (pair<cmd_t,uint8_t>(ts->event,ts->cpu),litmusTimestamp));
 
     // register the end event, which is start event +1; notice that litmusTimestamp is the same
     it = registeredLitmusTimestamps.begin();
     registeredLitmusTimestamps.insert(it, pair<pair<cmd_t,uint8_t>,LitmusTimestamp*>
-      (pair<cmd_t,uint8_t>(ts->event+1,ts->cpu),litmusTimestamp));
-  } else {
-    
-    it = registeredLitmusTimestamps.begin();
-    litmusTimestamp = new SingleLitmusTimestamp(ts->event);
-    registeredLitmusTimestamps.insert(it, pair<pair<cmd_t,uint8_t>,LitmusTimestamp*>
-      (pair<cmd_t,uint8_t>(ts->event,ts->cpu),litmusTimestamp));
+				      (pair<cmd_t,uint8_t>(ts->event+1,ts->cpu),litmusTimestamp));
+
+    litmusTimestamp->setLitmusTimestampObserver(this);
   }
+}
+
+void TimestampProcessor::registerSingleLitmusTimestamp(struct timestamp* ts) {
+  
+  LitmusTimestamp *litmusTimestamp;
+  SingleLitmusTimestamp* singleLitmusTimestamp;
+  map<pair<cmd_t,uint8_t>,LitmusTimestamp*>::iterator it;
+    
+  it = registeredLitmusTimestamps.begin();
+  litmusTimestamp = new SingleLitmusTimestamp(ts->event);
+  registeredLitmusTimestamps.insert(it, pair<pair<cmd_t,uint8_t>,LitmusTimestamp*>
+				    (pair<cmd_t,uint8_t>(ts->event,ts->cpu),litmusTimestamp));
 
   litmusTimestamp->setLitmusTimestampObserver(this);
 }
+
 void TimestampProcessor::processRegisteredTimestamp(struct timestamp* ts) {
   
   registeredLitmusTimestamps[pair<cmd_t,uint8_t>(ts->event, ts->cpu)]->check(ts);
