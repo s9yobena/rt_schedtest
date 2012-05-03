@@ -36,7 +36,7 @@ clean:
 	rm -f TAGS
 
 
-obj-rt_schedtest = rt_schedtest.o cmdlparser.o taskset.o overhead.o litmusdevice.o litmusoverhead.o timestampprocessor.o  schedtest.o timestamp.o litmustimestamp.o singlelitmustimestamp.o pairlitmustimestamp.o schedtrace.o litmusschedulingtrace.o schedulingtraceprocessor.o litmusschedulingtracerecord.o litmusexecutiontime.o litmusinterarrivaltime.o
+obj-rt_schedtest = rt_schedtest.o cmdlparser.o taskset.o overhead.o litmusdevice.o litmusoverhead.o timestampprocessor.o  schedtest.o timestamp.o litmustimestamp.o singlelitmustimestamp.o pairlitmustimestamp.o sendreschedlitmustimestamp.o schedtrace.o litmusschedulingtrace.o schedulingtraceprocessor.o litmusschedulingtracerecord.o litmusexecutiontime.o litmusinterarrivaltime.o
 
 rt_schedtest: ${obj-rt_schedtest}
 

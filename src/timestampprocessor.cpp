@@ -63,12 +63,24 @@ void TimestampProcessor::registerPairLitmusTimestamp(struct timestamp* ts) {
   LitmusTimestamp *litmusTimestamp;
   PairLitmusTimestamp* pairLitmusTimestamp;
   map<pair<cmd_t,uint8_t>,LitmusTimestamp*>::iterator it;
+  bool proceedRegister = false;
 
   // only look if this is a start event, by convention, 
   // the id of the start event is always even
-  if (ts->event % 2 == 0) {
-    
+  if ((ts->event % 2 == 0)
+      &&((ts->event != TS_SEND_RESCHED_START)
+	 ||(ts->event != TS_SEND_RESCHED_END))) {
+
     litmusTimestamp = new PairLitmusTimestamp(ts->event);
+    proceedRegister = true;
+  } else if ( ts->event == TS_SEND_RESCHED_START) {
+
+    litmusTimestamp = new SendReschedLitmusTimestamp(ts->event);
+    proceedRegister = true;
+  }
+    
+  if (proceedRegister) {
+
 
     // The start and end timestamps share the same state:
 
