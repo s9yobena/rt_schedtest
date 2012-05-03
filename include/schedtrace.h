@@ -32,8 +32,6 @@ struct st_param_data {		/* regular params */
 	u8	__unused[2];
 };
 
-/* #define STER_RELEASE 3 */
-
 struct st_release_data {	/* A job is was/is going to be released. */
 	u64	release;	/* What's the release time?              */
 	u64	deadline;	/* By when must it finish?		 */
@@ -51,8 +49,6 @@ struct st_switch_away_data {	/* A process was switched away from on a given CPU.
 	u64	when;
 	u64	exec_time;
 };
-
-/* #define STER_COMPLETION 7 */
 
 struct st_completion_data {	/* A job completed. */
 	u64	when;
@@ -77,8 +73,6 @@ typedef enum {
 	ST_ACTION,
 	ST_SYS_RELEASE
 } st_event_record_type_t;
-
-
 
 struct st_event_record {
   struct st_trace_header hdr;
