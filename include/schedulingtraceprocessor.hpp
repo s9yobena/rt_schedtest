@@ -37,7 +37,6 @@ public:
   SchedulingTraceProcessor();
   void processSchedulingTrace(struct st_event_record*);
   void setSchedulingTraceProcessorObserver(TaskSet*);
-  void notifyNewExecutionTime(exec_time_t, task_id_t);
   void setPrintSchedulingTraces(bool);
   void setPrintExecutionTimes(bool);
   

@@ -106,17 +106,6 @@ void SchedulingTraceProcessor::processRegisteredSchedulingTrace(struct st_event_
   this->registeredInterArrivalTimeTraceRocords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
 }
 
-
-void SchedulingTraceProcessor::notifyNewExecutionTime(exec_time_t exec_time, task_id_t task_id) {
-  
-  if (printExecutionTimes) {
-    
-    std::cout<<"current execution time for "<<task_id<<" is (NS): \t"<<exec_time<<std::endl;
-  }
-
-  taskSet->updateTaskExecCost(exec_time, task_id);
-}
-
 void SchedulingTraceProcessor::setPrintSchedulingTraces(bool printSchedulingTraces) {
 
   this->printSchedulingTraces = printSchedulingTraces;
