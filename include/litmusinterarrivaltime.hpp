@@ -6,8 +6,8 @@
 
 enum LitmusInterArrivalTimeState {
   
-  IAT_WAIT_FOR_COMPLETION_EVENT,
-  IAT_WAIT_FOR_RELEASE_EVENT
+  IAT_WAIT_FOR_RELEASE_EVENT,
+  IAT_WAIT_FOR_2ND_RELEASE_EVENT,
 };
   
 class LitmusInterArrivalTime : public LitmusSchedulingTraceRecord {

@@ -68,7 +68,7 @@ void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_re
   LitmusInterArrivalTime *litmusInterArrivalTime;
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
-  litmusSchedulingTraceRecord = new LitmusInterArrivalTime(ST_COMPLETION);
+  litmusSchedulingTraceRecord = new LitmusInterArrivalTime(ST_RELEASE);
 
   it = registeredInterArrivalTimeTraceRocords.begin();
   registeredInterArrivalTimeTraceRocords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
