@@ -2,7 +2,7 @@
 #define LITMUS_INTERARRIVAL_TIME_HPP
 
 #include "litmusschedulingtracerecord.hpp"
-
+#include "packet2stdout.hpp"
 
 enum LitmusInterArrivalTimeState {
   
@@ -16,6 +16,8 @@ private:
 
   LitmusInterArrivalTimeState state;
   struct st_event_record  currentStEventRecord;
+
+  Packet2Stdout *packet2Stdout;
 
 public:
 

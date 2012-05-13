@@ -6,64 +6,32 @@
 #include "taskset.hpp"
 #include "overhead.hpp"
 #include "schedtest.hpp"
-#include "litmusoverhead.hpp"
-#include "litmusschedulingtrace.hpp"
+#include "litmusdaemon.hpp"
 
-#include <cstdlib>
-#include <cstdio>
-#include <sstream>
-
-static void setDevices(const CmdlParser& cmdlParser) {
-
-  LitmusDevice *litmusDevice;
-  stringstream litmusDeviceName;
-
-  litmusDevice = LitmusOverhead::getInstance();  
-  litmusDeviceName.str("/dev/litmus/ft_trace0");  
-  litmusDevice->setParameters(cmdlParser);  
-  litmusDevice->initDev(litmusDeviceName.str().c_str());
-
-  long nbrCPUs;
-  nbrCPUs = sysconf(_SC_NPROCESSORS_ONLN);
-
-  for (int i=0; i<nbrCPUs; i++) {
-    litmusDeviceName.str("");
-    litmusDevice = new LitmusSchedulingTrace();
-    litmusDeviceName<<"/dev/litmus/sched_trace"<<i;
-    litmusDevice->setParameters(cmdlParser);
-    litmusDevice->initDev(litmusDeviceName.str().c_str());
-  }
-}
-
-void finishTesting(int sig)
-{
-  LitmusDevice::stopAllDevices();
-  exit(0);
-}
 
 int main(int argc, char **argv) {
 
   TaskSet *taskSet;
   Overhead *overhead;
   SchedTest schedTest;  
+  LitmusDaemon * litmusDaemon;
   CmdlParser cmdlParser(argc, argv);    
 
   overhead = Overhead::getInstance();
   taskSet = TaskSet::getInstance();
-
-  signal(SIGINT, finishTesting);
-  signal(SIGUSR1, finishTesting);
-  signal(SIGTERM, finishTesting);
+  litmusDaemon = LitmusDaemon::getInstance();
 
   schedTest.setTaskSet(taskSet);
   schedTest.setOverhead(overhead);
   overhead->setSchedTestObserver(&schedTest);
 
+  litmusDaemon->setOverheadObserver(overhead);
+  litmusDaemon->setTaskSetObserver(taskSet);
+
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
 
-  setDevices(cmdlParser);
-  LitmusDevice::startTracingAllDevices();
+  litmusDaemon->forkDaemon();
   
   return 0;
 }

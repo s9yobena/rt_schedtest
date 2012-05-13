@@ -34,7 +34,6 @@ void LitmusDevice::scheduleTrace() {
   devQueue.pop();
 
   // schedules a trace on the oldest device that run trace()
-  cout<<"scheduling device: "<<devQueue.front()->devName<<endl;
   devQueue.front()->trace();
 }
 

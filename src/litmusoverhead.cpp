@@ -16,6 +16,9 @@ LitmusOverhead* LitmusOverhead::getInstance(){
 
 void LitmusOverhead::setDefaultConfig() {
 
+  printTimestamps = false;
+  printOverheads = false;
+
   maxCXS = 0;
   maxSCHED = 0;
   maxSCHED2 = 0;
@@ -28,7 +31,7 @@ void LitmusOverhead::setDefaultConfig() {
   timestampProcessor->setPrintOverheads(printOverheads);
   timestampProcessor->setTimestampProcessorObserver(this);
 
-  setLitmusOverheadObserver(Overhead::getInstance());  
+  packet2Stdout = Packet2Stdout::getInstance();
 
   enableEvent("CXS_START");
   enableEvent("CXS_END");
@@ -82,65 +85,55 @@ int LitmusOverhead::eventStrToEventId(const char* eventStr, EventId *eventId) {
   return 0;
 }
 
-
-void LitmusOverhead::setLitmusOverheadObserver(Overhead* overhead) {
-  this->overhead = overhead;
-}
-
-void LitmusOverhead::updateLitmusOverheadObservers() {
-  this->overhead->updateCXS(this->maxCXS);
-  this->overhead->updateSCHED(this->maxSCHED);
-  this->overhead->updateSCHED2(this->maxSCHED2);
-  this->overhead->updateRELEASE(this->maxRELEASE);
-  this->overhead->updateSEND_RESCHED(this->maxSEND_RESCHED);
-  this->overhead->updateRELEASE_LATENCY(this->maxRELEASE_LATENCY);
-  this->overhead->updateSchedTest();
-}
-
 void LitmusOverhead::setParameters(const CmdlParser& cmdlParser) {
   this->printTimestamps = cmdlParser.printTimestamps;
   this->printOverheads = cmdlParser.printOverheads;
 }
 
-
 void LitmusOverhead::checkMaxCXS(overhead_t cxsOverhead) {
   if (this->maxCXS < cxsOverhead){
     this->maxCXS = cxsOverhead;
-    this->updateLitmusOverheadObservers();
+    packet2Stdout->setCXS(this->maxCXS);
+    packet2Stdout->send();
   }
 }
 
 void LitmusOverhead::checkMaxSCHED(overhead_t schedOverhead) {
   if (this->maxSCHED < schedOverhead){
     this->maxSCHED = schedOverhead;
-    this->updateLitmusOverheadObservers();
+    packet2Stdout->setSCHED(this->maxSCHED);
+    packet2Stdout->send();
   }
 }
 
 void LitmusOverhead::checkMaxSCHED2(overhead_t sched2Overhead) {
   if (this->maxSCHED2 < sched2Overhead){
     this->maxSCHED2 = sched2Overhead;
-    this->updateLitmusOverheadObservers();
+    packet2Stdout->setSCHED2(this->maxSCHED);
+    packet2Stdout->send();
   }
 }
 
 void LitmusOverhead::checkMaxRELEASE(overhead_t releaseOverhead) {
   if (this->maxRELEASE < releaseOverhead){
     this->maxRELEASE = releaseOverhead;
-    this->updateLitmusOverheadObservers();
+    packet2Stdout->setRELEASE(this->maxRELEASE);
+    packet2Stdout->send();
   }
 }
 
 void LitmusOverhead::checkMaxSEND_RESCHED(overhead_t send_reschedOverhead) {
   if (this->maxSEND_RESCHED < send_reschedOverhead){
     this->maxSEND_RESCHED = send_reschedOverhead;
-    this->updateLitmusOverheadObservers();
+    packet2Stdout->setSEND_RESCHED(this->maxSEND_RESCHED);
+    packet2Stdout->send();
   }
 }
 
 void LitmusOverhead::checkMaxRELEASE_LATENCY(overhead_t release_latencyOverhead) {
   if (this->maxRELEASE_LATENCY < release_latencyOverhead){
     this->maxRELEASE_LATENCY = release_latencyOverhead;
-    this->updateLitmusOverheadObservers();
+    packet2Stdout->setRELEASE_LATENCY(this->maxRELEASE_LATENCY);
+    packet2Stdout->send();
   }
 }

@@ -27,7 +27,7 @@ CPPFLAGS += -Iinclude/
 # ##############################################################################
 # Targets
 
-all = rt_schedtest
+all = rt_schedtest rt_trace-daemon
 
 .PHONY: all clean TAGS
 all: ${all}
@@ -36,9 +36,13 @@ clean:
 	rm -f TAGS
 
 
-obj-rt_schedtest = rt_schedtest.o cmdlparser.o taskset.o overhead.o litmusdevice.o litmusoverhead.o timestampprocessor.o  schedtest.o timestamp.o litmustimestamp.o singlelitmustimestamp.o pairlitmustimestamp.o sendreschedlitmustimestamp.o schedtrace.o litmusschedulingtrace.o schedulingtraceprocessor.o litmusschedulingtracerecord.o litmusexecutiontime.o litmusinterarrivaltime.o
+obj-rt_schedtest = rt_schedtest.o cmdlparser.o taskset.o overhead.o schedtest.o litmusdaemon.o litmustracingpacket.o 
+
+obj-rt_trace-daemon = rt_trace-daemon.o litmusdevice.o litmusoverhead.o timestampprocessor.o  timestamp.o litmustimestamp.o singlelitmustimestamp.o pairlitmustimestamp.o sendreschedlitmustimestamp.o schedtrace.o litmusschedulingtrace.o schedulingtraceprocessor.o litmusschedulingtracerecord.o litmusexecutiontime.o litmusinterarrivaltime.o litmustracingpacket.o packet2stdout.o
 
 rt_schedtest: ${obj-rt_schedtest}
+
+rt_trace-daemon: ${obj-rt_trace-daemon}
 
 # Emacs Tags
 TAGS:

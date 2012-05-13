@@ -4,6 +4,7 @@ LitmusInterArrivalTime::LitmusInterArrivalTime(ster_t sterType)
   : LitmusSchedulingTraceRecord(sterType) {
   
   state = IAT_WAIT_FOR_COMPLETION_EVENT;
+  packet2Stdout = Packet2Stdout::getInstance();
 }
 
 
@@ -38,13 +39,14 @@ void LitmusInterArrivalTime::check(struct st_event_record* ster) {
 	   && (ster->hdr.job == currentStEventRecord.hdr.job + 1)) {
 
     state = IAT_WAIT_FOR_COMPLETION_EVENT;
-    taskSet->updateTaskInterArrivalTime((uint64_t)(ster->data.release.release) - (uint64_t)(currentStEventRecord.data.completion.when), currentStEventRecord.hdr.pid );
+    updateTaskSet((uint64_t)(ster->data.release.release) - (uint64_t)(currentStEventRecord.data.completion.when), currentStEventRecord.hdr.pid );
   }
 }
 
 void LitmusInterArrivalTime::updateTaskSet(exec_time_t inter_arrival_time, task_id_t task_id) {
 
-  taskSet->updateTaskInterArrivalTime(inter_arrival_time, task_id);
+  packet2Stdout->setTaskInterArrivalTime(inter_arrival_time, task_id);
+  packet2Stdout->send();  
 }
 
 

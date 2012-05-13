@@ -4,6 +4,7 @@ LitmusExecutionTime::LitmusExecutionTime(ster_t sterType)
   : LitmusSchedulingTraceRecord(sterType) {
 
   state =  WAIT_FOR_RELEASE_EVENT;
+  packet2Stdout = Packet2Stdout::getInstance();
 }
 
 void LitmusExecutionTime::check(struct st_event_record* ster) {
@@ -41,5 +42,6 @@ void LitmusExecutionTime::check(struct st_event_record* ster) {
 }
 
 void LitmusExecutionTime::updateTaskSet(exec_time_t exec_time, task_id_t task_id) {
-  taskSet->updateTaskExecCost(exec_time, task_id);
+  packet2Stdout->setTaskExecutionCost(exec_time, task_id);  
+  packet2Stdout->send();
 }

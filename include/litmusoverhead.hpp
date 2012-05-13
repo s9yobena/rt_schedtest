@@ -3,11 +3,11 @@
 #ifndef LITMUS_OVERHEAD_H
 #define LITMUS_OVERHEAD_H
 
-#include "overhead.hpp"
 #include "timestampprocessor.hpp"
 #include "cmdlparser.h"
 #include "litmusdevice.hpp"
 #include "timestamp.h"
+#include "packet2stdout.hpp"
 
 typedef unsigned long long overhead_t;
 
@@ -21,8 +21,8 @@ private:
   LitmusOverhead(const LitmusOverhead&);
   LitmusOverhead & operator=(const LitmusOverhead&);
   static LitmusOverhead* litmusOverheadInstance;
-  Overhead* overhead;
   TimestampProcessor *timestampProcessor;
+  Packet2Stdout *packet2Stdout;
 
   bool printTimestamps;
   bool printOverheads;
@@ -37,13 +37,11 @@ private:
   int eventStrToEventId(const char* eventStr, EventId *eventId);
   void setDefaultConfig();
   void trace();
-  void updateLitmusOverheadObservers();
 
 public:
   
   static LitmusOverhead* getInstance();
   void setParameters(const CmdlParser&);
-  void setLitmusOverheadObserver(Overhead*);
   void checkMaxCXS(overhead_t);
   void checkMaxSCHED(overhead_t);
   void checkMaxSCHED2(overhead_t);

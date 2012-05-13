@@ -1,14 +1,13 @@
-#include "taskset.hpp"
-
 #ifndef LITMUS_SCHEDULING_TRACE_RECORD_HPP
 #define LITMUS_SCHEDULING_TRACE_RECORD_HPP
 
+#include "packet2stdout.hpp"
 
 class LitmusSchedulingTraceRecord {
 
 protected:
 
-  TaskSet *taskSet;
+  Packet2Stdout *packet2Stdout;
   ster_t schedulingTraceEventRecordID;    
 
 public:

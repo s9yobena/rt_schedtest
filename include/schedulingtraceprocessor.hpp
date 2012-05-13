@@ -5,7 +5,6 @@
 #include "schedtrace.h"
 #include "litmusexecutiontime.hpp"
 #include "litmusinterarrivaltime.hpp"
-#include "taskset.hpp"
 #include <inttypes.h>
 #include <iostream>
 #include <map>
@@ -20,7 +19,6 @@ private:
   SchedulingTraceProcessor(const SchedulingTraceProcessor&);
   SchedulingTraceProcessor & operator=(const SchedulingTraceProcessor&);
 
-  TaskSet *taskSet;
   bool printSchedulingTraces;
   bool printExecutionTimes;
   map<pair<int,int>,LitmusSchedulingTraceRecord*> registeredTraceRecords;
@@ -36,7 +34,6 @@ public:
   
   SchedulingTraceProcessor();
   void processSchedulingTrace(struct st_event_record*);
-  void setSchedulingTraceProcessorObserver(TaskSet*);
   void setPrintSchedulingTraces(bool);
   void setPrintExecutionTimes(bool);
   

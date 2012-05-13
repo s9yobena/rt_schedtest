@@ -1,7 +1,6 @@
 #include "schedulingtraceprocessor.hpp"
 
 SchedulingTraceProcessor::SchedulingTraceProcessor(){
-  setSchedulingTraceProcessorObserver(TaskSet::getInstance());
 }
 
 void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* ster) {
@@ -32,11 +31,6 @@ void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* st
 
   processRegisteredSchedulingTrace(ster);
 
-}
-
-
-void SchedulingTraceProcessor::setSchedulingTraceProcessorObserver(TaskSet* taskSet) {
-  this->taskSet = taskSet;
 }
 
 bool SchedulingTraceProcessor::isRegisteredSchedulingTrace(struct st_event_record* ster) {
