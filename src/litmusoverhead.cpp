@@ -109,7 +109,7 @@ void LitmusOverhead::checkMaxSCHED(overhead_t schedOverhead) {
 void LitmusOverhead::checkMaxSCHED2(overhead_t sched2Overhead) {
   if (this->maxSCHED2 < sched2Overhead){
     this->maxSCHED2 = sched2Overhead;
-    packet2Stdout->setSCHED2(this->maxSCHED);
+    packet2Stdout->setSCHED2(this->maxSCHED2);
     packet2Stdout->send();
   }
 }
