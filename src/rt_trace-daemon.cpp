@@ -1,6 +1,6 @@
 /*    rt_trace-daemon -- Overhead and scheduling tracing daemon
  *      
- *    Youcef A. Benabbas under the supervision of Dr. Björn B. Brandenburg,
+ *    Youcef A. Benabbas
  */
 #include "litmusoverhead.hpp"
 #include "litmusschedulingtrace.hpp"

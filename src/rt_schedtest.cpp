@@ -1,6 +1,6 @@
 /*    rt_schedtest -- Online overhead aware schedulability testing
  *      
- *    Youcef A. Benabbas under the supervision of Dr. Björn B. Brandenburg,
+ *    Youcef A. Benabbas.
  */
 #include "cmdlparser.h"
 #include "taskset.hpp"
