@@ -4,6 +4,7 @@
  */
 #include "litmusoverhead.hpp"
 #include "litmusschedulingtrace.hpp"
+#include "litmusdaemon.hpp"
 
 #include <cstdlib>
 #include <cstdio>
@@ -36,11 +37,16 @@ void finishTesting(int sig)
 }
 
 int main(int argc, char **argv) {
+  
+  LitmusDaemon * litmusDaemon;
+  litmusDaemon = LitmusDaemon::getInstance();  
 
   signal(SIGINT, finishTesting);
   signal(SIGUSR1, finishTesting);
   signal(SIGTERM, finishTesting);
 
+  litmusDaemon->forkSchedTest();
+  
   setDevices();
   LitmusDevice::startTracingAllDevices();
   return 0;
