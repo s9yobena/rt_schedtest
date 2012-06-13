@@ -5,8 +5,8 @@
 #include <cstdio>
 
 #include "schedtest.hpp"
-
-typedef unsigned long long overhead_t;
+#include "schedtestparam.hpp"
+#include "rttypes.h" 		// for overhead_t
 
 class SchedTest;
 
@@ -34,6 +34,7 @@ private:
 public :  
 
   static Overhead* getInstance();
+  void updateAllOverheads(SchedTestParam*);
   void updateCXS(overhead_t);
   void updateSCHED(overhead_t);
   void updateSCHED2(overhead_t);

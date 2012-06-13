@@ -1,26 +1,55 @@
 Overview
 ========
 
-rt_schedtest is a user-space tool that implemets onlin  schedulability  
-of real time tasks. It incorporates overhead like context switch overheads and IPI 
+rt_schedtest is a user-space tool that implements online schedulability testing  
+of real time tasks. It incorporates, among others, context switch overheads and IPI 
 latencies.
 
 Currenntly cache related preemption and migiration delay is given by the user. a default 
 value is set otherwise.
 
+
+Input
+====
+
+rt_schedtest accepts as input a file featuring the parameters necessary to make 
+a schedulability test. The following is an example:
+
+7      "Seven real-time tasks"				
+320613 	     "CXS(Cycles)"
+6802366	     "SCHED(Cycles)"
+40854	     "SCHED2(Cycles)"
+7071618      "RELEASE(Cycles)"
+0	     "SEND_RESCHED(Cycles)"
+16448911     "RELEASE_LATENCY(NS)"
+955 12831471 0 100000000 "id exec_time deadline period"
+958 12796310 0 100000000 "id exec_time deadline period"
+954 16500031 0 100000000 "id exec_time deadline period"
+953 1642999 0 100000000  "id exec_time deadline period"	
+959 12726031 0 100000000 "id exec_time deadline period"
+957 12901471 0 100000000 "id exec_time deadline period"
+956 16538001 0 100000000 "id exec_time deadline period"
+
+Remarks:
+- The text in "" is for illustrative purposes; The actual file contains only numbers
+
+
+Output
+======
+The result of the schedulability test.
+
 Usage
 =====
 
-* rt_schedtest [--timestamps] [--overheads] [--cpmd <CPMD>] <RT_TASK_ID1> <RT_TASK_ID2>...
-  starts online schedulabilty testing of the given real time tasks where RT_TASK_ID
-  is the id of the process implementing RT_TASK with the given (optional) cache related
-  preemption and migration delay.
-
-    --timestamps   Print timestamps.
-    --overheads  Print overheads.
-    --cpmd  Cache preemption and migration delay.
-
-
+* rt_schedtest [--timestamps] [--overheads] [--cpmd <CPMD>] [--stf <inputfilename.stf>]
+  starts online schedulabilty testing of the given real time tasks where inputfilename.stf
+  is the name of the file containing the diffrent parameters needed to implement a schedulability 
+  test. 
+  
+    --timestamps 	   Print timestamps.
+    --overheads	     	   Print overheads.
+    --cpmd  	     	   Cache preemption and migration delay.
+    --stf 		   Input schedulability test file.
 
 CREDIT
 ======

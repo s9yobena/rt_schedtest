@@ -7,7 +7,8 @@
 #include "cmdlparser.h"
 #include "litmusdevice.hpp"
 #include "timestamp.h"
-#include "packet2stdout.hpp"
+#include "schedtestparam.hpp"
+#include "litmusschedtest.hpp"
 
 typedef unsigned long long overhead_t;
 
@@ -22,7 +23,8 @@ private:
   LitmusOverhead & operator=(const LitmusOverhead&);
   static LitmusOverhead* litmusOverheadInstance;
   TimestampProcessor *timestampProcessor;
-  Packet2Stdout *packet2Stdout;
+  SchedTestParam *schedTestParam;
+  LitmusSchedTest *litmusSchedTest;
 
   bool printTimestamps;
   bool printOverheads;

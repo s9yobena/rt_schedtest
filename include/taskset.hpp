@@ -8,6 +8,7 @@
 #include "cmdlparser.h"
 
 #include "schedtrace.h"
+#include "schedtestparam.hpp"
 
 #define MAX_RT_TASK_NR 100
 
@@ -31,6 +32,7 @@ public :
   int nb_rts;
   
   static TaskSet* getInstance();
+  void updateAllTasks(SchedTestParam*);
   void updateTaskExecCost(exec_time_t exec_time, task_id_t task_id);
   void updateTaskInterArrivalTime(exec_time_t inter_arrival_time, task_id_t task_id);
   void setParameters(const CmdlParser&);

@@ -31,7 +31,8 @@ void LitmusOverhead::setDefaultConfig() {
   timestampProcessor->setPrintOverheads(printOverheads);
   timestampProcessor->setTimestampProcessorObserver(this);
 
-  packet2Stdout = Packet2Stdout::getInstance();
+  schedTestParam = SchedTestParam::getInstance();
+  litmusSchedTest = LitmusSchedTest::getInstance();
 
   enableEvent("CXS_START");
   enableEvent("CXS_END");
@@ -93,47 +94,53 @@ void LitmusOverhead::setParameters(const CmdlParser& cmdlParser) {
 void LitmusOverhead::checkMaxCXS(overhead_t cxsOverhead) {
   if (this->maxCXS < cxsOverhead){
     this->maxCXS = cxsOverhead;
-    packet2Stdout->setCXS(this->maxCXS);
-    packet2Stdout->send();
+    schedTestParam->setCXS(this->maxCXS);
+    schedTestParam->makeSchedTestParam();
+    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
   }
 }
 
 void LitmusOverhead::checkMaxSCHED(overhead_t schedOverhead) {
   if (this->maxSCHED < schedOverhead){
     this->maxSCHED = schedOverhead;
-    packet2Stdout->setSCHED(this->maxSCHED);
-    packet2Stdout->send();
+    schedTestParam->setSCHED(this->maxSCHED);
+    schedTestParam->makeSchedTestParam();
+    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
   }
 }
 
 void LitmusOverhead::checkMaxSCHED2(overhead_t sched2Overhead) {
   if (this->maxSCHED2 < sched2Overhead){
     this->maxSCHED2 = sched2Overhead;
-    packet2Stdout->setSCHED2(this->maxSCHED2);
-    packet2Stdout->send();
+    schedTestParam->setSCHED2(this->maxSCHED2);
+    schedTestParam->makeSchedTestParam();
+    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
   }
 }
 
 void LitmusOverhead::checkMaxRELEASE(overhead_t releaseOverhead) {
   if (this->maxRELEASE < releaseOverhead){
     this->maxRELEASE = releaseOverhead;
-    packet2Stdout->setRELEASE(this->maxRELEASE);
-    packet2Stdout->send();
+    schedTestParam->setRELEASE(this->maxRELEASE);
+    schedTestParam->makeSchedTestParam();
+    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
   }
 }
 
 void LitmusOverhead::checkMaxSEND_RESCHED(overhead_t send_reschedOverhead) {
   if (this->maxSEND_RESCHED < send_reschedOverhead){
     this->maxSEND_RESCHED = send_reschedOverhead;
-    packet2Stdout->setSEND_RESCHED(this->maxSEND_RESCHED);
-    packet2Stdout->send();
+    schedTestParam->setSEND_RESCHED(this->maxSEND_RESCHED);
+    schedTestParam->makeSchedTestParam();
+    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
   }
 }
 
 void LitmusOverhead::checkMaxRELEASE_LATENCY(overhead_t release_latencyOverhead) {
   if (this->maxRELEASE_LATENCY < release_latencyOverhead){
     this->maxRELEASE_LATENCY = release_latencyOverhead;
-    packet2Stdout->setRELEASE_LATENCY(this->maxRELEASE_LATENCY);
-    packet2Stdout->send();
+    schedTestParam->setRELEASE_LATENCY(this->maxRELEASE_LATENCY);
+    schedTestParam->makeSchedTestParam();
+    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
   }
 }

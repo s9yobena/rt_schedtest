@@ -4,7 +4,6 @@ LitmusInterArrivalTime::LitmusInterArrivalTime(ster_t sterType)
   : LitmusSchedulingTraceRecord(sterType) {
   
   state = IAT_WAIT_FOR_RELEASE_EVENT;
-  packet2Stdout = Packet2Stdout::getInstance();
 }
 
 
@@ -45,9 +44,7 @@ void LitmusInterArrivalTime::check(struct st_event_record* ster) {
 }
 
 void LitmusInterArrivalTime::updateTaskSet(exec_time_t inter_arrival_time, task_id_t task_id) {
-
-  packet2Stdout->setTaskInterArrivalTime(inter_arrival_time, task_id);
-  packet2Stdout->send();  
+  taskSet->updateTaskInterArrivalTime(inter_arrival_time, task_id);
 }
 
 

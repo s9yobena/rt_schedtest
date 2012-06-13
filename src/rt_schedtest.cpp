@@ -6,7 +6,7 @@
 #include "taskset.hpp"
 #include "overhead.hpp"
 #include "schedtest.hpp"
-#include "litmusdaemonlistner.hpp"
+#include "schedtestparam.hpp"
 
 
 int main(int argc, char **argv) {
@@ -14,24 +14,28 @@ int main(int argc, char **argv) {
   TaskSet *taskSet;
   Overhead *overhead;
   SchedTest schedTest;  
-  LitmusDaemonListner *litmusDaemonListner;
+  SchedTestParam *schedTestParam;
   CmdlParser cmdlParser(argc, argv);    
 
   overhead = Overhead::getInstance();
   taskSet = TaskSet::getInstance();
-  litmusDaemonListner = LitmusDaemonListner::getInstance();
+  schedTestParam = SchedTestParam::getInstance();
 
   schedTest.setTaskSet(taskSet);
   schedTest.setOverhead(overhead);
   overhead->setSchedTestObserver(&schedTest);
 
-  litmusDaemonListner->setOverheadObserver(overhead);
-  litmusDaemonListner->setTaskSetObserver(taskSet);
+  schedTestParam->resetLocalParams();
+  schedTestParam->setParameters(cmdlParser);
+  schedTestParam->getSchedTestParam();
+
+  overhead->updateAllOverheads(schedTestParam);
+  
+  taskSet->updateAllTasks(schedTestParam);
 
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
 
-  litmusDaemonListner->initLitmusDaemonListner();
-  
+  schedTest.makeSchedTest();
   return 0;
 }

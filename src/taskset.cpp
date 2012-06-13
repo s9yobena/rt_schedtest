@@ -15,6 +15,16 @@ TaskSet* TaskSet::getInstance() {
   return taskSetInstance;
 }
 
+void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
+  vector<TaskParam>::iterator it;
+  for (it = schedTestParam->taskParams.begin(); 
+       it != schedTestParam->taskParams.end(); it++) {
+    updateTaskExecCost(it->e, it->id);
+    updateTaskInterArrivalTime(it->p, it->id);
+  }
+
+}
+
 void TaskSet::updateTaskExecCost(exec_time_t exec_time, task_id_t task_id) {
   
   if (isNewTask(task_id))

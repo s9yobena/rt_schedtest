@@ -9,5 +9,5 @@ LitmusSchedulingTraceRecord::LitmusSchedulingTraceRecord(ster_t schedulingTraceE
 
   this->schedulingTraceEventRecordID = schedulingTraceEventRecordID;
   this->startID = schedulingTraceEventRecordID;
-  this->packet2Stdout = Packet2Stdout::getInstance();
+  this->taskSet = TaskSet::getInstance();
 }

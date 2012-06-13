@@ -51,6 +51,15 @@ overhead_t Overhead::getCPMD() {
   return this->CPMD;
 }
 
+void Overhead::updateAllOverheads(SchedTestParam *schedTestParam) {
+  CXS = schedTestParam->getCXS();
+  SCHED = schedTestParam->getSCHED();
+  SCHED2 = schedTestParam->getSCHED2();
+  RELEASE = schedTestParam->getRELEASE();
+  SEND_RESCHED = schedTestParam->getSEND_RESCHED();
+  RELEASE_LATENCY = schedTestParam->getRELEASE_LATENCY();
+}
+
 void Overhead::updateCXS(overhead_t  cxs){
   this->CXS = cxs;
 }
