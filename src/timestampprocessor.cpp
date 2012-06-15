@@ -69,7 +69,7 @@ void TimestampProcessor::registerPairLitmusTimestamp(struct timestamp* ts) {
   // the id of the start event is always even
   if ((ts->event % 2 == 0)
       &&((ts->event != TS_SEND_RESCHED_START)
-	 ||(ts->event != TS_SEND_RESCHED_END))) {
+	 &&(ts->event != TS_SEND_RESCHED_END))) {
 
     litmusTimestamp = new PairLitmusTimestamp(ts->event);
     proceedRegister = true;

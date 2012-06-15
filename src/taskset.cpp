@@ -59,6 +59,7 @@ void TaskSet::addTask(task_id_t task_id) {
   // set exec_cost to 0 to be able to check for the current maximum value
   // even if the user defined one is arbitrarly large
   rt_task_param[nb_rts].exec_cost = 0;
+  
 
   nb_rts++;
 }

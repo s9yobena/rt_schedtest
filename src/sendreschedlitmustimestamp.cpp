@@ -8,11 +8,10 @@ SendReschedLitmusTimestamp::SendReschedLitmusTimestamp(cmd_t id)
 
 
 void SendReschedLitmusTimestamp::check(struct timestamp* ts) {
-  // Notice that for SEND_RESCHED, we make sure that the start event is 
-  // send from a real-time task
+  // Notice that for SEND_RESCHED, we don't care who sent the IPI
+  // since real-time task will be affected by it anyway
   if ( (state == WAIT_FOR_START_EVENT)
-       && (ts->event == startID)
-       && (ts->task_type == TSK_RT)) {
+       && (ts->event == startID)) {
 
     state = WAIT_FOR_MATCH;
     currentTimestamp = *ts;
@@ -33,7 +32,12 @@ void SendReschedLitmusTimestamp::check(struct timestamp* ts) {
   // ts is an end event. Make sure ts was generated afer 
   // currentTimestamp. Then generate a new overhead value
 
-  // Notice that we don't check if the task is a real time one.
+  // Notice that we are sure this is the matching end event
+  // since another starting event would take the state machine 
+  // to the initial state(WAIT_FOR_MATCH), whereas an end event 
+  // with a diffrent cpu would not go be checked by this state 
+  // machine (see TimestampProcessor::processRegisteredTimestamp)
+
   else if ((currentTimestamp.event == startID)
 	   &&(ts->event == startID+1)
 	   &&(currentTimestamp.seq_no < ts->seq_no)) {
