@@ -23,25 +23,16 @@ char* SchedTestParam::getOutputName() {
 }
 
 void SchedTestParam::initSchedTestParam() {
+  endSchedTestParam = "End";
   resetLocalParams();
 }
 
 void SchedTestParam::resetLocalParams() {
-  nbrTasks = 0;
   cxs = 0;
   sched = 0;
   sched2 = 0;
   taskParams.clear();
 }
-
-void SchedTestParam::setNbrTasks(unsigned nbrTasks) {
-  this->nbrTasks = nbrTasks;
-}
-
-unsigned SchedTestParam::getNbrTasks() {
-  return nbrTasks;
-}
-
 
 void SchedTestParam::setCXS(overhead_t cxs) {
   this->cxs = cxs;
@@ -98,7 +89,6 @@ vector<TaskParam> SchedTestParam::getTaskParams() {
 
 void SchedTestParam::addTask(TaskParam taskParam) {
   taskParams.push_back(taskParam);
-  nbrTasks++;
 }
 
 void SchedTestParam::addAllTasks() {
@@ -111,7 +101,6 @@ void SchedTestParam::addAllTasks() {
 		 taskParamPos);
     taskParamPos++;
   }
-  nbrTasks = taskSet->nb_rts;
 }
 
 
@@ -119,10 +108,18 @@ void SchedTestParam::getAllTasks() {
   vector<TaskParam>::iterator it;
   unsigned taskParamPos = startTaskPos;
   TaskParam taskParam(0,0,0,0);
-  for (int i=0; i<nbrTasks; i++) {
-    getTaskParam(&taskParam,startTaskPos+i);
+  int i=0;
+  while(!getTaskParam(&taskParam,startTaskPos+i)) {
     taskParams.push_back(taskParam);
+    i++;
   }
+}
+
+int SchedTestParam::endOfSchedTestParam(const char *line) {
+  if(!strcmp(line,endSchedTestParam))
+    return 1;
+  else
+    return 0;
 }
 
 void SchedTestParam::setTaskParam(TaskParam taskParam, unsigned pos) {
@@ -142,7 +139,7 @@ void SchedTestParam::setTaskParam(TaskParam taskParam, unsigned pos) {
   } while (fgets (line, sizeof line, schedTestPramFile) != NULL);
 }
 
-void SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
+int SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
   rewind(schedTestPramFile);
   char line[100];
   unsigned currLineNbr;
@@ -150,12 +147,18 @@ void SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
   currLineNbr = 0;
   while (fgets (line, sizeof line, schedTestPramFile) != NULL) {
     if (currLineNbr == pos) {
+      // check if we reached the end of file
+      if (endOfSchedTestParam(line)) {
+      	return 1;
+      }
       sscanf(line,"%u %u %u %u",
 	     &taskParam->id, &taskParam->e, &taskParam->d, &taskParam->p);
-      break;
+      return 0;
     }
     currLineNbr++;
   }
+  // we should not reach here
+  printf("Error parsing file; Correct input file format? \n");
 }
 
 void SchedTestParam::setParam(unsigned value, unsigned pos) {
@@ -190,20 +193,29 @@ unsigned SchedTestParam::getParam(unsigned pos) {
   }
 }
 
+void SchedTestParam::addEndMark() {
+
+  schedTestPramFile = fopen(name,"a");
+  fputs(endSchedTestParam,schedTestPramFile);
+  fclose(schedTestPramFile); 
+}
+
+// Do not modify this function unless you know 
+// very well what you are doing
 void SchedTestParam::makeSchedTestParam() {
   schedTestPramFile = fopen(name,"w+");
   // DO NOT CHANGE THE ORDER OF THE FOLLOWING BLOCK
   // START
-  setParam(nbrTasks, nbrTaskPos);
   setParam(cxs, cxsPos);
   setParam(sched, schedPos);
   setParam(sched2, sched2Pos);
   setParam(release, releasePos);
   setParam(send_resched, send_reschedPos);
   setParam(release_latency, release_latencyPos);
-  addAllTasks();
+  addAllTasks();  
   // END
   fclose(schedTestPramFile); 
+  addEndMark();
 }
 
 void SchedTestParam::getSchedTestParam() {
@@ -215,7 +227,6 @@ void SchedTestParam::getSchedTestParam() {
 
   // DO NOT CHANGE THE ORDER OF THE FOLLOWING BLOCK
   // START
-  nbrTasks = getParam(nbrTaskPos);
   cxs = getParam(cxsPos);
   sched = getParam(schedPos);
   sched2 = getParam(sched2Pos);

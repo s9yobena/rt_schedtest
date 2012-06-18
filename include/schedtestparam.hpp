@@ -21,7 +21,6 @@ using namespace std;
 
 // DO NOT CHANGE THE ORDER OF THE FOLLOWING ENUM
 enum ParamPos {
-  nbrTaskPos,
   cxsPos,
   schedPos,
   sched2Pos,
@@ -53,7 +52,6 @@ private:
   FILE *schedTestPramFile;
   char name[MAX_STP_NAME];
 
-  unsigned nbrTasks;
   TaskSet *taskSet;
   overhead_t cxs;
   overhead_t sched;
@@ -68,10 +66,14 @@ private:
   unsigned getParam(unsigned pos);
 
   void setTaskParam(TaskParam taskParam, unsigned pos);
-  void getTaskParam(TaskParam *taskParam, unsigned pos);
+  int getTaskParam(TaskParam *taskParam, unsigned pos);
 
   void addAllTasks();
   void getAllTasks();
+  
+  const char* endSchedTestParam;
+  int endOfSchedTestParam(const char*);
+  void addEndMark();
 
 public:
   static SchedTestParam* getInstance();
@@ -83,7 +85,6 @@ public:
 
   vector<TaskParam> taskParams;
 
-  void setNbrTasks(unsigned);
   void setCXS(overhead_t);
   void setSCHED(overhead_t);
   void setSCHED2(overhead_t);
@@ -93,7 +94,6 @@ public:
   void addTask(TaskParam taskParam);
   void makeSchedTestParam();
 
-  unsigned getNbrTasks();
   overhead_t getCXS();
   overhead_t getSCHED();
   overhead_t getSCHED2();

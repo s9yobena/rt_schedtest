@@ -15,7 +15,6 @@ Input
 rt_schedtest accepts as input a file featuring the parameters necessary to make 
 a schedulability test. The following is an example:
 
-7      "Seven real-time tasks"				
 320613 	     "CXS(Cycles)"
 6802366	     "SCHED(Cycles)"
 40854	     "SCHED2(Cycles)"
@@ -29,9 +28,10 @@ a schedulability test. The following is an example:
 959 12726031 0 100000000 "id exec_time deadline period"
 957 12901471 0 100000000 "id exec_time deadline period"
 956 16538001 0 100000000 "id exec_time deadline period"
+End
 
 Remarks:
-- The text in "" is for illustrative purposes; The actual file contains only numbers
+- The text in "" is for illustrative purposes; The actual file contains only numbers and the End marker
 
 
 Output

@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   schedTest.setOverhead(overhead);
   overhead->setSchedTestObserver(&schedTest);
 
-  schedTestParam->resetLocalParams();
+  schedTestParam->initSchedTestParam();
   schedTestParam->setParameters(cmdlParser);
   schedTestParam->getSchedTestParam();
 

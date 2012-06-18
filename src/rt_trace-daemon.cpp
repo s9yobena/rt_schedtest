@@ -40,8 +40,8 @@ int main(int argc, char **argv) {
 
   SchedTestParam *schedTestParam;
   schedTestParam = SchedTestParam::getInstance();
+  schedTestParam->initSchedTestParam();
   schedTestParam->setOutputName("schedtestfile.stf");
-  schedTestParam->resetLocalParams();
 
   signal(SIGINT, finishTesting);
   signal(SIGUSR1, finishTesting);
