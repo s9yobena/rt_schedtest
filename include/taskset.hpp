@@ -21,10 +21,10 @@ private:
   static TaskSet* taskSetInstance;
   bool printExecutionTimes;
 
-  bool isNewTask(task_id_t task_id);
-  void addTask(task_id_t task_id);
-  void updateMaxExecCost(lt_t exec_time, task_id_t task_id); // exec_time in NS
-  void updateMinInterArrivalTime(lt_t exec_time, task_id_t task_id);  
+  bool isNewTask(pid_t task_id);
+  void addTask(pid_t task_id);
+  void updateMaxExecCost(lt_t exec_time, pid_t task_id); // exec_time in NS
+  void updateMinInterArrivalTime(lt_t exec_time, pid_t task_id);  
 
 public :  
   int  rt_task_id[MAX_RT_TASK_NR];
@@ -33,8 +33,8 @@ public :
   
   static TaskSet* getInstance();
   void updateAllTasks(SchedTestParam*);
-  void updateTaskExecCost(lt_t exec_time, task_id_t task_id);
-  void updateTaskInterArrivalTime(lt_t inter_arrival_time, task_id_t task_id);
+  void updateTaskExecCost(lt_t exec_time, pid_t task_id);
+  void updateTaskInterArrivalTime(lt_t inter_arrival_time, pid_t task_id);
   void setParameters(const CmdlParser&);
   void printParameters();
 

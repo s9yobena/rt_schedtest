@@ -27,11 +27,11 @@ enum ParamPos {
 };
 
 struct TaskParam {
-  task_id_t id;
+  pid_t id;
   lt_t e;
   lt_t d;
   lt_t p;
-  TaskParam(task_id_t idp, lt_t ep, lt_t dp, lt_t pp)
+  TaskParam(pid_t idp, lt_t ep, lt_t dp, lt_t pp)
   {id = idp;e = ep; d = dp; p = pp;}
 };
 

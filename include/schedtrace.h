@@ -13,7 +13,6 @@ typedef uint32_t u32 ;
 typedef uint64_t u64 ;
 
 typedef u8 ster_t;
-typedef u16 task_id_t;
 
 struct st_trace_header {
 	u8	type;		/* Of what type is this record?  */
