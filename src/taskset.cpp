@@ -25,7 +25,7 @@ void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
 
 }
 
-void TaskSet::updateTaskExecCost(exec_time_t exec_time, task_id_t task_id) {
+void TaskSet::updateTaskExecCost(lt_t exec_time, task_id_t task_id) {
   
   if (isNewTask(task_id))
     addTask(task_id);
@@ -33,7 +33,7 @@ void TaskSet::updateTaskExecCost(exec_time_t exec_time, task_id_t task_id) {
   updateMaxExecCost(exec_time, task_id);  
 }
 
-void TaskSet::updateTaskInterArrivalTime(exec_time_t inter_arrival_time, task_id_t task_id) {
+void TaskSet::updateTaskInterArrivalTime(lt_t inter_arrival_time, task_id_t task_id) {
 
   if (isNewTask(task_id))
     addTask(task_id);
@@ -64,7 +64,7 @@ void TaskSet::addTask(task_id_t task_id) {
   nb_rts++;
 }
 
-void TaskSet::updateMaxExecCost(exec_time_t exec_time, task_id_t task_id) {
+void TaskSet::updateMaxExecCost(lt_t exec_time, task_id_t task_id) {
 
   for (int i=0; i< nb_rts; i++){
     if (task_id == rt_task_id[i] && exec_time > rt_task_param[i].exec_cost ) {
@@ -77,7 +77,7 @@ void TaskSet::updateMaxExecCost(exec_time_t exec_time, task_id_t task_id) {
   }
 }
 
-void TaskSet::updateMinInterArrivalTime(exec_time_t inter_arrival_time, task_id_t task_id) {
+void TaskSet::updateMinInterArrivalTime(lt_t inter_arrival_time, task_id_t task_id) {
   for (int i=0; i< nb_rts; i++){
     // IMPORTANT: it is assumed that period cannot be arbitrarly small. i.e litmus will
     // not execute the corresponding task.

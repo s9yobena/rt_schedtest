@@ -12,7 +12,6 @@ typedef uint16_t u16 ;
 typedef uint32_t u32 ;
 typedef uint64_t u64 ;
 
-typedef unsigned long long exec_time_t;
 typedef u8 ster_t;
 typedef u16 task_id_t;
 

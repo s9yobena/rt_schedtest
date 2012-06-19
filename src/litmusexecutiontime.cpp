@@ -40,6 +40,6 @@ void LitmusExecutionTime::check(struct st_event_record* ster) {
   }
 }
 
-void LitmusExecutionTime::updateTaskSet(exec_time_t exec_time, task_id_t task_id) {
+void LitmusExecutionTime::updateTaskSet(lt_t exec_time, task_id_t task_id) {
   taskSet->updateTaskExecCost(exec_time, task_id);
 }

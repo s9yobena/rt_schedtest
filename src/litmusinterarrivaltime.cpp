@@ -43,7 +43,7 @@ void LitmusInterArrivalTime::check(struct st_event_record* ster) {
   }
 }
 
-void LitmusInterArrivalTime::updateTaskSet(exec_time_t inter_arrival_time, task_id_t task_id) {
+void LitmusInterArrivalTime::updateTaskSet(lt_t inter_arrival_time, task_id_t task_id) {
   taskSet->updateTaskInterArrivalTime(inter_arrival_time, task_id);
 }
 

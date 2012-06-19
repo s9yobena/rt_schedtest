@@ -20,7 +20,7 @@ public:
 
   LitmusInterArrivalTime(ster_t);
   void check(struct st_event_record*);
-  void updateTaskSet(exec_time_t inter_arrival_time, task_id_t task_id);
+  void updateTaskSet(lt_t inter_arrival_time, task_id_t task_id);
 };
 
 #endif
