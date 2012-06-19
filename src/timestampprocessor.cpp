@@ -145,6 +145,9 @@ void TimestampProcessor::notifyNewOverhead(overhead_t overhead, cmd_t id) {
   case TS_RELEASE_LATENCY:
     litmusOverhead->checkMaxRELEASE_LATENCY(overhead);
     break;
+  case TS_LOCK_SUSPEND:
+    litmusOverhead->updateSumSelfSuspension(overhead);
+    break;
     
   default:
     cout<<"WARNING: case not handeled"<<endl;
