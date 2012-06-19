@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "taskset.hpp"
 #include "overhead.hpp"
+#include "rttypes.h"		// for enum SchedTestName
 
 #define __CPU_CLOCK_MHz 10000.0
 #define __Hz_PER_MHz 1000000.0
@@ -18,14 +19,11 @@
 
 using namespace std;
 
-enum SchedTestName {
-  DENSITY_TEST,
-  BAKERS_TEST
-};
-
 class Overhead;
 
 class SchedTest{
+
+protected:
 
   SchedTestName schedTestName;
   TaskSet *taskSet;
@@ -35,15 +33,14 @@ class SchedTest{
   long double msPerCycle;
   long double getMsPerCycle();
   long double getNsPerCycle();
-
-
- public :
+  
+public:
   SchedTest();
   ~SchedTest();
   void setTaskSet(TaskSet*);
   void setOverhead(Overhead*);  
   int densityTest();
-  int makeSchedTest();
+  virtual int makeSchedTest()=0;
 
 };
 

@@ -31,7 +31,17 @@ void LitmusSchedTest::callSchedTest(char *schedTestParamFile) {
 
 void LitmusSchedTest::initSchedTest(char *schedTestParamFile) {
   
-  execl( "./rt_schedtest","rt_schedtest","--stf", schedTestParamFile,(char *) NULL );
+  char schedTestNameOption[25];
+  strcpy(schedTestNameOption, "--");
+  strcat(schedTestNameOption, schedTestName);
+  execl( "./rt_schedtest","rt_schedtest", 
+	 schedTestNameOption,
+	 "--stf", schedTestParamFile,
+	 (char *) NULL );
   perror( "execl()" );
-  exit(255);
+  exit(EXIT_FAILURE);
+}
+
+void LitmusSchedTest::setDensityTest() {
+  strcpy(schedTestName, "density-test");
 }

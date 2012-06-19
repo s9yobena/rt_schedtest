@@ -91,12 +91,3 @@ void Overhead::updateCPMD(overhead_t  cpmd){
 void Overhead::setParameters(const CmdlParser& cmdlParser) {
   this->CPMD = cmdlParser.cpmd;
 }
-
-
-void Overhead::setSchedTestObserver(SchedTest *schedTest) {
-  this->schedTest = schedTest;
-}
-
-void Overhead::updateSchedTest() {
-  this->schedTest->makeSchedTest();
-}

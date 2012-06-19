@@ -14,6 +14,7 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   int c;
   int cpmd_flag = 0;
   int stf_flag = 0;
+  int density_test_flag = 0;
   int printTimestamps_flag = 0;
   int printOverheads_flag = 0;
   int printSchedulingTraces_flag = 0;
@@ -25,6 +26,7 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	{
 	  {"cpmd", required_argument, NULL,'c' },
 	  {"stf", required_argument, NULL,'s' },
+	  {"density-test", no_argument, &density_test_flag,1},
 	  {"timestamps", no_argument, &printTimestamps_flag,1 },
 	  {"overheads", no_argument, &printOverheads_flag, 1 },
 	  {"schedtraces", no_argument, &printSchedulingTraces_flag, 1 },
@@ -75,7 +77,12 @@ CmdlParser::CmdlParser(int argc, char **argv) {
     fprintf(stderr, "%s", USAGE);
     exit(EXIT_FAILURE);
   }
-    
+
+  if (density_test_flag) {
+    this->schedTestName = DENSITY_TEST;
+    printf("Using density test \n");
+  }
+
 
   if (printTimestamps_flag) {
     this->printTimestamps = true;

@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sys/wait.h>
+#include "cstring"
 #include <iostream>
 
 using namespace std;
@@ -16,12 +17,14 @@ private:
   LitmusSchedTest(const LitmusSchedTest&);
   LitmusSchedTest& operator= (const LitmusSchedTest&);
   static LitmusSchedTest* litmusSchedTestInstance;
-
+  
   void initSchedTest(char*);
+  char schedTestName[20];
 
 public:
   static LitmusSchedTest* getInstance();
   void callSchedTest(char*);
+  void setDensityTest();
 };
 
 #endif

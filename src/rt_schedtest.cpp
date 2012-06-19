@@ -3,39 +3,18 @@
  *    Youcef A. Benabbas.
  */
 #include "cmdlparser.h"
-#include "taskset.hpp"
-#include "overhead.hpp"
-#include "schedtest.hpp"
-#include "schedtestparam.hpp"
-
+#include <unistd.h>
+#include "configschedtest.hpp"
 
 int main(int argc, char **argv) {
-
-  TaskSet *taskSet;
-  Overhead *overhead;
-  SchedTest schedTest;  
-  SchedTestParam *schedTestParam;
-  CmdlParser cmdlParser(argc, argv);    
-
-  overhead = Overhead::getInstance();
-  taskSet = TaskSet::getInstance();
-  schedTestParam = SchedTestParam::getInstance();
-
-  schedTest.setTaskSet(taskSet);
-  schedTest.setOverhead(overhead);
-  overhead->setSchedTestObserver(&schedTest);
-
-  schedTestParam->initSchedTestParam();
-  schedTestParam->setParameters(cmdlParser);
-  schedTestParam->getSchedTestParam();
-
-  overhead->updateAllOverheads(schedTestParam);
   
-  taskSet->updateAllTasks(schedTestParam);
+  CmdlParser cmdlParser(argc, argv);    
+  ConfigSchedTest *configSchedTest;
+  configSchedTest = ConfigSchedTest::getInstance();
 
-  taskSet->setParameters(cmdlParser);
-  overhead->setParameters(cmdlParser);
+  configSchedTest->setParameters(cmdlParser);
 
-  schedTest.makeSchedTest();
+  configSchedTest->callSchedTest();
+
   return 0;
 }

@@ -12,7 +12,9 @@ value is set otherwise.
 Input
 ====
 
-rt_schedtest accepts as input a file featuring the parameters necessary to make 
+- The schedulability test name to be performed.
+
+- rt_schedtest accepts as input a file featuring the parameters necessary to make 
 a schedulability test. The following is an example:
 
 320613 	     "CXS(Cycles)"
@@ -33,7 +35,6 @@ End
 Remarks:
 - The text in "" is for illustrative purposes; The actual file contains only numbers and the End marker
 
-
 Output
 ======
 The result of the schedulability test.
@@ -50,6 +51,7 @@ Usage
     --overheads	     	   Print overheads.
     --cpmd  	     	   Cache preemption and migration delay.
     --stf 		   Input schedulability test file.
+    --density-test
 
 CREDIT
 ======

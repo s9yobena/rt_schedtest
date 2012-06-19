@@ -33,6 +33,7 @@ void LitmusOverhead::setDefaultConfig() {
 
   schedTestParam = SchedTestParam::getInstance();
   litmusSchedTest = LitmusSchedTest::getInstance();
+  litmusSchedTest->setDensityTest();
 
   enableEvent("CXS_START");
   enableEvent("CXS_END");

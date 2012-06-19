@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <getopt.h>
 #include <string.h>
-
+#include "rttypes.h"
 
 
 #define MAX_RT_TASK_NR 100
@@ -20,6 +20,8 @@
 	"   --schedtraces: print scheduling traces \n"		\
 	"   --cpmd: cache related preemption and migration delay \n " \
 	"   --stf: scheduling test input file \n " \
+	"   One of the following schedulability tests:  \n " \
+	"   --density-test  \n " \
 	""
 
 
@@ -33,6 +35,7 @@ class CmdlParser {
   bool printSchedulingTraces;
   bool printExecutionTimes;
   char stfName[MAX_STF_NAME];
+  SchedTestName schedTestName;
 
 
   CmdlParser(int, char**);
