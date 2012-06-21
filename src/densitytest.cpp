@@ -36,6 +36,7 @@ int DensityTest::makeSchedTest() {
     cur_density = 0.0;
     cur_density =
       (long double)( (long double) ( (long double)((this->taskSet->getTaskExecCost(taskId)))
+				     +(long double)((this->taskSet->getTaskSelfSuspension(taskId)))
 				     +(long double)(inflation) 
 				     ) 
 		     /(long double)((this->taskSet->getTaskPeriod(taskId))));
