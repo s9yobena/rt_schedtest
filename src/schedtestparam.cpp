@@ -97,7 +97,8 @@ void SchedTestParam::addAllTasks() {
     setTaskParam(TaskParam(taskSet->rt_task_id[i],
 			   taskSet->rt_task_param[i].exec_cost,
 			   0,
-			   taskSet->rt_task_param[i].period),
+			   taskSet->rt_task_param[i].period,
+			   taskSet->rt_task_SelfSuspension[i]),
 		 taskParamPos);
     taskParamPos++;
   }
@@ -107,7 +108,7 @@ void SchedTestParam::addAllTasks() {
 void SchedTestParam::getAllTasks() {
   vector<TaskParam>::iterator it;
   unsigned taskParamPos = startTaskPos;
-  TaskParam taskParam(0,0,0,0);
+  TaskParam taskParam(0,0,0,0,0);
   int i=0;
   while(!getTaskParam(&taskParam,startTaskPos+i)) {
     taskParams.push_back(taskParam);
@@ -130,8 +131,8 @@ void SchedTestParam::setTaskParam(TaskParam taskParam, unsigned pos) {
   currLineNbr = 0;
   do {
     if (currLineNbr == pos) {
-      sprintf(buf, "%u %llu %llu %llu \n", 
-	      taskParam.id, taskParam.e, taskParam.d, taskParam.p);
+      sprintf(buf, "%u %llu %llu %llu %llu \n", 
+	      taskParam.id, taskParam.e, taskParam.d, taskParam.p, taskParam.ss);
       fputs (buf, schedTestPramFile);
       break;
     }
@@ -151,8 +152,8 @@ int SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
       if (endOfSchedTestParam(line)) {
       	return 1;
       }
-      sscanf(line,"%u %u %u %u",
-	     &taskParam->id, &taskParam->e, &taskParam->d, &taskParam->p);
+      sscanf(line,"%u %u %u %u %u",
+	     &taskParam->id, &taskParam->e, &taskParam->d, &taskParam->p, &taskParam->ss);
       return 0;
     }
     currLineNbr++;

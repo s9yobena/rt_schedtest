@@ -31,8 +31,9 @@ struct TaskParam {
   lt_t e;
   lt_t d;
   lt_t p;
-  TaskParam(pid_t idp, lt_t ep, lt_t dp, lt_t pp)
-  {id = idp;e = ep; d = dp; p = pp;}
+  lt_t ss;			// sum self suspension
+  TaskParam(pid_t idp, lt_t ep, lt_t dp, lt_t pp, lt_t pss)
+  {id = idp;e = ep; d = dp; p = pp; ss = pss;}
 };
 
 class TaskSet;

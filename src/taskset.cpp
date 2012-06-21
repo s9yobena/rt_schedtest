@@ -21,6 +21,7 @@ void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
        it != schedTestParam->taskParams.end(); it++) {
     updateTaskExecCost(it->e, it->id);
     updateTaskInterArrivalTime(it->p, it->id);
+    updateTaskSelfSuspension(it->ss, it->id);
   }
 
 }
@@ -121,7 +122,7 @@ void TaskSet::printParameters() {
   
   printf("printing task set parameters \n");
   for (int i=0;i<this->nb_rts;i++){
-    printf("rt_task %d: e = %d, p = %d  self-suspension %d\n",this->rt_task_id[i], 
+    printf("rt_task %d: e = %d, p = %d  sum self-suspension %d\n",this->rt_task_id[i], 
   	   (int)this->rt_task_param[i].exec_cost, 
   	   (int)this->rt_task_param[i].period,
 	   (int)this->rt_task_SelfSuspension[i]);
