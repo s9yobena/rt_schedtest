@@ -57,6 +57,16 @@ struct st_completion_data {	/* A job completed. */
 	u8	__unused[7];
 };
 
+struct st_block_data {		/* A task blocks. */
+	u64	when;
+	u64	__unused;
+};
+
+struct st_resume_data {		/* A task resumes. */
+	u64	when;
+	u64	__unused;
+};
+
 typedef enum {
         ST_NAME = 1,		/* Start at one, so that we can spot
 				 * uninitialized records. */
@@ -82,6 +92,8 @@ struct st_event_record {
     struct st_switch_to_data switch_to;
     struct st_switch_away_data switch_away;
     struct st_completion_data completion;
+    struct st_block_data block;
+    struct st_resume_data resume;
   } data;
 };
 

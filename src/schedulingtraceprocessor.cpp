@@ -35,10 +35,14 @@ void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* st
 
 bool SchedulingTraceProcessor::isRegisteredSchedulingTrace(struct st_event_record* ster) {
 
-  if (registeredTraceRecords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-      !=registeredTraceRecords.end()
-      &&registeredInterArrivalTimeTraceRocords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-      !=registeredInterArrivalTimeTraceRocords.end())
+  if ((registeredTraceRecords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
+       !=registeredTraceRecords.end()
+       &&registeredInterArrivalTimeTraceRocords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
+       !=registeredInterArrivalTimeTraceRocords.end())
+
+      ||registeredSelfSuspensions.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
+      !=registeredSelfSuspensions.end()
+      )
     return true;
   else
     return false;
@@ -81,6 +85,24 @@ void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_re
 
 }
 
+void SchedulingTraceProcessor::registerLitmusSelfSuspension(struct st_event_record* ster) {
+
+  LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
+  LitmusSelfSuspension *litmusSelfSuspension;
+  map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
+
+  litmusSchedulingTraceRecord = new LitmusSelfSuspension(ST_BLOCK);
+
+  it = registeredSelfSuspensions.begin();
+  registeredSelfSuspensions.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+				(pair<int,int>(ST_BLOCK,ster->hdr.pid),litmusSchedulingTraceRecord));
+
+  // register the completion scheduling trace; notice that LitmusSchedulingTraceRecord is the same
+  it = registeredSelfSuspensions.begin();
+  registeredSelfSuspensions.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+				(pair<int,int>(ST_RESUME,ster->hdr.pid),litmusSchedulingTraceRecord));
+}
+
 bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* ster) {
 
   if (ster->hdr.type ==	ST_RELEASE || ster->hdr.type == ST_COMPLETION) {
@@ -88,6 +110,9 @@ bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* s
     registerLitmusExecutionTime(ster);
     registerLitmusInterArrivalTime(ster);
     return true;
+  } else if (ster->hdr.type ==	ST_BLOCK || ster->hdr.type == ST_RESUME) {
+    
+    registerLitmusSelfSuspension(ster);
   } else {
     
     return false;
@@ -95,9 +120,15 @@ bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* s
 
 }
 void SchedulingTraceProcessor::processRegisteredSchedulingTrace(struct st_event_record* ster) {
+  if (ster->hdr.type ==	ST_RELEASE || ster->hdr.type == ST_COMPLETION) {
+ 
+    this->registeredTraceRecords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
+    this->registeredInterArrivalTimeTraceRocords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
   
-  this->registeredTraceRecords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
-  this->registeredInterArrivalTimeTraceRocords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
+  } else if (ster->hdr.type ==	ST_BLOCK || ster->hdr.type == ST_RESUME) {
+
+    this->registeredSelfSuspensions[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
+  }
 }
 
 void SchedulingTraceProcessor::setPrintSchedulingTraces(bool printSchedulingTraces) {
