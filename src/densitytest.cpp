@@ -28,13 +28,17 @@ int DensityTest::makeSchedTest() {
 
   inflation = (long double)(inflation*this->getNsPerCycle()) + overhead->getRELEASE_LATENCY();
 
-  for (i=0; i< this->taskSet->nb_rts; i++) {
+  for (i=0; i< this->taskSet->getNbrTasks(); i++) {
+    
+    pid_t taskId;
+    taskId = taskSet->getTaskId(i);
+
     cur_density = 0.0;
     cur_density =
-      (long double)( (long double) ( (long double)((this->taskSet->rt_task_param[i].exec_cost))
+      (long double)( (long double) ( (long double)((this->taskSet->getTaskExecCost(taskId)))
 				     +(long double)(inflation) 
 				     ) 
-		     /(long double)((this->taskSet->rt_task_param[i].period)));
+		     /(long double)((this->taskSet->getTaskPeriod(taskId))));
     
     if (cur_density > max_density) {
       max_density = cur_density;

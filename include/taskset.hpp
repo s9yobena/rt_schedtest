@@ -4,9 +4,10 @@
 #include <cstdio>
 #include "rttypes.h"
 #include "litmus.h"
-
+#include "task.hpp"
 #include "cmdlparser.h"
-
+#include <map>
+#include <vector>
 #include "schedtrace.h"
 #include "schedtestparam.hpp"
 
@@ -20,18 +21,23 @@ private:
   TaskSet& operator=(const TaskSet&);
   static TaskSet* taskSetInstance;
   bool printExecutionTimes;
-
+  
+  vector<pid_t> tasksId;
+  map<pid_t,Task> taskSet;
+  
   bool isNewTask(pid_t task_id);
   void addTask(pid_t task_id);
   void updateMaxExecCost(lt_t exec_time, pid_t task_id); // exec_time in NS
   void updateMinInterArrivalTime(lt_t exec_time, pid_t task_id);  
   void updateSumSelfSuspension(lt_t self_suspension_time, pid_t task_id);
-
-public :  
+  
   int  rt_task_id[MAX_RT_TASK_NR];
   struct rt_task rt_task_param[MAX_RT_TASK_NR]; // times in NS
   lt_t rt_task_SelfSuspension[MAX_RT_TASK_NR]; // times in NS
   int nb_rts;
+  
+
+public :  
   
   static TaskSet* getInstance();
   void updateAllTasks(SchedTestParam*);
@@ -40,6 +46,12 @@ public :
   void updateTaskSelfSuspension(lt_t self_suspension_time, pid_t task_id);
   void setParameters(const CmdlParser&);
   void printParameters();
+
+  int getNbrTasks();
+  pid_t getTaskId(int);
+  lt_t getTaskExecCost(pid_t);
+  lt_t getTaskPeriod(pid_t);
+  lt_t getTaskSelfSuspension(pid_t);
 
 };
 

@@ -50,68 +50,72 @@ void TaskSet::updateTaskSelfSuspension(lt_t self_suspension_time, pid_t task_id)
   updateSumSelfSuspension(self_suspension_time, task_id);
 }
 
-bool TaskSet::isNewTask(pid_t task_id) {
+bool TaskSet::isNewTask(pid_t taskId) {
   
   for (int i=0; i< nb_rts; i++){
-    if (task_id == rt_task_id[i]) {
+    if (taskId == tasksId[i]) {
       return false;
     }
   }
   return true;
 }
 
-void TaskSet::addTask(pid_t task_id) {
+void TaskSet::addTask(pid_t taskId) {
   
-  rt_task_id[nb_rts] = task_id;
-  get_rt_task_param(rt_task_id[nb_rts],&rt_task_param[nb_rts]); 
+  tasksId.push_back(taskId);
+  
+  Task tmpTask;
+  struct rt_task tmpTaskParam;
+  get_rt_task_param(taskId,&tmpTaskParam); 
 
   // set exec_cost to 0 to be able to check for the current maximum value
   // even if the user defined one is arbitrarly large
-  rt_task_param[nb_rts].exec_cost = 0;
-  rt_task_SelfSuspension[nb_rts] = 0;
+  tmpTaskParam.exec_cost = 0;
+  tmpTask.setParameters(tmpTaskParam);
 
+  tmpTask.setSelfSuspension(0);
+
+  taskSet.insert(pair<pid_t,Task>(taskId,tmpTask));
   nb_rts++;
 }
 
-void TaskSet::updateMaxExecCost(lt_t exec_time, pid_t task_id) {
+void TaskSet::updateMaxExecCost(lt_t exec_time, pid_t taskId) {
 
-  for (int i=0; i< nb_rts; i++){
-    if (task_id == rt_task_id[i] && exec_time > rt_task_param[i].exec_cost ) {
+  map<pid_t,Task>::iterator it;
+  it = taskSet.find(taskId);
+  if (exec_time > it->second.getExecCost()) {
+    it->second.setExecCost(exec_time);
+    if (printExecutionTimes)
+      printf("rt_task %d: Max. exec_time = %d \n",taskId, 
+	     (int)exec_time);
       
-      rt_task_param[i].exec_cost = exec_time;
-      if (printExecutionTimes) 
-	printf("rt_task %d: Max. exec_time = %d \n",this->rt_task_id[i], 
-	       (int)this->rt_task_param[i].exec_cost);
-    }
   }
 }
 
-void TaskSet::updateMinInterArrivalTime(lt_t inter_arrival_time, pid_t task_id) {
-  for (int i=0; i< nb_rts; i++){
-    // IMPORTANT: it is assumed that period cannot be arbitrarly small. i.e litmus will
-    // not execute the corresponding task.
-    if (task_id == rt_task_id[i] && inter_arrival_time < rt_task_param[i].period ) {
-      
-      rt_task_param[i].period = inter_arrival_time;
-      if (printExecutionTimes) 
-	printf("rt_task %d: Min. inter_arrival_time = %d \n",this->rt_task_id[i], 
-	       (int)this->rt_task_param[i].period);
-    }
+void TaskSet::updateMinInterArrivalTime(lt_t inter_arrival_time, pid_t taskId) {
+
+  map<pid_t,Task>::iterator it;
+  it = taskSet.find(taskId);
+  if (inter_arrival_time < it->second.getPeriod()) {
+    it->second.setPeriod(inter_arrival_time);
+    if (printExecutionTimes)
+     printf("rt_task %d: Min. inter_arrival_time = %d \n",
+	    taskId, 
+	    (int)inter_arrival_time);
   }
 }
 
-void TaskSet::updateSumSelfSuspension(lt_t self_suspension_time, pid_t task_id) {
+void TaskSet::updateSumSelfSuspension(lt_t self_suspension_time, pid_t taskId) {
 
-  for (int i=0; i< nb_rts; i++){
-    if (task_id == rt_task_id[i]) {
-      
-      rt_task_SelfSuspension[i] += self_suspension_time;
-      // if (printExecutionTimes)  
-	printf("rt_task %d: Sum. Self Suspension = %d \n",this->rt_task_id[i], 
-	       (int)this->rt_task_SelfSuspension[i]);
-    }
-  }
+  map<pid_t,Task>::iterator it;
+  it = taskSet.find(taskId);
+  it->second.addSelfSuspension(self_suspension_time);
+  if (printExecutionTimes)  
+    printf("rt_task %d: Sum. Self Suspension = %d \n",
+	   taskId, 
+	   (int)it->second.getSelfSuspension());
 }
+
 
 void TaskSet::setParameters(const CmdlParser& cmdlParser) {
   
@@ -121,11 +125,36 @@ void TaskSet::setParameters(const CmdlParser& cmdlParser) {
 void TaskSet::printParameters() {
   
   printf("printing task set parameters \n");
-  for (int i=0;i<this->nb_rts;i++){
-    printf("rt_task %d: e = %d, p = %d  sum self-suspension %d\n",this->rt_task_id[i], 
-  	   (int)this->rt_task_param[i].exec_cost, 
-  	   (int)this->rt_task_param[i].period,
-	   (int)this->rt_task_SelfSuspension[i]);
+  for (int i=0;i<getNbrTasks();i++){
+
+    pid_t taskId;
+    taskId = getTaskId(i);
+
+    printf("rt_task %d: e = %d, p = %d  sum self-suspension %d\n",
+	   taskId, 
+  	   (int)getTaskExecCost(taskId), 
+  	   (int)getTaskPeriod(taskId),
+	   (int)getTaskSelfSuspension(taskId));
     
   }
+}
+
+int TaskSet::getNbrTasks() {
+  return taskSet.size();
+}
+
+pid_t TaskSet::getTaskId(int i) {
+  return tasksId[i];
+}
+
+lt_t TaskSet::getTaskExecCost(pid_t taskId) {
+  return taskSet[taskId].getExecCost();
+}
+
+lt_t TaskSet::getTaskPeriod(pid_t taskId) {
+  return taskSet[taskId].getPeriod();
+}
+
+lt_t TaskSet::getTaskSelfSuspension(pid_t taskId) {
+  return taskSet[taskId].getSelfSuspension();
 }
