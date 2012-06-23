@@ -44,6 +44,9 @@ bool SchedulingTraceProcessor::isRegisteredSchedulingTrace(struct st_event_recor
       !=registeredSelfSuspensions.end()
       )
     return true;
+  else if (ster->hdr.type == ST_TERMINATION)
+    // we do not need to register termination traces, we just process them
+    return true;
   else
     return false;
 }
@@ -128,6 +131,13 @@ void SchedulingTraceProcessor::processRegisteredSchedulingTrace(struct st_event_
   } else if (ster->hdr.type ==	ST_BLOCK || ster->hdr.type == ST_RESUME) {
 
     this->registeredSelfSuspensions[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
+
+  } else if (ster->hdr.type ==	ST_TERMINATION) {
+    
+    LitmusTaskTermination *litmusTaskTermination;
+    litmusTaskTermination = new LitmusTaskTermination(ST_RELEASE);
+    litmusTaskTermination->check(ster);
+    delete litmusTaskTermination;
   }
 }
 

@@ -67,6 +67,11 @@ struct st_resume_data {		/* A task resumes. */
 	u64	__unused;
 };
 
+struct st_termination_data {		/* A task terminates execution. */
+	u64	when;
+	u64	__unused;
+};
+
 typedef enum {
         ST_NAME = 1,		/* Start at one, so that we can spot
 				 * uninitialized records. */
@@ -79,7 +84,8 @@ typedef enum {
 	ST_BLOCK,
 	ST_RESUME,
 	ST_ACTION,
-	ST_SYS_RELEASE
+	ST_SYS_RELEASE,
+	ST_TERMINATION      
 } st_event_record_type_t;
 
 struct st_event_record {
@@ -94,6 +100,7 @@ struct st_event_record {
     struct st_completion_data completion;
     struct st_block_data block;
     struct st_resume_data resume;
+    struct st_termination_data termination;
   } data;
 };
 

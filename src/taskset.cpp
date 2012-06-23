@@ -4,7 +4,6 @@ TaskSet* TaskSet::taskSetInstance = 0;
 
 
 TaskSet::TaskSet() {
-  nb_rts = 0;
 }
 
 TaskSet* TaskSet::getInstance() {
@@ -52,7 +51,7 @@ void TaskSet::updateTaskSelfSuspension(lt_t self_suspension_time, pid_t task_id)
 
 bool TaskSet::isNewTask(pid_t taskId) {
   
-  for (int i=0; i< nb_rts; i++){
+  for (int i=0; i< getNbrTasks(); i++){
     if (taskId == tasksId[i]) {
       return false;
     }
@@ -76,7 +75,6 @@ void TaskSet::addTask(pid_t taskId) {
   tmpTask.setSelfSuspension(0);
 
   taskSet.insert(pair<pid_t,Task>(taskId,tmpTask));
-  nb_rts++;
 }
 
 void TaskSet::updateMaxExecCost(lt_t exec_time, pid_t taskId) {
@@ -157,4 +155,14 @@ lt_t TaskSet::getTaskPeriod(pid_t taskId) {
 
 lt_t TaskSet::getTaskSelfSuspension(pid_t taskId) {
   return taskSet[taskId].getSelfSuspension();
+}
+
+void TaskSet::removeTask(pid_t taskId) {
+  for (int i=0; i< tasksId.size(); i++) {
+    if (tasksId[i] == taskId) {
+      tasksId.erase(tasksId.begin()+i);
+      break;
+    }
+  }
+  taskSet.erase(taskId);  
 }

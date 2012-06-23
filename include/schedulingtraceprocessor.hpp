@@ -6,6 +6,7 @@
 #include "litmusexecutiontime.hpp"
 #include "litmusinterarrivaltime.hpp"
 #include "litmusselfsuspension.hpp"
+#include "litmustasktermination.hpp"
 #include <inttypes.h>
 #include <iostream>
 #include <map>

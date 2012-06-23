@@ -31,12 +31,6 @@ private:
   void updateMinInterArrivalTime(lt_t exec_time, pid_t task_id);  
   void updateSumSelfSuspension(lt_t self_suspension_time, pid_t task_id);
   
-  int  rt_task_id[MAX_RT_TASK_NR];
-  struct rt_task rt_task_param[MAX_RT_TASK_NR]; // times in NS
-  lt_t rt_task_SelfSuspension[MAX_RT_TASK_NR]; // times in NS
-  int nb_rts;
-  
-
 public :  
   
   static TaskSet* getInstance();
@@ -52,6 +46,8 @@ public :
   lt_t getTaskExecCost(pid_t);
   lt_t getTaskPeriod(pid_t);
   lt_t getTaskSelfSuspension(pid_t);
+
+  void removeTask(pid_t);
 
 };
 

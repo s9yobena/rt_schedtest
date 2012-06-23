@@ -10,10 +10,12 @@ void LitmusSchedulingTrace::setDefaultConfig() {
   printSchedulingTraces = false;
   printExecutionTimes = false;
 
-  enableEvent("503");
+  enableEvent("503");           // 503 enables event event 3 (ST_RELEASE)
   enableEvent("506");		// 506 enables event event 7 (ST_COMPLETION ?!!
   enableEvent("507");		// 507 enables event event 8 (ST_BLOCK ?!!
   enableEvent("508");		// 508 enables event event 9 (ST_RESUME ?!!
+  enableEvent("510");		// 508 enables event event 11 (ST_TERMINATION ?!!
+  enableEvent("511");		// 508 enables event event 11 (ST_TERMINATION ?!!
 
 
   schedulingTraceProcessor.setPrintSchedulingTraces(printSchedulingTraces);
