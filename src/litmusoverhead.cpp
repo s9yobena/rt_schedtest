@@ -62,8 +62,6 @@ void LitmusOverhead::trace() {
   int rd;
   size_t size, count;
   struct timestamp *ts, *end;
-  overhead_t currentOverhead;
-  unsigned long currentOverheadId;
 
   if ((rd = read(devFD, devBuffer, DEV_BUF_SIZE)) > 0) {
 
