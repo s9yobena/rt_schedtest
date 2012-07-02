@@ -54,6 +54,10 @@ void SchedTestParam::setSEND_RESCHED(overhead_t send_resched) {
   this->send_resched = send_resched;
 }
 
+void SchedTestParam::setTICK(overhead_t tick) {
+  this->tick = tick;
+}
+
 void SchedTestParam::setRELEASE_LATENCY(overhead_t release_latency) {
   this->release_latency = release_latency;
 }
@@ -81,6 +85,10 @@ overhead_t SchedTestParam::getSEND_RESCHED() {
 
 overhead_t SchedTestParam::getRELEASE_LATENCY() {
   return release_latency;
+}
+
+overhead_t SchedTestParam::getTICK() {
+  return tick;
 }
 
 vector<TaskParam> SchedTestParam::getTaskParams() {
@@ -217,6 +225,7 @@ void SchedTestParam::makeSchedTestParam() {
   setParam(release, releasePos);
   setParam(send_resched, send_reschedPos);
   setParam(release_latency, release_latencyPos);
+  setParam(tick, tickPos);
   addAllTasks();  
   // END
   fclose(schedTestPramFile); 
@@ -238,6 +247,7 @@ void SchedTestParam::getSchedTestParam() {
   release = getParam(releasePos);
   send_resched = getParam(send_reschedPos);
   release_latency = getParam(release_latencyPos);
+  tick = getParam(tickPos);
   getAllTasks();
   // END  
   fclose(schedTestPramFile); 

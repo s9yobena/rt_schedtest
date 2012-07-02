@@ -68,8 +68,12 @@ void TimestampProcessor::registerPairLitmusTimestamp(struct timestamp* ts) {
   // only look if this is a start event, by convention, 
   // the id of the start event is always even
   if ((ts->event % 2 == 0)
+      
       &&((ts->event != TS_SEND_RESCHED_START)
-	 &&(ts->event != TS_SEND_RESCHED_END))) {
+	 &&(ts->event != TS_SEND_RESCHED_END))
+
+      &&((ts->event != TS_TICK_START)
+	 &&(ts->event != TS_TICK_END))) {
 
     litmusTimestamp = new PairLitmusTimestamp(ts->event);
     proceedRegister = true;
@@ -77,8 +81,11 @@ void TimestampProcessor::registerPairLitmusTimestamp(struct timestamp* ts) {
 
     litmusTimestamp = new SendReschedLitmusTimestamp(ts->event);
     proceedRegister = true;
-  }
-    
+  } else if ( ts->event == TS_TICK_START) {
+    litmusTimestamp = new TickLitmusTimestamp(ts->event);
+    proceedRegister = true;
+  } 
+
   if (proceedRegister) {
 
 
@@ -148,6 +155,10 @@ void TimestampProcessor::notifyNewOverhead(overhead_t overhead, cmd_t id) {
   case TS_LOCK_SUSPEND:
     litmusOverhead->updateSumSelfSuspension(overhead);
     break;
+  case TS_TICK_START:
+    litmusOverhead->checkMaxTICK(overhead);
+    break;
+    
     
   default:
     cout<<"WARNING: case not handeled"<<endl;

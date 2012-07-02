@@ -23,6 +23,7 @@ enum ParamPos {
   releasePos,
   send_reschedPos,
   release_latencyPos,
+  tickPos,
   startTaskPos
 };
 
@@ -56,6 +57,7 @@ private:
   overhead_t release;
   overhead_t send_resched;
   overhead_t release_latency;
+  overhead_t tick;
 
 
   
@@ -88,6 +90,7 @@ public:
   void setRELEASE(overhead_t);
   void setSEND_RESCHED(overhead_t);
   void setRELEASE_LATENCY(overhead_t);
+  void setTICK(overhead_t);
   void addTask(TaskParam taskParam);
   void makeSchedTestParam();
 
@@ -97,6 +100,7 @@ public:
   overhead_t getRELEASE();
   overhead_t getSEND_RESCHED();
   overhead_t getRELEASE_LATENCY();
+  overhead_t getTICK();
   vector<TaskParam> getTaskParams();
   void getSchedTestParam();
 

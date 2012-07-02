@@ -36,6 +36,7 @@ private:
   overhead_t maxRELEASE_LATENCY;
   overhead_t maxSEND_RESCHED;
   overhead_t sumSelfSuspension;
+  overhead_t maxTICK;
 
   int eventStrToEventId(const char* eventStr, EventId *eventId);
   void setDefaultConfig();
@@ -52,6 +53,7 @@ public:
   void checkMaxSEND_RESCHED(overhead_t);
   void checkMaxRELEASE_LATENCY(overhead_t);
   void updateSumSelfSuspension(overhead_t);
+  void checkMaxTICK(overhead_t);
 
 };
 

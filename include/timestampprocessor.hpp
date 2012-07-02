@@ -6,6 +6,7 @@
 #include "singlelitmustimestamp.hpp"
 #include "pairlitmustimestamp.hpp"
 #include "sendreschedlitmustimestamp.hpp"
+#include "ticklitmustimestamp.hpp"
 #include "litmusoverhead.hpp"
 #include <iostream>
 #include <map>

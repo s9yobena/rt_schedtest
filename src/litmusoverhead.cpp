@@ -25,6 +25,7 @@ void LitmusOverhead::setDefaultConfig() {
   maxRELEASE = 0;
   maxRELEASE_LATENCY = 0;
   maxSEND_RESCHED = 0;
+  maxTICK = 0;
   sumSelfSuspension = 0;
   
   timestampProcessor = TimestampProcessor::getInstance();
@@ -53,6 +54,9 @@ void LitmusOverhead::setDefaultConfig() {
 
   enableEvent("LOCK_SUSPEND");
   enableEvent("LOCK_RESUME");
+
+  enableEvent("TICK_START");
+  enableEvent("TICK_END");
   
   enableEvent("RELEASE_LATENCY");
 }
@@ -151,3 +155,13 @@ void LitmusOverhead::checkMaxRELEASE_LATENCY(overhead_t release_latencyOverhead)
 void LitmusOverhead::updateSumSelfSuspension(overhead_t selfSuspension) {
   sumSelfSuspension += selfSuspension;
 }
+
+void LitmusOverhead::checkMaxTICK(overhead_t tickOverhead) {
+  if (this->maxTICK < tickOverhead){
+    this->maxTICK = tickOverhead;
+    schedTestParam->setTICK(this->maxTICK);
+    schedTestParam->makeSchedTestParam();
+    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+  }
+}
+
