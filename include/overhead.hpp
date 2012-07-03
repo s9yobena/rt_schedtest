@@ -27,6 +27,7 @@ private:
   overhead_t RELEASE;
   overhead_t RELEASE_LATENCY;
   overhead_t SEND_RESCHED;
+  overhead_t TICK;
   overhead_t CPMD;
 
 
@@ -41,6 +42,7 @@ public :
   void updateRELEASE(overhead_t);
   void updateRELEASE_LATENCY(overhead_t);
   void updateSEND_RESCHED(overhead_t);
+  void updateTICK(overhead_t);
   void updateCPMD(overhead_t);
   overhead_t getCXS();
   overhead_t getSCHED();
@@ -48,6 +50,7 @@ public :
   overhead_t getRELEASE();  
   overhead_t getRELEASE_LATENCY();
   overhead_t getSEND_RESCHED();
+  overhead_t getTICK();
   overhead_t getCPMD();
 
   void setParameters(const CmdlParser&);

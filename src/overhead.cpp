@@ -47,6 +47,10 @@ overhead_t Overhead::getSEND_RESCHED() {
   return this->SEND_RESCHED;
 }
 
+overhead_t Overhead::getTICK() {
+  return this->TICK;
+}
+
 overhead_t Overhead::getCPMD() {
   return this->CPMD;
 }
@@ -57,7 +61,9 @@ void Overhead::updateAllOverheads(SchedTestParam *schedTestParam) {
   SCHED2 = schedTestParam->getSCHED2();
   RELEASE = schedTestParam->getRELEASE();
   SEND_RESCHED = schedTestParam->getSEND_RESCHED();
+  TICK = schedTestParam->getTICK();
   RELEASE_LATENCY = schedTestParam->getRELEASE_LATENCY();
+  
 }
 
 void Overhead::updateCXS(overhead_t  cxs){
@@ -82,6 +88,10 @@ void Overhead::updateRELEASE_LATENCY(overhead_t  release_latency){
 
 void Overhead::updateSEND_RESCHED(overhead_t  send_resched){
   this->SEND_RESCHED = send_resched;
+}
+
+void Overhead::updateTICK(overhead_t  tick){
+  this->TICK = tick;
 }
 
 void Overhead::updateCPMD(overhead_t  cpmd){
