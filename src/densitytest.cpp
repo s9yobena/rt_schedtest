@@ -8,25 +8,43 @@ DensityTest::DensityTest()
 DensityTest::~DensityTest() {
 }
 
-int DensityTest::makeSchedTest() {
-    
-  int i;
-  long double sum_density;
-  long double max_density;
-  long double cur_density;
-  long double inflation;
+void DensityTest::drawTaskSetSafeApprox() {
 
-  sum_density = 0.0;
-  max_density = 0.0;
-  cur_density = 0.0;
+  long double inflation;
   inflation = 0.0;
-  
+
   inflation = (long double)(overhead->getCXS()+ overhead->getSCHED()
 			    + overhead->getRELEASE() + overhead->getSEND_RESCHED()
 			    + (overhead->getRELEASE_LATENCY())
 			    + overhead->getCPMD()) ;
 
   inflation = (long double)(inflation*this->getNsPerCycle()) + overhead->getRELEASE_LATENCY();
+
+  for (int i=0; i< this->taskSet->getNbrTasks(); i++) {
+    
+    pid_t taskId;
+    lt_t execCost;
+    taskId = taskSet->getTaskId(i);
+    execCost = this->taskSet->getTaskExecCost(taskId);
+    // Since inflation has type double, and execCost has type unsigned,
+    // we may lose up to 0.9 nanoseconds; therefore we add 1
+    execCost += inflation + 1;
+    this->taskSet->setTaskExecCost(taskId, execCost);
+  }
+}
+
+int DensityTest::makeSchedTest() {
+    
+  int i;
+  long double sum_density;
+  long double max_density;
+  long double cur_density;
+
+  sum_density = 0.0;
+  max_density = 0.0;
+  cur_density = 0.0;
+
+  drawTaskSetSafeApprox();
 
   for (i=0; i< this->taskSet->getNbrTasks(); i++) {
     
@@ -37,7 +55,6 @@ int DensityTest::makeSchedTest() {
     cur_density =
       (long double)( (long double) ( (long double)((this->taskSet->getTaskExecCost(taskId)))
 				     +(long double)((this->taskSet->getTaskSelfSuspension(taskId)))
-				     +(long double)(inflation) 
 				     ) 
 		     /(long double)((this->taskSet->getTaskPeriod(taskId))));
     
@@ -58,7 +75,7 @@ int DensityTest::makeSchedTest() {
   std::cout<<"sum_density(NS): "<<sum_density<<"\t"
 	   <<"nbr_cpu: "<<nbr_cpu<<"\t"
 	   <<"max_density(NS): "<<max_density<<"\t"
-	   <<"sum_overhead(NS): "<<(long double)inflation<<"\t"
+           <<"sum_overhead(NS): "<< overhead->getSumOverheads() <<"\t"
 	   <<std::endl;
 
  cout<<endl;

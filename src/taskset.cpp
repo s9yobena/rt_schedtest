@@ -157,6 +157,10 @@ lt_t TaskSet::getTaskSelfSuspension(pid_t taskId) {
   return taskSet[taskId].getSelfSuspension();
 }
 
+void TaskSet::setTaskExecCost(pid_t taskId, lt_t execCost) {
+  taskSet[taskId].setExecCost(execCost);
+}
+
 void TaskSet::removeTask(pid_t taskId) {
   for (int i=0; i< tasksId.size(); i++) {
     if (tasksId[i] == taskId) {

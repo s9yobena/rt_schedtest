@@ -98,6 +98,17 @@ void Overhead::updateCPMD(overhead_t  cpmd){
   this->CPMD = cpmd;
 }
 
+overhead_t Overhead::getSumOverheads() {
+  return CXS +   
+    SCHED + 
+    SCHED2 +
+    RELEASE +   
+    RELEASE_LATENCY +
+    SEND_RESCHED +   
+    TICK +
+    CPMD;
+}
+
 void Overhead::setParameters(const CmdlParser& cmdlParser) {
   this->CPMD = cmdlParser.cpmd;
 }

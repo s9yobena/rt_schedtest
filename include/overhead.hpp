@@ -53,6 +53,8 @@ public :
   overhead_t getTICK();
   overhead_t getCPMD();
 
+  overhead_t getSumOverheads();
+
   void setParameters(const CmdlParser&);
 
 };

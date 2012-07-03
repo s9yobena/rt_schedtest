@@ -8,6 +8,7 @@ class DensityTest : public SchedTest{
 public :
   DensityTest();
   ~DensityTest();
+  void drawTaskSetSafeApprox();
   int makeSchedTest();
 
 };
