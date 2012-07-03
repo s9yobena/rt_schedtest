@@ -13,6 +13,8 @@
 #define __Hz_PER_MHz 1000000.0
 #define __MS_PER_S 1000.0
 
+#define TIMER_FREQ_HZ 1000
+
 #ifndef LITMUS_H
 #define __NS_PER_MS 1000000
 #endif
@@ -33,6 +35,8 @@ protected:
   long double msPerCycle;
   long double getMsPerCycle();
   long double getNsPerCycle();
+
+  long double getNsTimerPeriod();
   
 public:
   SchedTest();

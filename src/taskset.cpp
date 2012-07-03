@@ -161,6 +161,10 @@ void TaskSet::setTaskExecCost(pid_t taskId, lt_t execCost) {
   taskSet[taskId].setExecCost(execCost);
 }
 
+void TaskSet::setTaskPeriod(pid_t taskId, lt_t period) {
+  taskSet[taskId].setPeriod(period);
+}
+
 void TaskSet::removeTask(pid_t taskId) {
   for (int i=0; i< tasksId.size(); i++) {
     if (tasksId[i] == taskId) {

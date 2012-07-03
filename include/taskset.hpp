@@ -48,6 +48,8 @@ public :
   lt_t getTaskSelfSuspension(pid_t);
 
   void setTaskExecCost(pid_t, lt_t);
+  void setTaskPeriod(pid_t, lt_t);
+
 
   void removeTask(pid_t);
 

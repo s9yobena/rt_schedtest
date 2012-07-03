@@ -28,4 +28,8 @@ long double SchedTest::getNsPerCycle() {
   return getMsPerCycle() * __NS_PER_MS ;
 }
 
+long double SchedTest::getNsTimerPeriod() {
+  
+  return (1.0/TIMER_FREQ_HZ)*(__NS_PER_MS * __MS_PER_S);
+}
    
