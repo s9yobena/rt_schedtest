@@ -168,7 +168,7 @@ int DensityTest::makeSchedTest() {
 
   cout<<endl;
 
-  std::cout<<"CPU CLOCK MHz: "<<__CPU_CLOCK_MHz<<"\t"
+  std::cout<<"CPU CLOCK MHz: "<<getMHzCpuClock()<<"\t"
 	   <<"NS PER CYCLE: "<<getNsPerCycle()<<"\t"
 	   <<std::endl;
 

@@ -9,7 +9,6 @@
 #include "overhead.hpp"
 #include "rttypes.h"		// for enum SchedTestName
 
-#define __CPU_CLOCK_MHz 10000.0
 #define __Hz_PER_MHz 1000000.0
 #define __MS_PER_S 1000.0
 
@@ -37,6 +36,7 @@ protected:
   long double getNsPerCycle();
 
   long double getNsTimerPeriod();
+  unsigned getMHzCpuClock();
   
 public:
   SchedTest();
