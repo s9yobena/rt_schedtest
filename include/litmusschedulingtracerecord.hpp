@@ -4,6 +4,8 @@
 #include "taskset.hpp" 
 #include "schedtrace.h"
 #include "rttypes.h"
+#include "schedtestparam.hpp"
+#include "litmusschedtest.hpp"
 
 class LitmusSchedulingTraceRecord {
 
@@ -11,6 +13,10 @@ protected:
 
   TaskSet *taskSet;
   ster_t schedulingTraceEventRecordID;    
+
+  SchedTestParam *schedTestParam;
+  LitmusSchedTest *litmusSchedTest;
+
 
 public:
 

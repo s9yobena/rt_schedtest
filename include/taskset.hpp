@@ -25,6 +25,8 @@ private:
   vector<pid_t> tasksId;
   map<pid_t,Task> taskSet;
   
+  lt_t averageExecCost;
+  
   bool isNewTask(pid_t task_id);
   void addTask(pid_t task_id);
   void updateMaxExecCost(lt_t exec_time, pid_t task_id); // exec_time in NS
@@ -50,8 +52,11 @@ public :
   void setTaskExecCost(pid_t, lt_t);
   void setTaskPeriod(pid_t, lt_t);
 
-
   void removeTask(pid_t);
+
+  lt_t computeAverageExecCost();
+  lt_t getAverageExecCost();
+  void setAverageExecCost(lt_t);
 
 };
 

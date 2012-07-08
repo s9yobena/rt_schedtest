@@ -4,6 +4,7 @@ TaskSet* TaskSet::taskSetInstance = 0;
 
 
 TaskSet::TaskSet() {
+  averageExecCost = 0;
 }
 
 TaskSet* TaskSet::getInstance() {
@@ -174,3 +175,21 @@ void TaskSet::removeTask(pid_t taskId) {
   }
   taskSet.erase(taskId);  
 }
+
+lt_t TaskSet::computeAverageExecCost() {
+  map<pid_t,Task>::iterator it;
+  lt_t sumExecCost = 0;
+  for (it = taskSet.begin(); it != taskSet.end(); it++) {
+    sumExecCost += it->second.getExecCost();
+  }  
+  return sumExecCost/getNbrTasks();
+}
+
+lt_t TaskSet::getAverageExecCost() {
+  return averageExecCost;
+}
+
+void TaskSet::setAverageExecCost(lt_t _avrgExecCost) {
+  averageExecCost = _avrgExecCost;
+}
+
