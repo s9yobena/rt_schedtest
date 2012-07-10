@@ -2,7 +2,6 @@
 
 CmdlParser::CmdlParser(int argc, char **argv) {
 
-  this->nb_rts = 0;
   this->cpmd = 5000;
   this->printTimestamps = false;
   this->printOverheads = false;
@@ -102,12 +101,6 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   if (printExecutionTimes_flag) {
     this->printExecutionTimes = true;
     printf("Printing execution times \n");
-  }
-     
-  for(int i = optind; i<argc; i++){
-
-    this->rt_task_id[nb_rts] = atoi(argv[i]);
-    this->nb_rts ++;
   }
 }
 
