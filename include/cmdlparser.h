@@ -8,8 +8,6 @@
 #include <string.h>
 #include "rttypes.h"
 
-
-#define MAX_RT_TASK_NR 100
 #define MAX_STF_NAME 100
 
 #define USAGE							\
