@@ -43,8 +43,6 @@ public:
   ~SchedTest();
   void setTaskSet(TaskSet*);
   void setOverhead(Overhead*);  
-  virtual int makeSchedTest()=0;
-
 };
 
 

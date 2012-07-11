@@ -1,16 +1,15 @@
 #ifndef DENSITYTEST_H
 #define DENSITYTEST_H
 
-#include "schedtest.hpp"
+#include "globaltest.hpp"
 
-class DensityTest : public SchedTest{
+class DensityTest : public GlobalTest{
 
 public :
   DensityTest();
   ~DensityTest();
-  void drawTaskSetSafeApprox();
-  int makeSchedTest();
 
+  int makeSchedTest();
 };
 
 
