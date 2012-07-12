@@ -1,4 +1,19 @@
 #include "litmusschedtest.hpp"
+#include <cstdio>
+#include <cstring>
+
+struct plugin_name {
+  const char *name;
+  const char *schedtestname;
+};
+
+static struct plugin_name plugin_table [] = {
+  
+  {"GSN-EDF","density-test"},
+  {"PSN-EDF","p-edf-test"}
+
+};
+
 
 LitmusSchedTest::LitmusSchedTest() {
 }
@@ -15,7 +30,7 @@ LitmusSchedTest* LitmusSchedTest::getInstance() {
 
 
 void LitmusSchedTest::callSchedTest(char *schedTestParamFile) {
-  
+
   pid_t pid;
   pid = fork();
   if (pid == -1) {
@@ -25,27 +40,35 @@ void LitmusSchedTest::callSchedTest(char *schedTestParamFile) {
 
   // sched test
   if (pid == 0) {
-    initSchedTest(schedTestParamFile);
+    initSchedTest(schedTestParamFile);    
+    execl( "./rt_schedtest","rt_schedtest", 
+	   schedTestNameOption,
+	   "--stf", schedTestParamFile,
+	   (char *) NULL );
+    perror( "execl()" );
+    exit(EXIT_FAILURE);
   } 
 }
 
+
+
 void LitmusSchedTest::initSchedTest(char *schedTestParamFile) {
   
-  char schedTestNameOption[25];
+  FILE *active_plugin_f;
+
+  char active_plugin[25];
+  
+  active_plugin_f = fopen("/proc/litmus/active_plugin","r");
+  fgets(active_plugin,sizeof active_plugin,active_plugin_f);
+  
+  for (int i=0; i<(sizeof(plugin_table)/sizeof(plugin_table[0])); i++) {
+    if (!strncmp(active_plugin, plugin_table[i].name, strlen(plugin_table[i].name))){
+	strcpy(schedTestName, plugin_table[i].schedtestname);
+      }
+  }
+  printf("callign rt_schedtest with the following schedulability test: %s \n ",schedTestName);
+
   strcpy(schedTestNameOption, "--");
   strcat(schedTestNameOption, schedTestName);
-  execl( "./rt_schedtest","rt_schedtest", 
-	 schedTestNameOption,
-	 "--stf", schedTestParamFile,
-	 (char *) NULL );
-  perror( "execl()" );
-  exit(EXIT_FAILURE);
 }
 
-void LitmusSchedTest::setDensityTest() {
-  strcpy(schedTestName, "density-test");
-}
-
-void LitmusSchedTest::setPartitionnedTest() {
-  strcpy(schedTestName, "p-edf-test");
-}

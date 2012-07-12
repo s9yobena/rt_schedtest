@@ -20,13 +20,11 @@ private:
   
   void initSchedTest(char*);
   char schedTestName[20];
+  char schedTestNameOption[25];
 
 public:
   static LitmusSchedTest* getInstance();
   void callSchedTest(char*);
-  void setDensityTest();
-  void setPartitionnedTest();
-
 };
 
 #endif

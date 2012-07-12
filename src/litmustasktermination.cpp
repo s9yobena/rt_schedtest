@@ -5,7 +5,7 @@ LitmusTaskTermination::LitmusTaskTermination(ster_t sterType)
 
   schedTestParam = SchedTestParam::getInstance();
   litmusSchedTest = LitmusSchedTest::getInstance();
-  litmusSchedTest->setDensityTest();
+  // litmusSchedTest->setDensityTest();
 }
 
 void LitmusTaskTermination::check(struct st_event_record* ster) {

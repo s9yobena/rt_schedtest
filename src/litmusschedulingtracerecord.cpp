@@ -13,7 +13,4 @@ LitmusSchedulingTraceRecord::LitmusSchedulingTraceRecord(ster_t schedulingTraceE
 
   schedTestParam = SchedTestParam::getInstance();
   litmusSchedTest = LitmusSchedTest::getInstance();
-  // litmusSchedTest->setDensityTest();
-  litmusSchedTest->setPartitionnedTest();
-
 }
