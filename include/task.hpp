@@ -13,7 +13,7 @@ private:
 public:
   Task();
   ~Task();
-
+  unsigned getCpu();
   lt_t getExecCost();
   lt_t getPeriod(); 
   lt_t getSelfSuspension();

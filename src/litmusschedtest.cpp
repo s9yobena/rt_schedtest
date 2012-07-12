@@ -45,3 +45,7 @@ void LitmusSchedTest::initSchedTest(char *schedTestParamFile) {
 void LitmusSchedTest::setDensityTest() {
   strcpy(schedTestName, "density-test");
 }
+
+void LitmusSchedTest::setPartitionnedTest() {
+  strcpy(schedTestName, "p-edf-test");
+}

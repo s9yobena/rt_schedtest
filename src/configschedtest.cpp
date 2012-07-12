@@ -37,6 +37,10 @@ void ConfigSchedTest::configSchedTest() {
     perror( "execl()" );
     exit(EXIT_FAILURE);
 
+  case P_EDF_TEST:
+    execl( "./rt_partitionned-test","rt_partitionned-test","--stf", schedTestParamFile,(char *) NULL );
+    perror( "execl()" );
+    exit(EXIT_FAILURE);
   }
   
   // execl( "./rt_density-test","rt_density-test","--stf", schedTestParamFile,(char *) NULL );

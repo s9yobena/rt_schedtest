@@ -29,12 +29,13 @@ enum ParamPos {
 
 struct TaskParam {
   pid_t id;
+  unsigned cpu;
   lt_t e;
   lt_t d;
   lt_t p;
   lt_t ss;			// sum self suspension
-  TaskParam(pid_t idp, lt_t ep, lt_t dp, lt_t pp, lt_t pss)
-  {id = idp;e = ep; d = dp; p = pp; ss = pss;}
+  TaskParam(pid_t idp, unsigned _cpu, lt_t ep, lt_t dp, lt_t pp, lt_t pss)
+  {id = idp; cpu = _cpu; e = ep; d = dp; p = pp; ss = pss;}
 };
 
 class TaskSet;

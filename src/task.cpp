@@ -6,6 +6,10 @@ Task::Task() {
 Task::~Task() {
 }
 
+unsigned Task::getCpu() {
+  return parameters.cpu;
+}
+
 lt_t Task::getExecCost() {
   return parameters.exec_cost;
 }

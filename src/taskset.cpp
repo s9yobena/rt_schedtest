@@ -146,6 +146,10 @@ pid_t TaskSet::getTaskId(int i) {
   return tasksId[i];
 }
 
+unsigned TaskSet::getTaskCpu(pid_t taskId) {
+  return taskSet[taskId].getCpu();
+}
+
 lt_t TaskSet::getTaskExecCost(pid_t taskId) {
   return taskSet[taskId].getExecCost();
 }
@@ -164,6 +168,10 @@ void TaskSet::setTaskExecCost(pid_t taskId, lt_t execCost) {
 
 void TaskSet::setTaskPeriod(pid_t taskId, lt_t period) {
   taskSet[taskId].setPeriod(period);
+}
+
+void TaskSet::setTaskSelfSuspension(pid_t taskId, lt_t selfSusp) {
+  taskSet[taskId].setSelfSuspension(selfSusp);
 }
 
 void TaskSet::removeTask(pid_t taskId) {

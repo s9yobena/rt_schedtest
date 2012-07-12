@@ -25,6 +25,8 @@ public:
   static LitmusSchedTest* getInstance();
   void callSchedTest(char*);
   void setDensityTest();
+  void setPartitionnedTest();
+
 };
 
 #endif

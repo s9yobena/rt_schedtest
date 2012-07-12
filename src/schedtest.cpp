@@ -48,4 +48,3 @@ unsigned SchedTest::getMHzCpuClock() {
   pclose(fp);
   return cpuspeed;
 }
-   
