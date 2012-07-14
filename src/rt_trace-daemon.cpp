@@ -5,10 +5,13 @@
 #include "litmusoverhead.hpp"
 #include "litmusschedulingtrace.hpp"
 #include "schedtestparam.hpp"
+#include "taskset.hpp"
 
 #include <cstdlib>
 #include <cstdio>
 #include <sstream>
+
+TaskSet *taskSet;
 
 
 static void setDevices() {
@@ -25,7 +28,7 @@ static void setDevices() {
 
   for (int i=0; i<nbrCPUs; i++) {
     litmusDeviceName.str("");
-    litmusDevice = new LitmusSchedulingTrace();
+    litmusDevice = new LitmusSchedulingTrace(taskSet);
     litmusDeviceName<<"/dev/litmus/sched_trace"<<i;
     litmusDevice->initDev(litmusDeviceName.str().c_str());
   }
@@ -38,10 +41,12 @@ void finishTesting(int sig)
 
 int main(int argc, char **argv) {
 
+  taskSet = new TaskSet();
   SchedTestParam *schedTestParam;
   schedTestParam = SchedTestParam::getInstance();
   schedTestParam->initSchedTestParam();
   schedTestParam->setOutputName("schedtestfile.stf");
+  schedTestParam->setTaskSet(taskSet);
 
   signal(SIGINT, finishTesting);
   signal(SIGUSR1, finishTesting);

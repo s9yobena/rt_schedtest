@@ -13,6 +13,7 @@
 using namespace std;
 
 class LitmusSchedulingTraceRecord;
+class TaskSet;
 
 class SchedulingTraceProcessor {
 
@@ -20,6 +21,8 @@ private:
 
   SchedulingTraceProcessor(const SchedulingTraceProcessor&);
   SchedulingTraceProcessor & operator=(const SchedulingTraceProcessor&);
+
+  TaskSet *taskSet;
 
   bool printSchedulingTraces;
   bool printExecutionTimes;
@@ -38,6 +41,8 @@ public:
   
   SchedulingTraceProcessor();
   void processSchedulingTrace(struct st_event_record*);
+  void setTaskSet(TaskSet *);
+
   void setPrintSchedulingTraces(bool);
   void setPrintExecutionTimes(bool);
   

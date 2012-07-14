@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
   CmdlParser cmdlParser(argc, argv);    
 
   overhead = Overhead::getInstance();
-  taskSet = TaskSet::getInstance();
+  taskSet = new TaskSet();
   schedTestParam = SchedTestParam::getInstance();
 
   densityTest.setTaskSet(taskSet);

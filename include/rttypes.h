@@ -7,6 +7,7 @@
 enum SchedTestName {
   DENSITY_TEST,
   P_EDF_TEST,
+  C_EDF_TEST,
   BAKERS_TEST
 };
 

@@ -3,6 +3,12 @@
 SchedulingTraceProcessor::SchedulingTraceProcessor(){
 }
 
+void SchedulingTraceProcessor::setTaskSet(TaskSet *_taskSet){
+  
+  taskSet = _taskSet;
+}
+
+
 void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* ster) {
 
   if (printSchedulingTraces) {
@@ -58,6 +64,7 @@ void SchedulingTraceProcessor::registerLitmusExecutionTime(struct st_event_recor
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusExecutionTime(ST_RELEASE);
+  litmusSchedulingTraceRecord->setTaskSet(taskSet);
 
   it = registeredTraceRecords.begin();
   registeredTraceRecords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
@@ -76,6 +83,7 @@ void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_re
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusInterArrivalTime(ST_RELEASE);
+  litmusSchedulingTraceRecord->setTaskSet(taskSet);
 
   it = registeredInterArrivalTimeTraceRocords.begin();
   registeredInterArrivalTimeTraceRocords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
@@ -95,6 +103,7 @@ void SchedulingTraceProcessor::registerLitmusSelfSuspension(struct st_event_reco
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusSelfSuspension(ST_BLOCK);
+  litmusSchedulingTraceRecord->setTaskSet(taskSet);
 
   it = registeredSelfSuspensions.begin();
   registeredSelfSuspensions.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
@@ -136,6 +145,7 @@ void SchedulingTraceProcessor::processRegisteredSchedulingTrace(struct st_event_
     
     LitmusTaskTermination *litmusTaskTermination;
     litmusTaskTermination = new LitmusTaskTermination(ST_RELEASE);
+    litmusTaskTermination->setTaskSet(taskSet);
     litmusTaskTermination->check(ster);
     delete litmusTaskTermination;
   }

@@ -41,11 +41,13 @@ void ConfigSchedTest::configSchedTest() {
     execl( "./rt_partitionned-test","rt_partitionned-test","--stf", schedTestParamFile,(char *) NULL );
     perror( "execl()" );
     exit(EXIT_FAILURE);
+
+  case C_EDF_TEST:
+    execl( "./rt_clustered-test","rt_clustered-test","--stf", schedTestParamFile,(char *) NULL );
+    perror( "execl()" );
+    exit(EXIT_FAILURE);
+
   }
-  
-  // execl( "./rt_density-test","rt_density-test","--stf", schedTestParamFile,(char *) NULL );
-  // perror( "execl()" );
-  // exit(EXIT_FAILURE);
 }
 
 void ConfigSchedTest::setParameters(const CmdlParser& cmdlParser) {

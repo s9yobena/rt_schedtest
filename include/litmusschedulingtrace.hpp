@@ -7,12 +7,15 @@
 #include "schedulingtraceprocessor.hpp"
 
 class SchedulingTraceProcessor;
+class TaskSet;
+
 class LitmusSchedulingTrace : public LitmusDevice {
 
 private:
 
   SchedulingTraceProcessor schedulingTraceProcessor;
-
+  TaskSet *taskSet;
+  
   bool printSchedulingTraces;
   bool printExecutionTimes;
 
@@ -21,7 +24,7 @@ private:
   void trace();
 
 public:
-  LitmusSchedulingTrace();
+  LitmusSchedulingTrace(TaskSet*);
   void setParameters(const CmdlParser&);
 
 };

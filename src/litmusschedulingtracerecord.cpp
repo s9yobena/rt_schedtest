@@ -9,8 +9,11 @@ LitmusSchedulingTraceRecord::LitmusSchedulingTraceRecord(ster_t schedulingTraceE
 
   this->schedulingTraceEventRecordID = schedulingTraceEventRecordID;
   this->startID = schedulingTraceEventRecordID;
-  this->taskSet = TaskSet::getInstance();
 
   schedTestParam = SchedTestParam::getInstance();
   litmusSchedTest = LitmusSchedTest::getInstance();
+}
+
+void LitmusSchedulingTraceRecord::setTaskSet(TaskSet *_taskSet) {
+  taskSet = _taskSet;
 }

@@ -82,6 +82,7 @@ public:
 
   void setOutputName(const char*);
   char* getOutputName();
+  void setTaskSet(TaskSet*);
 
   vector<TaskParam> taskParams;
 

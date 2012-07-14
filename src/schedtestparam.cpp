@@ -2,7 +2,6 @@
 #include "taskset.hpp"
 
 SchedTestParam::SchedTestParam() {
-  taskSet = TaskSet::getInstance();
 }
 
 SchedTestParam* SchedTestParam::schedTestParamInstance = 0;
@@ -20,6 +19,10 @@ void SchedTestParam::setOutputName(const char* name) {
 
 char* SchedTestParam::getOutputName() {
   return name;
+}
+
+void SchedTestParam::setTaskSet(TaskSet *_taskSet) {
+  taskSet = _taskSet;
 }
 
 void SchedTestParam::initSchedTestParam() {

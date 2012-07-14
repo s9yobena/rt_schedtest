@@ -16,7 +16,7 @@
 class TaskSet {
 
 private:
-  TaskSet();
+
   TaskSet(const TaskSet&);
   TaskSet& operator=(const TaskSet&);
   static TaskSet* taskSetInstance;
@@ -34,8 +34,8 @@ private:
   void updateSumSelfSuspension(lt_t self_suspension_time, pid_t task_id);
   
 public :  
-  
-  static TaskSet* getInstance();
+  TaskSet();  
+  // static TaskSet* getInstance();
   void updateAllTasks(SchedTestParam*);
   void updateTaskExecCost(lt_t exec_time, pid_t task_id);
   void updateTaskInterArrivalTime(lt_t inter_arrival_time, pid_t task_id);

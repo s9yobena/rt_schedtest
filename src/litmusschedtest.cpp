@@ -10,7 +10,8 @@ struct plugin_name {
 static struct plugin_name plugin_table [] = {
   
   {"GSN-EDF","density-test"},
-  {"PSN-EDF","p-edf-test"}
+  {"PSN-EDF","p-edf-test"},
+  {"C-EDF","c-edf-test"}
 
 };
 

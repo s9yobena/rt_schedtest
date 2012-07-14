@@ -7,13 +7,13 @@ TaskSet::TaskSet() {
   averageExecCost = 0;
 }
 
-TaskSet* TaskSet::getInstance() {
+// TaskSet* TaskSet::getInstance() {
   
-  if (!taskSetInstance) {
-    taskSetInstance = new TaskSet();
-  }
-  return taskSetInstance;
-}
+//   if (!taskSetInstance) {
+//     taskSetInstance = new TaskSet();
+//   }
+//   return taskSetInstance;
+// }
 
 void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
   vector<TaskParam>::iterator it;

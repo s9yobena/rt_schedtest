@@ -1,8 +1,9 @@
 #include "litmusschedulingtrace.hpp"
 
-LitmusSchedulingTrace::LitmusSchedulingTrace()
+LitmusSchedulingTrace::LitmusSchedulingTrace(TaskSet *_taskSet)
   :LitmusDevice() {
 
+  taskSet = _taskSet;
 }
 
 void LitmusSchedulingTrace::setDefaultConfig() {
@@ -20,6 +21,7 @@ void LitmusSchedulingTrace::setDefaultConfig() {
 
   schedulingTraceProcessor.setPrintSchedulingTraces(printSchedulingTraces);
   schedulingTraceProcessor.setPrintExecutionTimes(printExecutionTimes);
+  schedulingTraceProcessor.setTaskSet(taskSet);
 }
 
 void LitmusSchedulingTrace::trace() {
