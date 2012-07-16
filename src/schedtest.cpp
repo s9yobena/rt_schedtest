@@ -15,6 +15,11 @@ void SchedTest::setOverhead(Overhead *overhead) {
   this->overhead = overhead;
 }
 
+void SchedTest::setNbrCpus(unsigned _nbrCpus) {
+
+  nbr_cpu = _nbrCpus;
+}
+
 long double SchedTest::getMsPerCycle() {
 
   long double sPerCycle;

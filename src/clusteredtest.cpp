@@ -1,4 +1,6 @@
 #include "clusteredtest.hpp"
+#include "densitytest.hpp"
+#include "partitionnedtest.hpp"
 #include <vector>
 
 using namespace std;
@@ -53,6 +55,8 @@ void ClusteredTest::drawClusters() {
     }
   }
 
+#ifdef PRINT_DEBUG_MSG
+
   // print clusters
   int i =0;
   vector<int>::iterator intit;
@@ -70,11 +74,12 @@ void ClusteredTest::drawClusters() {
     cout<<endl;
   }
 
+#endif
+
   // add tasks to their corresponding cluster
 
   for (int i=0; i< this->taskSet->getNbrTasks(); i++) {
     
-    cout<<"we have"<<this->taskSet->getNbrTasks()<<" tasks."<<endl;
     pid_t taskId;
     Task *task;
     taskId = taskSet->getTaskId(i);
@@ -135,8 +140,9 @@ void ClusteredTest::drawCacheTop() {
     }
   }
 
+#ifdef PRINT_DEBUG_MSG
+  
   vector<int>::iterator it;
-
   for (int i=0; i<nbr_cpu; i++) {
     printf("CPU %d is sharing cache level %d  with: ",i,cache_level);
     for (it = cache_top[i].begin();it != cache_top[i].end(); it++) {
@@ -144,11 +150,15 @@ void ClusteredTest::drawCacheTop() {
     }
     printf(".\n");
   }
+#endif
 
 }
 
 int ClusteredTest::makeSchedTest() {
-  
+
+  // we assume the task set is schedulable, unless otherwise correct
+  int schedTestResult = 1;
+
   if (getCacheLevel() != ALL) {
     drawCacheTop();
     drawClusters();
@@ -159,22 +169,78 @@ int ClusteredTest::makeSchedTest() {
     for (clusterIt = clustersVec.begin() ;
 	 clusterIt != clustersVec.end();
 	 clusterIt++) {
-    
-      cout<<"Cluster has: "<<endl;
 
+#ifdef PRINT_DEBUG_MSG    
+
+      cout<<"Cluster has: "<<endl;
       for (int i=0; i< (*clusterIt)->taskSet.getNbrTasks(); i++) {
-    
 	pid_t taskId;
 	Task *task;
 	taskId = (*clusterIt)->taskSet.getTaskId(i);
 	task = (*clusterIt)->taskSet.getTask(taskId);
-
 	cout<<"task id:"<<taskId<<";"<<"task cpu:"<<task->getCpu()<<";"<<endl;;
+      }
+
+#endif
+      
+      // Make a seperate schedulability test for each cluster
+      
+
+      if ((*clusterIt)->nbrCpus>1) {
+	// apply a global schedulability test on this cluster
+
+	DensityTest densityTest;  
+	densityTest.setTaskSet(&(*clusterIt)->taskSet);
+	densityTest.setOverhead(overhead);
+	densityTest.setNbrCpus((*clusterIt)->nbrCpus);
+
+	if (!densityTest.makeSchedTest())
+	  schedTestResult = 0;
+
+      } else {
+	// apply a partitionned (with one cpu) schedulablity test on this cluster
+
+	PartitionnedTest partitionnedTest;  
+	partitionnedTest.setTaskSet(&(*clusterIt)->taskSet);
+	partitionnedTest.setOverhead(overhead);
+	partitionnedTest.setNbrCpus((*clusterIt)->nbrCpus);
+
+	if (!partitionnedTest.makeSchedTest())
+	  schedTestResult = 0;
       }
     }
   } else {
     
-    cout<<"making global schedulability testing"<<endl;
+    if (nbr_cpu >1) {
+      cout<<"making global schedulability testing"<<endl;
+
+      DensityTest densityTest;  
+      densityTest.setTaskSet(taskSet);
+      densityTest.setOverhead(overhead);
+      densityTest.setNbrCpus(nbr_cpu);
+
+      if (!densityTest.makeSchedTest())
+	schedTestResult = 0;
+
+    } else {
+
+      cout<<"making partitionned schedulability testing with one cpu"<<endl;
+
+      PartitionnedTest partitionnedTest;  
+      partitionnedTest.setTaskSet(taskSet);
+      partitionnedTest.setOverhead(overhead);
+      partitionnedTest.setNbrCpus(1);
+
+      if (!partitionnedTest.makeSchedTest())
+	schedTestResult = 0;
+    }
   }
+
+  (  schedTestResult ==1) ? 
+    cout<<"Task set schedulable under C-EDF":
+    cout<<"Task set unschedulable under C-EDF"; 
+  
+
+  return schedTestResult;
 }  
 
