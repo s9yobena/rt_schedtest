@@ -51,8 +51,10 @@ public :
   void setTaskExecCost(pid_t, lt_t);
   void setTaskPeriod(pid_t, lt_t);
   void setTaskSelfSuspension(pid_t, lt_t);
-
+  
+  void addTask(Task*);
   void removeTask(pid_t);
+  Task* getTask(pid_t);
 
   lt_t computeAverageExecCost();
   lt_t getAverageExecCost();

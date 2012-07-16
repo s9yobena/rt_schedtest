@@ -13,11 +13,14 @@ private:
 public:
   Task();
   ~Task();
+  pid_t getId();
   unsigned getCpu();
   lt_t getExecCost();
   lt_t getPeriod(); 
   lt_t getSelfSuspension();
 
+  void setId(pid_t);
+  void setCpu(unsigned);
   void setExecCost(lt_t);
   void setPeriod(lt_t);
   void setSelfSuspension(lt_t);

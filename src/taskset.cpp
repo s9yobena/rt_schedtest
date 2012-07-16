@@ -8,11 +8,17 @@ void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
   vector<TaskParam>::iterator it;
   for (it = schedTestParam->taskParams.begin(); 
        it != schedTestParam->taskParams.end(); it++) {
-    updateTaskExecCost(it->e, it->id);
-    updateTaskInterArrivalTime(it->p, it->id);
-    updateTaskSelfSuspension(it->ss, it->id);
-  }
 
+    Task *task = new Task();
+
+    task->setId(it->id);
+    task->setExecCost(it->e);
+    task->setPeriod(it->p);
+    task->setSelfSuspension(it->ss);
+    task->setCpu(it->cpu);
+
+    addTask(task);
+  }
 }
 
 void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
@@ -56,6 +62,8 @@ void TaskSet::addTask(pid_t taskId) {
   Task tmpTask;
   struct rt_task tmpTaskParam;
   get_rt_task_param(taskId,&tmpTaskParam); 
+
+  tmpTask.setId(taskId);
 
   // set exec_cost to 0 to be able to check for the current maximum value
   // even if the user defined one is arbitrarly large
@@ -163,6 +171,11 @@ void TaskSet::setTaskSelfSuspension(pid_t taskId, lt_t selfSusp) {
   taskSet[taskId].setSelfSuspension(selfSusp);
 }
 
+void TaskSet::addTask(Task *task) {
+  tasksId.push_back(task->getId());
+  taskSet.insert(pair<pid_t,Task>(task->getId(),*task));
+}
+
 void TaskSet::removeTask(pid_t taskId) {
   for (int i=0; i< tasksId.size(); i++) {
     if (tasksId[i] == taskId) {
@@ -171,6 +184,10 @@ void TaskSet::removeTask(pid_t taskId) {
     }
   }
   taskSet.erase(taskId);  
+}
+
+Task* TaskSet::getTask(pid_t taskId) {
+  return &taskSet[taskId];
 }
 
 lt_t TaskSet::computeAverageExecCost() {

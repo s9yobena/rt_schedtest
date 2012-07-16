@@ -6,6 +6,10 @@ Task::Task() {
 Task::~Task() {
 }
 
+pid_t Task::getId() {
+  return id;
+}
+
 unsigned Task::getCpu() {
   return parameters.cpu;
 }
@@ -21,6 +25,17 @@ lt_t Task::getPeriod() {
 lt_t Task::getSelfSuspension() {
   return selfSuspension;
 }
+
+void Task::setId(pid_t _taskId) {
+  id = _taskId;
+}
+
+
+void Task::setCpu(unsigned _cpu) {
+  parameters.cpu = _cpu;
+}
+
+
 
 void Task::setExecCost(lt_t execCost) {
   parameters.exec_cost = execCost;
