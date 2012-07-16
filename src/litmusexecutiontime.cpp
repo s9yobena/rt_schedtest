@@ -1,4 +1,5 @@
 #include "litmusexecutiontime.hpp"
+#include "safetymargin.hpp"
 
 LitmusExecutionTime::LitmusExecutionTime(ster_t sterType) 
   : LitmusSchedulingTraceRecord(sterType) {
@@ -41,6 +42,9 @@ void LitmusExecutionTime::check(struct st_event_record* ster) {
 }
 
 void LitmusExecutionTime::updateTaskSet(lt_t exec_time, pid_t task_id) {
+
+  exec_time = SafetyMargin::makeSM(exec_time);
+
   taskSet->updateTaskExecCost(exec_time, task_id);
   lt_t avrgExecCost = taskSet->computeAverageExecCost();
   if (avrgExecCost > taskSet->getAverageExecCost() ) {

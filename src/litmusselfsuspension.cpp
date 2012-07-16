@@ -1,4 +1,5 @@
 #include "litmusselfsuspension.hpp"
+#include "safetymargin.hpp"
 
 LitmusSelfSuspension::LitmusSelfSuspension(ster_t sterType) 
   : LitmusSchedulingTraceRecord(sterType) {
@@ -41,5 +42,8 @@ void LitmusSelfSuspension::check(struct st_event_record* ster) {
 }
 
 void LitmusSelfSuspension::updateTaskSet(lt_t self_suspension_time, pid_t task_id) {
+
+  self_suspension_time = SafetyMargin::makeSM(self_suspension_time);
+
   taskSet->updateTaskSelfSuspension(self_suspension_time, task_id);
 }

@@ -1,4 +1,5 @@
 #include "litmusinterarrivaltime.hpp"
+#include "safetymargin.hpp"
 
 LitmusInterArrivalTime::LitmusInterArrivalTime(ster_t sterType) 
   : LitmusSchedulingTraceRecord(sterType) {
@@ -44,6 +45,9 @@ void LitmusInterArrivalTime::check(struct st_event_record* ster) {
 }
 
 void LitmusInterArrivalTime::updateTaskSet(lt_t inter_arrival_time, pid_t task_id) {
+
+  inter_arrival_time = SafetyMargin::makeSM(inter_arrival_time);
+
   taskSet->updateTaskInterArrivalTime(inter_arrival_time, task_id);
 }
 

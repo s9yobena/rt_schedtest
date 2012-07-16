@@ -1,4 +1,5 @@
 #include "timestampprocessor.hpp"
+#include "safetymargin.hpp"
 
 TimestampProcessor* TimestampProcessor::timestampProcessorInstance = 0;
 
@@ -132,6 +133,8 @@ void TimestampProcessor::notifyNewOverhead(overhead_t overhead, cmd_t id) {
      
     std::cout<<"current overhead for "<<id<<" is: \t"<<overhead<<std::endl;
   }
+
+  overhead = SafetyMargin::makeSM(overhead);
   
   switch(id){
   case TS_CXS_START:
