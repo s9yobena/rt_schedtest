@@ -18,6 +18,10 @@ lt_t Task::getExecCost() {
   return parameters.exec_cost;
 }
 
+lt_t Task::getAvrgExecTime() {
+  return execTimeSW.computeAvrg();
+}
+
 lt_t Task::getPeriod() {
   return parameters.period;
 }
@@ -57,3 +61,6 @@ void Task::setParameters(struct rt_task taskParams) {
   parameters = taskParams;
 }
 
+void Task::updateAvrgExecTime(lt_t execTime) {
+  execTimeSW.update(execTime);
+}

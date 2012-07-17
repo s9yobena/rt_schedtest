@@ -2,6 +2,7 @@
 
 TaskSet::TaskSet() {
   averageExecCost = 0;
+  
 }
 
 void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
@@ -26,6 +27,11 @@ void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
   if (isNewTask(task_id))
     addTask(task_id);
 
+  // update task average execution time
+  taskSet[task_id].updateAvrgExecTime(exec_time);
+  cout<<"task id:"<<task_id<<" average exec time is "<<taskSet[task_id].getAvrgExecTime() <<endl;
+  
+  // update task worst execution time
   updateMaxExecCost(exec_time, task_id);  
 }
 
@@ -126,12 +132,11 @@ void TaskSet::printParameters() {
     pid_t taskId;
     taskId = getTaskId(i);
 
-    printf("rt_task %d: e = %d, p = %d  sum self-suspension %d\n",
+    printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
 	   taskId, 
   	   (int)getTaskExecCost(taskId), 
-  	   (int)getTaskPeriod(taskId),
+	   (int)getTaskPeriod(taskId),
 	   (int)getTaskSelfSuspension(taskId));
-    
   }
 }
 
@@ -149,6 +154,10 @@ unsigned TaskSet::getTaskCpu(pid_t taskId) {
 
 lt_t TaskSet::getTaskExecCost(pid_t taskId) {
   return taskSet[taskId].getExecCost();
+}
+
+lt_t TaskSet::getTaskAvrgExecCost(pid_t  taskId) {
+  return taskSet[taskId].getAvrgExecTime();
 }
 
 lt_t TaskSet::getTaskPeriod(pid_t taskId) {

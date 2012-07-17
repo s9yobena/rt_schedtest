@@ -45,6 +45,7 @@ public :
   pid_t getTaskId(int);
   unsigned getTaskCpu(pid_t);
   lt_t getTaskExecCost(pid_t);
+  lt_t getTaskAvrgExecCost(pid_t);
   lt_t getTaskPeriod(pid_t);
   lt_t getTaskSelfSuspension(pid_t);
 

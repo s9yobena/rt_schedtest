@@ -2,6 +2,7 @@
 #define TASK_HPP
 
 #include "rttypes.h"
+#include "slidingwindow.hpp"
 
 class Task {
 
@@ -9,6 +10,7 @@ private:
   pid_t id;
   struct rt_task parameters;
   lt_t selfSuspension;
+  SlidingWindow<lt_t> execTimeSW;	// used to compute task average execution time over a sliding window
 
 public:
   Task();
@@ -16,6 +18,7 @@ public:
   pid_t getId();
   unsigned getCpu();
   lt_t getExecCost();
+  lt_t getAvrgExecTime();
   lt_t getPeriod(); 
   lt_t getSelfSuspension();
 
@@ -26,6 +29,8 @@ public:
   void setSelfSuspension(lt_t);
   void addSelfSuspension(lt_t);
   void setParameters(struct rt_task);
+
+  void updateAvrgExecTime(lt_t execTime);
 
 };
 

@@ -44,7 +44,7 @@ obj-rt_partitionned-test = rt_partitionned-test.o schedtest.o partitionnedtest.o
 
 obj-rt_clustered-test = rt_clustered-test.o schedtest.o clusteredtest.o globaltest.o densitytest.o partitionnedtest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o
 
-obj-rt_trace-daemon = rt_trace-daemon.o taskset.o task.o litmusdevice.o litmusoverhead.o timestampprocessor.o  timestamp.o litmustimestamp.o singlelitmustimestamp.o pairlitmustimestamp.o ticklitmustimestamp.o sendreschedlitmustimestamp.o schedtrace.o litmusschedulingtrace.o schedulingtraceprocessor.o litmusschedulingtracerecord.o litmusexecutiontime.o litmusinterarrivaltime.o litmusselfsuspension.o litmustasktermination.o schedtestparam.o litmusschedtest.o safetymargin.o
+obj-rt_trace-daemon = rt_trace-daemon.o taskset.o task.o litmusdevice.o litmusoverhead.o timestampprocessor.o  timestamp.o litmustimestamp.o singlelitmustimestamp.o pairlitmustimestamp.o ticklitmustimestamp.o sendreschedlitmustimestamp.o schedtrace.o litmusschedulingtrace.o schedulingtraceprocessor.o litmusschedulingtracerecord.o litmusexecutiontime.o litmusinterarrivaltime.o litmusselfsuspension.o litmustasktermination.o schedtestparam.o litmusschedtest.o safetymargin.o 
 
 rt_schedtest: ${obj-rt_schedtest}
 
