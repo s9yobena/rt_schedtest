@@ -60,7 +60,7 @@ private:
   overhead_t release_latency;
   overhead_t tick;
 
-
+  
   
   void setParam(unsigned value, unsigned pos);
   unsigned getParam(unsigned pos);

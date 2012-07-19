@@ -9,20 +9,11 @@
 #include <sstream>
 #include <iostream>
 #include "taskset.hpp"
+#include "cachetop.hpp"
 
-enum CacheLevel {
-  L1,
-  L2,
-  L3,
-  ALL
-};
-
-struct CacheLevelEntry { 
-  const char* litmusName;
-  int level;
-};
 
 class Cluster {
+
 public:
   unsigned nbrCpus;
   vector<int> cpus;
@@ -65,7 +56,6 @@ public:
     }
     return false;
   }
-
 };
 
 class ClusteredTest : public SchedTest{
@@ -73,14 +63,11 @@ class ClusteredTest : public SchedTest{
 protected:
   void drawTaskSetSafeApprox();
   vector<Cluster*> clustersVec;
-  vector<vector<int> > cache_top;
 
 public :
   ClusteredTest();
   ~ClusteredTest();
-  int getCacheLevel();
-  void drawCacheTop();
-  void drawClusters();
+  void drawClusters(CacheTop &);
   
   int makeSchedTest();
 };

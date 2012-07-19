@@ -3,17 +3,8 @@
 #include "partitionnedtest.hpp"
 #include <vector>
 
+
 using namespace std;
-
-#define ALL -1
-
-static struct CacheLevelEntry cacheLevelTable[] = {
-  {"L1",1},
-  {"L2",2},
-  {"L3",3},
-  {"ALL",ALL}
-};
-
 
 ClusteredTest::ClusteredTest() {
 }
@@ -21,7 +12,7 @@ ClusteredTest::ClusteredTest() {
 ClusteredTest::~ClusteredTest() {
 }
 
-void ClusteredTest::drawClusters() {
+void ClusteredTest::drawClusters(CacheTop & _cT) {
 
   vector<int>::iterator cacheTopIt;
   vector<Cluster*>::iterator clusterIt;
@@ -30,6 +21,9 @@ void ClusteredTest::drawClusters() {
   bool cB;
 
   // first, for each cpu draw the corresponding cluster
+  
+  std::vector<vector<int> >  cache_top = _cT.getCacheTop();
+  
   for (int i = 0; i< nbr_cpu; i++) {
     cluster = new Cluster();    
     cB = false;
@@ -96,72 +90,20 @@ void ClusteredTest::drawClusters() {
   }  
 }
 
-int ClusteredTest::getCacheLevel() {
-
-  FILE *f;
-  char cluster[10];
-  int cache_level;
-
-  f = fopen("/proc/litmus/plugins/C-EDF/cluster","r");
-  fgets(cluster, sizeof cluster, f);
-  fclose(f);
-  
-  for (int i=0; i<((sizeof cacheLevelTable)/(sizeof cacheLevelTable[0])); i++)  {
-    
-    if (!strncmp(cacheLevelTable[i].litmusName,cluster, strlen(cacheLevelTable[i].litmusName)))
-      cache_level = cacheLevelTable[i].level;
-  }
-  
-  return cache_level;
-}
-
-void ClusteredTest::drawCacheTop() {
-  int cache_level;
-  cache_level = getCacheLevel();
-
-  FILE *f;
-  char buf[10];
-  unsigned sharedCpuStartId, sharedCpuEndId;
-  
-  // cout<<"the vector has "<<cache_top[0].size()<<endl;
-  cache_top.resize(nbr_cpu);
-  stringstream ss;
-
-  for (int i=0; i<nbr_cpu; i++) {
-    ss.str("");
-    ss<<"/sys/devices/system/cpu/cpu"<<i<<"/cache/index"<<cache_level<<"/shared_cpu_list";
-
-    f = fopen(ss.str().c_str(),"r");
-    fgets(buf, sizeof buf, f);
-    fclose(f);
-    sscanf(buf,"%u-%u", &sharedCpuStartId, &sharedCpuEndId);
-    for (int j=sharedCpuStartId; j <= sharedCpuEndId; j++) {
-      cache_top[i].push_back(j);
-    }
-  }
-
-#ifdef PRINT_DEBUG_MSG
-  
-  vector<int>::iterator it;
-  for (int i=0; i<nbr_cpu; i++) {
-    printf("CPU %d is sharing cache level %d  with: ",i,cache_level);
-    for (it = cache_top[i].begin();it != cache_top[i].end(); it++) {
-      printf("%d, ",*it);
-    }
-    printf(".\n");
-  }
-#endif
-
-}
-
 int ClusteredTest::makeSchedTest() {
+  
+  CacheTop cT;
 
   // we assume the task set is schedulable, unless otherwise correct
   int schedTestResult = 1;
 
-  if (getCacheLevel() != ALL) {
-    drawCacheTop();
-    drawClusters();
+  if (cT.getCacheLevel() != ALL) {
+
+    cT.drawCacheTop();
+    // output: cache_top[]
+
+    // input:   vector<vector<int> > cache_top;
+    drawClusters(cT);
 
     vector<Cluster*>::iterator clusterIt;
     vector<int>::iterator cpuIt;
