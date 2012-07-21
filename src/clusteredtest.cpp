@@ -2,6 +2,7 @@
 #include "densitytest.hpp"
 #include "partitionnedtest.hpp"
 #include <vector>
+#define PRINT_DEBUG_MSG
 
 
 using namespace std;
@@ -10,6 +11,10 @@ ClusteredTest::ClusteredTest() {
 }
 
 ClusteredTest::~ClusteredTest() {
+}
+
+void ClusteredTest::setCacheTop(CacheTop *_cacheTop) {
+  cacheTop = _cacheTop;
 }
 
 void ClusteredTest::drawClusters(CacheTop & _cT) {
@@ -23,26 +28,16 @@ void ClusteredTest::drawClusters(CacheTop & _cT) {
   // first, for each cpu draw the corresponding cluster
   
   std::vector<vector<int> >  cache_top = _cT.getCacheTop();
-  
-  for (int i = 0; i< nbr_cpu; i++) {
+  for (int i = 0; i< cache_top.size(); i++) {
     cluster = new Cluster();    
     cB = false;
+
     for (cacheTopIt = cache_top[i].begin(); 
-	 cacheTopIt != cache_top[i].end(); 
-	 cacheTopIt++){
+    	 cacheTopIt != cache_top[i].end(); 
+    	 cacheTopIt++){
       cluster->addCpu(*cacheTopIt);
     }
 
-    // then check if the cluster is already stored
-    for (clusterIt = clustersVec.begin(); 
-	 clusterIt != clustersVec.end(); 
-	 clusterIt++) {
-      
-      if ((*clusterIt)->isIdentical(cluster)) {
-	cB = true;
-	break;
-      }     
-    }
 
     if (!cB) {
       clustersVec.push_back(cluster);
@@ -97,13 +92,7 @@ int ClusteredTest::makeSchedTest() {
   // we assume the task set is schedulable, unless otherwise correct
   int schedTestResult = 1;
 
-  if (cT.getCacheLevel() != ALL) {
-
-    cT.drawCacheTop();
-    // output: cache_top[]
-
-    // input:   vector<vector<int> > cache_top;
-    drawClusters(cT);
+    drawClusters(*cacheTop);
 
     vector<Cluster*>::iterator clusterIt;
     vector<int>::iterator cpuIt;
@@ -151,38 +140,12 @@ int ClusteredTest::makeSchedTest() {
 	  schedTestResult = 0;
       }
     }
-  } else {
-    
-    if (nbr_cpu >1) {
-      cout<<"making global schedulability testing"<<endl;
 
-      DensityTest densityTest;  
-      densityTest.setTaskSet(taskSet);
-      densityTest.setOverhead(overhead);
-      densityTest.setNbrCpus(nbr_cpu);
-
-      if (!densityTest.makeSchedTest())
-	schedTestResult = 0;
-
-    } else {
-
-      cout<<"making partitionned schedulability testing with one cpu"<<endl;
-
-      PartitionnedTest partitionnedTest;  
-      partitionnedTest.setTaskSet(taskSet);
-      partitionnedTest.setOverhead(overhead);
-      partitionnedTest.setNbrCpus(1);
-
-      if (!partitionnedTest.makeSchedTest())
-	schedTestResult = 0;
-    }
-  }
-
-  (  schedTestResult ==1) ? 
-    cout<<"Task set schedulable under C-EDF":
-    cout<<"Task set unschedulable under C-EDF"; 
+    (schedTestResult ==1) ? 
+      cout<<"Task set schedulable under C-EDF":
+      cout<<"Task set unschedulable under C-EDF"; 
   
 
-  return schedTestResult;
+    return schedTestResult;
 }  
 

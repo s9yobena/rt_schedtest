@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include "schedtestparam.hpp"
 
 using namespace std;
 
@@ -19,8 +20,14 @@ struct CacheLevelEntry {
 };
 
 class CacheTop {
+
+private:
   vector<vector<int> > cache_top;
+
 public:
+
+  void updateCacheTop(SchedTestParam*);
+
   vector<vector<int> > getCacheTop();
   int getCacheLevel();
   void drawCacheTop();

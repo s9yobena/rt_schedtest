@@ -1,5 +1,6 @@
 #include "schedtestparam.hpp"
 #include "taskset.hpp"
+#include "cachetop.hpp"
 
 SchedTestParam::SchedTestParam() {
 }
@@ -65,6 +66,9 @@ void SchedTestParam::setRELEASE_LATENCY(overhead_t release_latency) {
   this->release_latency = release_latency;
 }
 
+vector<vector<int> > SchedTestParam::getCacheTop() {
+  return cache_top;
+}
 
 overhead_t SchedTestParam::getCXS() {
   return cxs;
@@ -178,6 +182,75 @@ int SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
   printf("Error parsing file; Correct input file format? \n");
 }
 
+void SchedTestParam::setCacheTopParam(unsigned _cacheTopPos) {
+  CacheTop cacheTop;
+  cacheTop.drawCacheTop();
+  vector<vector<int> > _cacheTop;
+  _cacheTop = cacheTop.getCacheTop();
+
+  rewind(schedTestPramFile);
+  char line[100];
+  char buf[100];
+  unsigned currLineNbr;
+  currLineNbr = 0;
+  do {
+    if (currLineNbr == _cacheTopPos) {
+      buf[0] = '\0';
+      for (int i=0; i<_cacheTop.size(); i++) {
+	
+	for (int j=0; j<_cacheTop[i].size(); j++) {
+
+	  char tmpB[4];
+	  sprintf(tmpB, "%d,", _cacheTop[i][j]);
+	  strncat(buf, tmpB, strlen(tmpB));
+	}
+	strcat(buf,"-");
+      }
+      strcat(buf,"\n");
+      fputs (buf, schedTestPramFile);
+      break;
+    }
+    currLineNbr++;
+  } while (fgets (line, sizeof line, schedTestPramFile) != NULL);
+
+}
+
+vector<vector<int> > SchedTestParam::getCacheTopParam(unsigned cacheTopPos) {
+  rewind(schedTestPramFile);
+  char line[100];
+  unsigned currLineNbr;
+  vector<vector<int> > ret;
+  vector<int> tmp;
+ 
+  currLineNbr = 0;
+  while (fgets (line, sizeof line, schedTestPramFile) != NULL) {
+    if (currLineNbr == cacheTopPos) {
+      char *str1,*str2,*token,*subtoken;
+      char *saveptr1, *saveptr2;
+      int cpu;
+
+      for (str1 = line; ; str1 = NULL) {
+	token = strtok_r(str1, "-", &saveptr1);
+	if (token == NULL ||strcmp(token,"\n")==0 )
+	  break;
+	tmp.clear();
+
+	for (str2 = token; ; str2 = NULL) {
+	  subtoken = strtok_r(str2, ",", &saveptr2);
+	  if (subtoken == NULL)
+	    break;
+	  sscanf(subtoken,"%d,",&cpu);
+	  tmp.push_back(cpu);
+	}
+	  ret.push_back(tmp);
+      }
+      
+      return ret;
+    }
+    currLineNbr++;
+  }
+}
+
 void SchedTestParam::setParam(unsigned value, unsigned pos) {
   rewind(schedTestPramFile);
   char line[100];
@@ -223,6 +296,7 @@ void SchedTestParam::makeSchedTestParam() {
   schedTestPramFile = fopen(name,"w+");
   // DO NOT CHANGE THE ORDER OF THE FOLLOWING BLOCK
   // START
+  setCacheTopParam(cacheTopPos);
   setParam(cxs, cxsPos);
   setParam(sched, schedPos);
   setParam(sched2, sched2Pos);
@@ -245,6 +319,7 @@ void SchedTestParam::getSchedTestParam() {
 
   // DO NOT CHANGE THE ORDER OF THE FOLLOWING BLOCK
   // START
+  cache_top = getCacheTopParam(cacheTopPos);
   cxs = getParam(cxsPos);
   sched = getParam(schedPos);
   sched2 = getParam(sched2Pos);

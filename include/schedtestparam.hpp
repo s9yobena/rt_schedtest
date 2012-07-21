@@ -17,6 +17,7 @@ using namespace std;
 
 // DO NOT CHANGE THE ORDER OF THE FOLLOWING ENUM
 enum ParamPos {
+  cacheTopPos,
   cxsPos,
   schedPos,
   sched2Pos,
@@ -51,7 +52,7 @@ private:
   FILE *schedTestPramFile;
   char name[MAX_STP_NAME];
 
-  TaskSet *taskSet;
+  vector<vector<int> > cache_top;
   overhead_t cxs;
   overhead_t sched;
   overhead_t sched2;
@@ -59,8 +60,10 @@ private:
   overhead_t send_resched;
   overhead_t release_latency;
   overhead_t tick;
-
+  TaskSet *taskSet;
   
+  void setCacheTopParam(unsigned cacheTopPos);
+  vector<vector<int> > getCacheTopParam(unsigned cacheTopPos);
   
   void setParam(unsigned value, unsigned pos);
   unsigned getParam(unsigned pos);
@@ -95,7 +98,8 @@ public:
   void setTICK(overhead_t);
   void addTask(TaskParam taskParam);
   void makeSchedTestParam();
-
+  
+  vector<vector<int> > getCacheTop();
   overhead_t getCXS();
   overhead_t getSCHED();
   overhead_t getSCHED2();

@@ -28,25 +28,6 @@ public:
     nbrCpus++;
   }
 
-  bool isIdentical(Cluster *_cluster) {
-    vector<int>::iterator it1;
-    vector<int>::iterator it2;
-    bool b1;
-    for (it1=cpus.begin(); it1!=cpus.end(); it1++) {
-      b1 = false;
-      for (it2=_cluster->cpus.begin(); it2!=_cluster->cpus.end(); it2++) {
-	if (*it1 == *it2) {
-	  b1 =true;
-	}
-      }
-      if (!b1) {
-	// there is at least one uncommon cpu
-	return false;
-      }
-    }
-    return true;
-  }
-
   bool inCluster(Task *task) {
     vector<int>::iterator it;
     for (it=cpus.begin(); it!=cpus.end(); it++) {
@@ -63,12 +44,15 @@ class ClusteredTest : public SchedTest{
 protected:
   void drawTaskSetSafeApprox();
   vector<Cluster*> clustersVec;
+  CacheTop *cacheTop;
 
 public :
   ClusteredTest();
   ~ClusteredTest();
+
+  void setCacheTop(CacheTop*);
   void drawClusters(CacheTop &);
-  
+
   int makeSchedTest();
 };
 

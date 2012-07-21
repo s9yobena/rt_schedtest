@@ -38,9 +38,9 @@ clean:
 
 obj-rt_schedtest = rt_schedtest.o configschedtest.o cmdlparser.o
 
-obj-rt_density-test = rt_density-test.o schedtest.o globaltest.o densitytest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o
+obj-rt_density-test = rt_density-test.o schedtest.o globaltest.o densitytest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o cachetop.o
 
-obj-rt_partitionned-test = rt_partitionned-test.o schedtest.o partitionnedtest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o
+obj-rt_partitionned-test = rt_partitionned-test.o schedtest.o partitionnedtest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o cachetop.o
 
 obj-rt_clustered-test = rt_clustered-test.o schedtest.o clusteredtest.o globaltest.o densitytest.o partitionnedtest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o cachetop.o
 

@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <unistd.h>
+// #define PRINT_DEBUG_MSG
 
 static struct CacheLevelEntry cacheLevelTable[] = {
   {"L1",L1},
@@ -11,6 +12,11 @@ static struct CacheLevelEntry cacheLevelTable[] = {
   {"L3",L3},
   {"ALL",ALL}
 };
+
+void CacheTop::updateCacheTop(SchedTestParam *_schedTestParam) {
+  
+  cache_top = _schedTestParam->getCacheTop();
+}
 
 vector<vector<int> > CacheTop::getCacheTop() {
   
@@ -37,30 +43,74 @@ int CacheTop::getCacheLevel() {
 }
 
 void CacheTop::drawCacheTop() {
+  int nbr_cpu;
+  nbr_cpu = sysconf(_SC_NPROCESSORS_ONLN);  
+
   int cache_level;
   cache_level = getCacheLevel();
 
-  FILE *f;
-  char buf[10];
-  unsigned sharedCpuStartId, sharedCpuEndId;
+  if (cache_level != ALL) {
 
-  int nbr_cpu;
-  nbr_cpu = sysconf(_SC_NPROCESSORS_ONLN);  
-  cache_top.resize(nbr_cpu);
+    FILE *f;
+    char buf[10];
+    unsigned sharedCpuStartId, sharedCpuEndId;
+
+    vector<vector<int> > tmp_cache_top;
+    tmp_cache_top.resize(nbr_cpu);
   
-  stringstream ss;
+    stringstream ss;
 
-  for (int i=0; i<nbr_cpu; i++) {
-    ss.str("");
-    ss<<"/sys/devices/system/cpu/cpu"<<i<<"/cache/index"<<cache_level<<"/shared_cpu_list";
+    for (int i=0; i<nbr_cpu; i++) {
+      ss.str("");
+      ss<<"/sys/devices/system/cpu/cpu"<<i<<"/cache/index"<<cache_level<<"/shared_cpu_list";
 
-    f = fopen(ss.str().c_str(),"r");
-    fgets(buf, sizeof buf, f);
-    fclose(f);
-    sscanf(buf,"%u-%u", &sharedCpuStartId, &sharedCpuEndId);
-    for (int j=sharedCpuStartId; j <= sharedCpuEndId; j++) {
-      cache_top[i].push_back(j);
+      f = fopen(ss.str().c_str(),"r");
+      fgets(buf, sizeof buf, f);
+      fclose(f);
+      sscanf(buf,"%u-%u", &sharedCpuStartId, &sharedCpuEndId);
+      for (int j=sharedCpuStartId; j <= sharedCpuEndId; j++) {
+	tmp_cache_top[i].push_back(j);
+      }
     }
+
+    // filter out duplicate clusters
+  
+    vector<int>::iterator it1;
+    vector<int>::iterator it2;
+    bool b1;
+
+    // loop through all cpus
+    for (int i=0; i<nbr_cpu; i++) {
+   
+      for (it1=tmp_cache_top[i].begin(); it1!=tmp_cache_top[i].end(); it1++) {
+	b1 = false;
+  
+	// loop through all clusters
+	for (int j=0; j<cache_top.size(); j++) {
+
+	  for (it2=cache_top[j].begin(); it2!=cache_top[j].end(); it2++) {
+	    if (*it1 == *it2) {
+	      // there is one common cpu
+	      b1 =true;
+	      break;
+	    }
+	  }
+	  if (b1)
+	    break;
+	}
+	if (b1)
+	  break;
+      }
+      if (!b1) 
+	// there is at least one uncommon cpu
+	cache_top.push_back(tmp_cache_top[i]);
+    }
+  } else {
+    vector<int> tmpC;
+    for (int i=0; i<nbr_cpu; i++) {
+      tmpC.push_back(i);
+    }
+    cache_top.push_back(tmpC);
   }
 
 #ifdef PRINT_DEBUG_MSG
