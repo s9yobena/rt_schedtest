@@ -32,9 +32,15 @@ void SchedTestParam::initSchedTestParam() {
 }
 
 void SchedTestParam::resetLocalParams() {
+  mhzCpuClock = 0;
+  cache_top.clear();
   cxs = 0;
   sched = 0;
   sched2 = 0;
+  release = 0;
+  send_resched = 0;
+  release_latency = 0;
+  tick = 0;
   taskParams.clear();
 }
 
