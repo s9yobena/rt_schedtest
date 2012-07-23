@@ -1,5 +1,5 @@
 #include "partitionnedtest.hpp"
-#include <vector>
+#include <map>
 
 using namespace std;
 
@@ -7,6 +7,10 @@ PartitionnedTest::PartitionnedTest() {
 }
 
 PartitionnedTest::~PartitionnedTest() {
+}
+
+void PartitionnedTest::setCpus(vector<int> _cpus) {
+  cpus = _cpus;
 }
 
 void PartitionnedTest::drawTaskSetSafeApprox() {
@@ -55,7 +59,12 @@ int PartitionnedTest::makeSchedTest() {
   // we first divide the tasks into m partitions, then
   // apply exact, uniprocessor EDF schedulability test.
 
-  vector<double> partitionsUtilization(nbr_cpu, 0.0);
+  map<int,double> partitionsUtilization;
+  map<int,double>::iterator puItr;
+  vector<int>::iterator cpuItr;
+  for (cpuItr = cpus.begin(); cpuItr != cpus.end(); cpuItr++) {
+    partitionsUtilization.insert( pair<int,double>(*cpuItr,0.0) );
+  }
 
   drawTaskSetSafeApprox();
 
@@ -74,10 +83,11 @@ int PartitionnedTest::makeSchedTest() {
   printf("\n");
   printf("******************************Testing schedulability********************************************\n");
 
-  for (int i=0; i < nbr_cpu; i++) {
+  for (puItr = partitionsUtilization.begin(); 
+       puItr != partitionsUtilization.end(); puItr++) {
 
-    std::cout<<"Partition: "<<i<<"\t"
-	     <<"sum_utilization: "<<partitionsUtilization[i] <<"\t"
+    std::cout<<"Partition's cpu : "<<puItr->first<<"\t"
+	     <<"sum_utilization: "<<puItr->second <<"\t"
 	     <<std::endl;
   }
 
@@ -112,9 +122,10 @@ int PartitionnedTest::makeSchedTest() {
   cout<<endl;
   taskSet->printParameters();
   
+  for (puItr = partitionsUtilization.begin(); 
+       puItr != partitionsUtilization.end(); puItr++) {
 
-  for (int i=0; i < nbr_cpu; i++) {
-    if (partitionsUtilization[i] > 1) {
+    if (puItr->second > 1) {
       printf("\n*******************Schedulability test result:***** TASK SET NO LONGER SCHEDULABLE :-( ************** \n");    return 0;
     }
   }

@@ -106,4 +106,3 @@ void GlobalTest::drawTaskSetSafeApprox() {
     taskSet->setTaskPeriod(taskId, period);
   }
 }
-
