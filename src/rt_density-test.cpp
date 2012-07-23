@@ -35,6 +35,7 @@ int main(int argc, char **argv) {
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
 
+  densityTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
   densityTest.makeSchedTest();
   return 0;
 }

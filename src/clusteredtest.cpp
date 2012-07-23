@@ -123,6 +123,7 @@ int ClusteredTest::makeSchedTest() {
       DensityTest densityTest;  
       densityTest.setTaskSet(&(*clusterIt)->taskSet);
       densityTest.setOverhead(overhead);
+      densityTest.setMHzCpuClock(this->getMHzCpuClock());
       densityTest.setNbrCpus((*clusterIt)->nbrCpus);
 
       if (!densityTest.makeSchedTest())
@@ -134,7 +135,7 @@ int ClusteredTest::makeSchedTest() {
       PartitionnedTest partitionnedTest;  
       partitionnedTest.setTaskSet(&(*clusterIt)->taskSet);
       partitionnedTest.setOverhead(overhead);
-      // partitionnedTest.setNbrCpus((*clusterIt)->nbrCpus);
+      partitionnedTest.setMHzCpuClock(this->getMHzCpuClock());
       partitionnedTest.setCpus((*clusterIt)->cpus);
 
       if (!partitionnedTest.makeSchedTest())

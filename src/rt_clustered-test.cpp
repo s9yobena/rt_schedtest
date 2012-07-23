@@ -39,6 +39,7 @@ int main(int argc, char **argv) {
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
 
+  clusteredTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
   clusteredTest.makeSchedTest();
   return 0;
 }

@@ -6,6 +6,7 @@
 #include "litmusschedulingtrace.hpp"
 #include "schedtestparam.hpp"
 #include "taskset.hpp"
+#include "cpuclock.hpp"
 
 #include <cstdlib>
 #include <cstdio>
@@ -47,6 +48,7 @@ int main(int argc, char **argv) {
   schedTestParam->initSchedTestParam();
   schedTestParam->setOutputName("schedtestfile.stf");
   schedTestParam->setTaskSet(taskSet);
+  schedTestParam->setMHzCpuClock(CpuClock::getMHzCpuClock());
 
   signal(SIGINT, finishTesting);
   signal(SIGUSR1, finishTesting);

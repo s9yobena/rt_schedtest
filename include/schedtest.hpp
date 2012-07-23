@@ -29,6 +29,7 @@ protected:
   SchedTestName schedTestName;
   TaskSet *taskSet;
   Overhead *overhead;
+  unsigned mhzCpuClock;
 
   int nbr_cpu;
   long double msPerCycle;
@@ -44,6 +45,7 @@ public:
   void setTaskSet(TaskSet*);
   void setOverhead(Overhead*);  
   void setNbrCpus(unsigned);
+  void setMHzCpuClock(unsigned);
   
 };
 

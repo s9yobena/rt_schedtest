@@ -38,6 +38,10 @@ void SchedTestParam::resetLocalParams() {
   taskParams.clear();
 }
 
+void SchedTestParam::setMHzCpuClock(unsigned _mhzCpuClock) {
+  mhzCpuClock = _mhzCpuClock;
+}
+
 void SchedTestParam::setCXS(overhead_t cxs) {
   this->cxs = cxs;
 }
@@ -64,6 +68,10 @@ void SchedTestParam::setTICK(overhead_t tick) {
 
 void SchedTestParam::setRELEASE_LATENCY(overhead_t release_latency) {
   this->release_latency = release_latency;
+}
+
+unsigned SchedTestParam::getMHzCpuClock() {
+  return mhzCpuClock;
 }
 
 vector<vector<int> > SchedTestParam::getCacheTop() {
@@ -296,6 +304,7 @@ void SchedTestParam::makeSchedTestParam() {
   schedTestPramFile = fopen(name,"w+");
   // DO NOT CHANGE THE ORDER OF THE FOLLOWING BLOCK
   // START
+  setParam(mhzCpuClock, cpuClockPos);
   setCacheTopParam(cacheTopPos);
   setParam(cxs, cxsPos);
   setParam(sched, schedPos);
@@ -319,6 +328,7 @@ void SchedTestParam::getSchedTestParam() {
 
   // DO NOT CHANGE THE ORDER OF THE FOLLOWING BLOCK
   // START
+  mhzCpuClock = getParam(cpuClockPos);
   cache_top = getCacheTopParam(cacheTopPos);
   cxs = getParam(cxsPos);
   sched = getParam(schedPos);

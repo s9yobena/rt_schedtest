@@ -35,6 +35,7 @@ int main(int argc, char **argv) {
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
 
+  partitionnedTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
   partitionnedTest.makeSchedTest();
   return 0;
 }
