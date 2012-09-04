@@ -11,8 +11,6 @@
 #include "schedtrace.h"
 #include "schedtestparam.hpp"
 
-#define MAX_RT_TASK_NR 100
-
 class TaskSet {
 
 private:
