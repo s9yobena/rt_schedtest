@@ -14,6 +14,7 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   int cpmd_flag = 0;
   int stf_flag = 0;
   int density_test_flag = 0;
+  int g_edf_test_flag = 0;
   int p_edf_test_flag = 0;
   int c_edf_test_flag = 0;
   int printTimestamps_flag = 0;
@@ -28,6 +29,7 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	  {"cpmd", required_argument, NULL,'c' },
 	  {"stf", required_argument, NULL,'s' },
 	  {"density-test", no_argument, &density_test_flag,1},
+	  {"g-edf-test", no_argument, &g_edf_test_flag,1},
 	  {"p-edf-test", no_argument, &p_edf_test_flag,1},
 	  {"c-edf-test", no_argument, &c_edf_test_flag,1},
 	  {"timestamps", no_argument, &printTimestamps_flag,1 },
@@ -84,6 +86,11 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   if (density_test_flag) {
     this->schedTestName = DENSITY_TEST;
     printf("Setting density test \n");
+  }
+
+  if (g_edf_test_flag) {
+    this->schedTestName = G_EDF_TEST;
+    printf("Setting G-EDF test \n");
   }
 
   if (p_edf_test_flag) {

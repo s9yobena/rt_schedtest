@@ -32,8 +32,8 @@ void ConfigSchedTest::callSchedTest() {
 void ConfigSchedTest::configSchedTest() {
 
   switch (schedTestName) {
-  case DENSITY_TEST:
-    execl( "./rt_density-test","rt_density-test","--stf", schedTestParamFile,(char *) NULL );
+  case G_EDF_TEST:
+    execl( "./rt_global-test","rt_global-test","--stf", schedTestParamFile,(char *) NULL );
     perror( "execl()" );
     exit(EXIT_FAILURE);
 

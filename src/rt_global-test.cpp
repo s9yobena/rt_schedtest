@@ -1,4 +1,4 @@
-/*    rt_density-test
+/*    rt_global-test
  *      
  *    Youcef A. Benabbas.
  */
@@ -7,6 +7,8 @@
 #include "overhead.hpp"
 #include "densitytest.hpp"
 #include "schedtestparam.hpp"
+
+// for now, global test is a wrapper around the density test.
 
 
 int main(int argc, char **argv) {

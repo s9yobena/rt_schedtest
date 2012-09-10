@@ -5,9 +5,10 @@
 #include "litmus.h"		/* for pid_t */
 
 enum SchedTestName {
-  DENSITY_TEST,
+  G_EDF_TEST,
   P_EDF_TEST,
   C_EDF_TEST,
+  DENSITY_TEST,
   BAKERS_TEST
 };
 

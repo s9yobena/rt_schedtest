@@ -27,7 +27,7 @@ CPPFLAGS += -Iinclude/
 # ##############################################################################
 # Targets
 
-all = rt_schedtest rt_density-test rt_partitionned-test rt_clustered-test rt_trace-daemon 
+all = rt_schedtest rt_global-test rt_partitionned-test rt_clustered-test rt_trace-daemon 
 
 .PHONY: all clean TAGS
 all: ${all}
@@ -38,7 +38,7 @@ clean:
 
 obj-rt_schedtest = rt_schedtest.o configschedtest.o cmdlparser.o
 
-obj-rt_density-test = rt_density-test.o schedtest.o globaltest.o densitytest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o cachetop.o
+obj-rt_global-test = rt_global-test.o schedtest.o globaltest.o densitytest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o cachetop.o
 
 obj-rt_partitionned-test = rt_partitionned-test.o schedtest.o partitionnedtest.o cmdlparser.o taskset.o task.o overhead.o schedtest.o schedtestparam.o schedtrace.o cachetop.o
 
@@ -48,7 +48,7 @@ obj-rt_trace-daemon = rt_trace-daemon.o taskset.o task.o litmusdevice.o litmusov
 
 rt_schedtest: ${obj-rt_schedtest}
 
-rt_density-test: ${obj-rt_density-test}
+rt_global-test: ${obj-rt_global-test}
 
 rt_partitionned-test: ${obj-rt_partitionned-test}
 
