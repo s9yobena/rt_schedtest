@@ -19,8 +19,12 @@ public:
   unsigned getCpu();
   lt_t getExecCost();
   lt_t getAvrgExecTime();
+  lt_t getDeadline();
   lt_t getPeriod(); 
+  double getUtilization();
   lt_t getSelfSuspension();
+  lt_t getTardiness();
+
 
   void setId(pid_t);
   void setCpu(unsigned);
