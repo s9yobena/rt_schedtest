@@ -30,6 +30,10 @@ lt_t Task::getSelfSuspension() {
   return selfSuspension;
 }
 
+lt_t Task::getPerJobMaxSelfSusp() {
+  return perJobMaxSelfSusp;
+}
+
 void Task::setId(pid_t _taskId) {
   id = _taskId;
 }
@@ -55,6 +59,10 @@ void  Task::setSelfSuspension(lt_t ss) {
 
 void  Task::addSelfSuspension(lt_t ss) {
   selfSuspension += ss;
+}
+
+void Task::setPerJobMaxSelfSusp(lt_t _perJobMaxSelfSusp) {
+  perJobMaxSelfSusp = _perJobMaxSelfSusp;
 }
 
 void Task::setParameters(struct rt_task taskParams) {

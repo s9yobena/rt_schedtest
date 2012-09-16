@@ -47,7 +47,8 @@ void TaskSet::updateTaskSelfSuspension(lt_t self_suspension_time, pid_t task_id)
 
   if (isNewTask(task_id))
     addTask(task_id);
-
+  
+  updatePerJobMaxSelfSusp(self_suspension_time, task_id);
   updateSumSelfSuspension(self_suspension_time, task_id);
 }
 
@@ -77,6 +78,7 @@ void TaskSet::addTask(pid_t taskId) {
   tmpTask.setParameters(tmpTaskParam);
 
   tmpTask.setSelfSuspension(0);
+  tmpTask.setPerJobMaxSelfSusp(0);
 
   taskSet.insert(pair<pid_t,Task>(taskId,tmpTask));
 }
@@ -117,6 +119,21 @@ void TaskSet::updateSumSelfSuspension(lt_t self_suspension_time, pid_t taskId) {
 	   taskId, 
 	   (int)it->second.getSelfSuspension());
 }
+
+void TaskSet::updatePerJobMaxSelfSusp(lt_t self_suspension_time, pid_t taskId) {
+
+  map<pid_t,Task>::iterator it;
+  it = taskSet.find(taskId);
+
+  if (self_suspension_time > it->second.getPerJobMaxSelfSusp()) {
+    it->second.setPerJobMaxSelfSusp(self_suspension_time);
+  if (printExecutionTimes)  
+    printf("rt_task %d: Max. Self Suspension = %d \n",
+	   taskId, 
+	   (int)it->second.getPerJobMaxSelfSusp());
+  }
+}
+
 
 
 void TaskSet::setParameters(const CmdlParser& cmdlParser) {
@@ -166,6 +183,10 @@ lt_t TaskSet::getTaskPeriod(pid_t taskId) {
 
 lt_t TaskSet::getTaskSelfSuspension(pid_t taskId) {
   return taskSet[taskId].getSelfSuspension();
+}
+
+lt_t TaskSet::getPerJobMaxSelfSusp(pid_t taskId) {
+  return taskSet[taskId].getPerJobMaxSelfSusp();
 }
 
 void TaskSet::setTaskExecCost(pid_t taskId, lt_t execCost) {

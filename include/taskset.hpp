@@ -29,6 +29,7 @@ private:
   void updateMaxExecCost(lt_t exec_time, pid_t task_id); // exec_time in NS
   void updateMinInterArrivalTime(lt_t exec_time, pid_t task_id);  
   void updateSumSelfSuspension(lt_t self_suspension_time, pid_t task_id);
+  void updatePerJobMaxSelfSusp(lt_t self_suspension_time, pid_t task_id);
   
 public :  
   TaskSet();  
@@ -46,6 +47,7 @@ public :
   lt_t getTaskAvrgExecCost(pid_t);
   lt_t getTaskPeriod(pid_t);
   lt_t getTaskSelfSuspension(pid_t);
+  lt_t getPerJobMaxSelfSusp(pid_t);
 
   void setTaskExecCost(pid_t, lt_t);
   void setTaskPeriod(pid_t, lt_t);
