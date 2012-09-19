@@ -38,6 +38,7 @@ int main(int argc, char **argv) {
   overhead->setParameters(cmdlParser);
 
   globalTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
+  globalTest.setNbrCpus(schedTestParam->getNbrCpus());
   globalTest.makeSchedTest();
 
   return 0;

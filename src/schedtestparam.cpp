@@ -76,6 +76,20 @@ void SchedTestParam::setRELEASE_LATENCY(overhead_t release_latency) {
   this->release_latency = release_latency;
 }
 
+unsigned SchedTestParam::getNbrCpus() {
+  int nbrcpus = 0;
+
+  std::vector< std::vector<int> >::const_iterator row;
+  std::vector<int>::const_iterator col;
+  for (row = cache_top.begin(); row != cache_top.end(); ++row) {
+    for (col = row->begin(); col != row->end(); ++col) {
+      nbrcpus++;
+    }
+  }
+
+  return nbrcpus;
+}
+
 unsigned SchedTestParam::getMHzCpuClock() {
   return mhzCpuClock;
 }

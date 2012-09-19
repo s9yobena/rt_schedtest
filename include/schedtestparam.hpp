@@ -103,7 +103,7 @@ public:
   void addTask(TaskParam taskParam);
   void makeSchedTestParam();
   
-  
+  unsigned getNbrCpus();
   unsigned getMHzCpuClock();  
   vector<vector<int> > getCacheTop();
   overhead_t getCXS();
