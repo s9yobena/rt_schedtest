@@ -17,6 +17,7 @@ void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
     task->setPeriod(it->p);
     task->setSelfSuspension(it->ss);
     task->setCpu(it->cpu);
+    task->setPerJobMaxSelfSusp(it->perJobMaxSelfSusp);
 
     addTask(task);
   }
@@ -177,16 +178,29 @@ lt_t TaskSet::getTaskAvrgExecCost(pid_t  taskId) {
   return taskSet[taskId].getAvrgExecTime();
 }
 
+lt_t TaskSet::getTaskDeadline(pid_t taskId) {
+  return taskSet[taskId].getDeadline();
+}
+
 lt_t TaskSet::getTaskPeriod(pid_t taskId) {
   return taskSet[taskId].getPeriod();
+}
+
+double TaskSet::getTaskUtilization(pid_t taskId) {
+  return taskSet[taskId].getUtilization();
 }
 
 lt_t TaskSet::getTaskSelfSuspension(pid_t taskId) {
   return taskSet[taskId].getSelfSuspension();
 }
 
+
 lt_t TaskSet::getPerJobMaxSelfSusp(pid_t taskId) {
   return taskSet[taskId].getPerJobMaxSelfSusp();
+}
+
+lt_t TaskSet::getTaskTardiness(pid_t taskId) {
+  return taskSet[taskId].getTardiness();
 }
 
 void TaskSet::setTaskExecCost(pid_t taskId, lt_t execCost) {

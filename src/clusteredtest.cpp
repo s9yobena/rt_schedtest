@@ -1,5 +1,5 @@
 #include "clusteredtest.hpp"
-#include "densitytest.hpp"
+#include "globaltest.hpp"
 #include "partitionnedtest.hpp"
 #include <vector>
 #define PRINT_DEBUG_MSG
@@ -120,13 +120,13 @@ int ClusteredTest::makeSchedTest() {
     if ((*clusterIt)->nbrCpus>1) {
       // apply a global schedulability test on this cluster
 
-      DensityTest densityTest;  
-      densityTest.setTaskSet(&(*clusterIt)->taskSet);
-      densityTest.setOverhead(overhead);
-      densityTest.setMHzCpuClock(this->getMHzCpuClock());
-      densityTest.setNbrCpus((*clusterIt)->nbrCpus);
+      GlobalTest globalTest;  
+      globalTest.setTaskSet(&(*clusterIt)->taskSet);
+      globalTest.setOverhead(overhead);
+      globalTest.setMHzCpuClock(this->getMHzCpuClock());
+      globalTest.setNbrCpus((*clusterIt)->nbrCpus);
 
-      if (!densityTest.makeSchedTest())
+      if (!globalTest.makeSchedTest())
 	schedTestResult = 0;
 
     } else {

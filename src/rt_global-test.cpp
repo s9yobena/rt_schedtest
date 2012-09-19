@@ -5,7 +5,7 @@
 #include "cmdlparser.h"
 #include "taskset.hpp"
 #include "overhead.hpp"
-#include "densitytest.hpp"
+#include "globaltest.hpp"
 #include "schedtestparam.hpp"
 
 // for now, global test is a wrapper around the density test.
@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 
   TaskSet *taskSet;
   Overhead *overhead;
-  DensityTest densityTest;  
+  GlobalTest globalTest;
   SchedTestParam *schedTestParam;
   CmdlParser cmdlParser(argc, argv);    
 
@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
   taskSet = new TaskSet();
   schedTestParam = SchedTestParam::getInstance();
 
-  densityTest.setTaskSet(taskSet);
-  densityTest.setOverhead(overhead);
+  globalTest.setTaskSet(taskSet);
+  globalTest.setOverhead(overhead);
 
   schedTestParam->initSchedTestParam();
   schedTestParam->setParameters(cmdlParser);
@@ -37,7 +37,8 @@ int main(int argc, char **argv) {
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
 
-  densityTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
-  densityTest.makeSchedTest();
+  globalTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
+  globalTest.makeSchedTest();
+
   return 0;
 }

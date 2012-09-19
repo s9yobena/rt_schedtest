@@ -22,16 +22,32 @@ lt_t Task::getAvrgExecTime() {
   return execTimeSW.computeAvrg();
 }
 
+lt_t Task::getDeadline() {
+  // For now, return period
+  return getPeriod();
+}
+
 lt_t Task::getPeriod() {
   return parameters.period;
+}
+
+double Task::getUtilization() {
+  return (double)((double)(getExecCost())
+		  /(double)(getPeriod()));
 }
 
 lt_t Task::getSelfSuspension() {
   return selfSuspension;
 }
 
+
 lt_t Task::getPerJobMaxSelfSusp() {
   return perJobMaxSelfSusp;
+}
+
+lt_t Task::getTardiness() {
+  // For now, return 0;
+  return 0;
 }
 
 void Task::setId(pid_t _taskId) {

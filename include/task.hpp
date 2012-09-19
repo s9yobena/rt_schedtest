@@ -20,9 +20,12 @@ public:
   unsigned getCpu();
   lt_t getExecCost();
   lt_t getAvrgExecTime();
+  lt_t getDeadline();
   lt_t getPeriod(); 
   lt_t getSelfSuspension(); 	// This is how long the task suspended, i.e the sum of all self suspensions
   lt_t getPerJobMaxSelfSusp(); 	// This is the maximum time a job suspended.
+  double getUtilization();
+  lt_t getTardiness();
 
   void setId(pid_t);
   void setCpu(unsigned);
