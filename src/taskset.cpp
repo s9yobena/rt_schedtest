@@ -2,7 +2,7 @@
 
 TaskSet::TaskSet() {
   averageExecCost = 0;
-  
+  printExecutionTimes = false;
 }
 
 void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
@@ -30,7 +30,9 @@ void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
 
   // update task average execution time
   taskSet[task_id].updateAvrgExecTime(exec_time);
-  cout<<"task id:"<<task_id<<" average exec time is "<<taskSet[task_id].getAvrgExecTime() <<endl;
+  if (printExecutionTimes) {
+    cout<<"task id:"<<task_id<<" average exec time is "<<taskSet[task_id].getAvrgExecTime() <<endl;
+  }
   
   // update task worst execution time
   updateMaxExecCost(exec_time, task_id);  
@@ -143,19 +145,21 @@ void TaskSet::setParameters(const CmdlParser& cmdlParser) {
 }
 
 void TaskSet::printParameters() {
-  
-  printf("printing task set parameters \n");
-  for (int i=0;i<getNbrTasks();i++){
 
-    pid_t taskId;
-    taskId = getTaskId(i);
+  if (printExecutionTimes)  {
+    printf("printing task set parameters \n");
+    for (int i=0;i<getNbrTasks();i++){
 
-    printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
-	   taskId, 
-  	   (int)getTaskExecCost(taskId), 
-	   (int)getTaskPeriod(taskId),
-	   (int)getTaskSelfSuspension(taskId));
-  }
+      pid_t taskId;
+      taskId = getTaskId(i);
+
+      printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
+	     taskId, 
+	     (int)getTaskExecCost(taskId), 
+	     (int)getTaskPeriod(taskId),
+	     (int)getTaskSelfSuspension(taskId));
+    }
+  }  
 }
 
 int TaskSet::getNbrTasks() {
