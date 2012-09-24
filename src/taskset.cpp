@@ -2,7 +2,7 @@
 
 TaskSet::TaskSet() {
   averageExecCost = 0;
-  printExecutionTimes = false;
+  printExecutionTimes = true;
 }
 
 void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
@@ -205,6 +205,10 @@ lt_t TaskSet::getPerJobMaxSelfSusp(pid_t taskId) {
 
 lt_t TaskSet::getTaskTardiness(pid_t taskId) {
   return taskSet[taskId].getTardiness();
+}
+
+void TaskSet::setTaskCpu(pid_t taskId, unsigned cpu) {
+  taskSet[taskId].setCpu(cpu);
 }
 
 void TaskSet::setTaskExecCost(pid_t taskId, lt_t execCost) {

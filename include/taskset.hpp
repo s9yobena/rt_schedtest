@@ -51,7 +51,8 @@ public :
   lt_t getTaskSelfSuspension(pid_t);
   lt_t getPerJobMaxSelfSusp(pid_t);
   lt_t getTaskTardiness(pid_t);
-
+  
+  void setTaskCpu(pid_t, unsigned);
   void setTaskExecCost(pid_t, lt_t);
   void setTaskPeriod(pid_t, lt_t);
   void setTaskSelfSuspension(pid_t, lt_t);

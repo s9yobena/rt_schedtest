@@ -37,19 +37,26 @@ void LitmusExecutionTime::check(struct st_event_record* ster) {
 	   && (ster->hdr.job == currentStEventRecord.hdr.job )) {
 
     state = WAIT_FOR_RELEASE_EVENT;
-    updateTaskSet((uint64_t)(ster->data.completion.when) - (uint64_t)(currentStEventRecord.data.release.release), currentStEventRecord.hdr.pid );
+    updateTaskSet((uint64_t)(ster->data.completion.when) - (uint64_t)(currentStEventRecord.data.release.release)
+		  ,currentStEventRecord.hdr.cpu
+		  ,currentStEventRecord.hdr.pid );
   }
 }
 
-void LitmusExecutionTime::updateTaskSet(lt_t exec_time, pid_t task_id) {
+
+void LitmusExecutionTime::updateTaskSet(lt_t exec_time, unsigned _cpu, pid_t task_id) {
 
   exec_time = SafetyMargin::makeSM(exec_time);
-
   taskSet->updateTaskExecCost(exec_time, task_id);
   lt_t avrgExecCost = taskSet->computeAverageExecCost();
-  if (avrgExecCost > taskSet->getAverageExecCost() ) {
+
+  // Whenever a task migrates to another cpu or if the taskset exhibits a 
+  // larger average execution time, a new schedulability test is performed.
+  if (avrgExecCost > taskSet->getAverageExecCost() 
+      || _cpu != taskSet->getTaskCpu(task_id) ){
 
     taskSet->setAverageExecCost(avrgExecCost);
+    taskSet->setTaskCpu(task_id, _cpu);
     schedTestParam->makeSchedTestParam();
     litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
   }
