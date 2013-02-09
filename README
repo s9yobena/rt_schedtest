@@ -17,6 +17,22 @@ Input
 - rt_schedtest accepts as input a file featuring the parameters necessary to make 
 a schedulability test. The following is an example:
 
+
+2267	 	 "CPU clock speed"
+0,1,2,3,-	 
+20985
+378115
+9807
+434703
+431340
+130401
+234443
+3126 0 275023 0 100000000 0 0 
+3124 1 213303 0 100000000 0 0 
+3128 2 225002 0 100000000 0 0 
+3129 3 219927 0 100000000 0 0 
+
+
 320613 	     "CXS(Cycles)"
 6802366	     "SCHED(Cycles)"
 40854	     "SCHED2(Cycles)"

@@ -1,28 +1,20 @@
-# Makefile copied from ft_tools
+# Makefile copied from ft_tools and modified
 
 # ##############################################################################
 # User variables
 
 # user variables can be specified in the environment or in a .config file
--include .config
+# -include .config
 
 # Where is the LITMUS^RT userspace library source tree?
 LIBLITMUS ?= ../liblitmus
 
-# Include default configuration from liblitmus
-# Liblitmus must have been built before ft_tools can be built.
-include ${LIBLITMUS}/inc/config.makefile
-
-# Use g++ instead of gcc and remove the -Wdeclaration-after-statement
-CC             = /usr/bin/g++
-CFLAGS         = -Wall -Werror -g
+-include ./inc/config.makefile
 
 # all sources
 vpath %.c src/
 vpath %.cpp src/
 
-# local include files
-CPPFLAGS += -Iinclude/ -fopenmp
 
 # ##############################################################################
 # Targets
@@ -60,8 +52,3 @@ rt_trace-daemon: ${obj-rt_trace-daemon}
 TAGS:
 	@echo TAGS
 	@find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
-
-
-
-# dependency discovery
-include ${LIBLITMUS}/inc/depend.makefile

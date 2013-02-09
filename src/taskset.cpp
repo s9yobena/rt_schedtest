@@ -2,7 +2,7 @@
 
 TaskSet::TaskSet() {
   averageExecCost = 0;
-  printExecutionTimes = true;
+  printExecutionTimes = false;
 }
 
 void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
