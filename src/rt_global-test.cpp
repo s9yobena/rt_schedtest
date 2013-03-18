@@ -8,8 +8,6 @@
 #include "globaltest.hpp"
 #include "schedtestparam.hpp"
 
-// for now, global test is a wrapper around the density test.
-
 
 int main(int argc, char **argv) {
 
