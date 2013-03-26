@@ -9,7 +9,17 @@
 # Where is the LITMUS^RT userspace library source tree?
 LIBLITMUS ?= ../liblitmus
 
--include ./inc/config.makefile
+# Include default configuration from liblitmus
+# Liblitmus must have been built before rt_schedtest can be built.
+include ${LIBLITMUS}/inc/config.makefile
+
+# Set our configuration 
+CFLAGS     = -Wall -Werror -g
+LDFLAGS    +=  -fopenmp  	
+CPPFLAGS  += -Iinclude/ -fopenmp
+CC         = /usr/bin/g++
+
+
 
 # all sources
 vpath %.c src/

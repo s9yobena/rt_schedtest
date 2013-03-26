@@ -17,6 +17,8 @@ int main(int argc, char **argv) {
   SchedTestParam *schedTestParam;
   CmdlParser cmdlParser(argc, argv);    
 
+  double non_sched_t;
+
   overhead = Overhead::getInstance();
   taskSet = new TaskSet();
   schedTestParam = SchedTestParam::getInstance();
@@ -37,7 +39,16 @@ int main(int argc, char **argv) {
 
   globalTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
   globalTest.setNbrCpus(schedTestParam->getNbrCpus());
-  globalTest.makeSchedTest();
+
+  if (!globalTest.makeSchedTest()) {
+
+	  non_sched_t = wctime();
+	  FILE *non_sched_file;
+	  non_sched_file = fopen("non_sched_file","a");
+	  char buf[100];
+	  sprintf(buf,"%f\n", non_sched_t);
+	  fputs(buf,non_sched_file);
+  }
 
   return 0;
 }
