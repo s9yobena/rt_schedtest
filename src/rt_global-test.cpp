@@ -48,6 +48,16 @@ int main(int argc, char **argv) {
 	  char buf[100];
 	  sprintf(buf,"%f\n", non_sched_t);
 	  fputs(buf,non_sched_file);
+	  fclose(non_sched_file);
+	  
+  } else  {
+
+	  FILE *non_sched_file;
+	  non_sched_file = fopen("non_sched_file","w");
+	  char buf[100];
+	  sprintf(buf,"TaskSetSchedulable\n");
+	  fputs(buf,non_sched_file);
+	  fclose(non_sched_file);
   }
 
   return 0;
