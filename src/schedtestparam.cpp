@@ -1,6 +1,7 @@
 #include "schedtestparam.hpp"
 #include "taskset.hpp"
 #include "cachetop.hpp"
+#include "litmus.h"		// for get_max_overheads()
 
 SchedTestParam::SchedTestParam() {
 }
@@ -32,15 +33,34 @@ void SchedTestParam::initSchedTestParam() {
 }
 
 void SchedTestParam::resetLocalParams() {
+
   mhzCpuClock = 0;
   cache_top.clear();
-  cxs = 0;
-  sched = 0;
-  sched2 = 0;
-  release = 0;
-  send_resched = 0;
-  release_latency = 0;
-  tick = 0;
+
+  // When the tracign daemon starts executing, the maximum system overheads
+  // may not be 0 (if system was already running) in this case the daemon may 
+  // work with 0 overheads until litmus exports an overheads value that is a 
+  // maximum value with regard to litmus internal maximum overheads. 
+  // To avoid this gap, this call makes sure that we start with the actual
+  // maximum overheads.
+  struct max_overheads_t max_overheads;	
+  if (!get_max_overheads(&max_overheads)) {
+    cxs = max_overheads.cxs;
+    sched = max_overheads.sched;
+    sched2 = max_overheads.sched2;
+    release = max_overheads.release;
+    send_resched = max_overheads.send_resched;
+    release_latency = max_overheads.release_latency;
+    tick = max_overheads.tick;
+  } else {  
+    cxs = 0;
+    sched = 0;
+    sched2 = 0;
+    release = 0;
+    send_resched = 0;
+    release_latency = 0;
+    tick = 0;
+  }
   taskParams.clear();
 }
 
