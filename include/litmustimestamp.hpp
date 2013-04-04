@@ -19,6 +19,8 @@ class LitmusTimestamp {
 
 private:
   TimestampProcessor* timestampProcessor;
+protected:
+	static unsigned int lastSeqNo;
 public:
   LitmusTimestamp();
   LitmusTimestamp(cmd_t);
@@ -26,6 +28,9 @@ public:
   virtual void check(struct timestamp*)=0;
   void setLitmusTimestampObserver(TimestampProcessor*);
   void updateLitmusTimestampObservers(overhead_t,cmd_t);
+
+	static void setLastSeqNo(unsigned int); 
+	static unsigned int getLastSeqNo();
 };
 
 #endif

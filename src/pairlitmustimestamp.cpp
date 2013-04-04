@@ -23,6 +23,7 @@ void PairLitmusTimestamp::check(struct timestamp* ts) {
   if ( (state == WAIT_FOR_START_EVENT) && 
        (ts->event == this->startID)) {
 
+    setLastSeqNo(ts->seq_no);
     state = WAIT_FOR_MATCH;
     currentTimestamp = *ts;
   }
@@ -34,6 +35,7 @@ void PairLitmusTimestamp::check(struct timestamp* ts) {
 	     &&( ts->event == startID)
 	     &&(currentTimestamp.seq_no < ts->seq_no)) {
 
+      setLastSeqNo(ts->seq_no);
     state = WAIT_FOR_MATCH;
     currentTimestamp = *ts;
   }
@@ -45,8 +47,10 @@ void PairLitmusTimestamp::check(struct timestamp* ts) {
   else if ((currentTimestamp.event == startID)
 	   &&(ts->event == startID+1)
 	   &&(ts->task_type == TSK_RT)
-	   &&(currentTimestamp.seq_no < ts->seq_no)) {
-
+	   &&(currentTimestamp.seq_no < ts->seq_no)
+	   &&(getLastSeqNo()+1 == ts->seq_no)) {
+	  
+    setLastSeqNo(ts->seq_no);
     state = WAIT_FOR_START_EVENT;
     updateLitmusTimestampObservers((ts->timestamp - currentTimestamp.timestamp),
 				   currentTimestamp.event );

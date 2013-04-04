@@ -13,6 +13,7 @@ void SendReschedLitmusTimestamp::check(struct timestamp* ts) {
   if ( (state == WAIT_FOR_START_EVENT)
        && (ts->event == startID)) {
 
+    setLastSeqNo(ts->seq_no);
     state = WAIT_FOR_MATCH;
     currentTimestamp = *ts;
   }
@@ -24,6 +25,7 @@ void SendReschedLitmusTimestamp::check(struct timestamp* ts) {
 	   &&( ts->event == startID)
 	   &&(currentTimestamp.seq_no < ts->seq_no)) {
 
+    setLastSeqNo(ts->seq_no);	  
     state = WAIT_FOR_MATCH;
     currentTimestamp = *ts;
   }
@@ -40,8 +42,10 @@ void SendReschedLitmusTimestamp::check(struct timestamp* ts) {
 
   else if ((currentTimestamp.event == startID)
 	   &&(ts->event == startID+1)
-	   &&(currentTimestamp.seq_no < ts->seq_no)) {
-
+	   &&(currentTimestamp.seq_no < ts->seq_no)
+	   &&(getLastSeqNo()+1 == ts->seq_no)) {
+	  
+    setLastSeqNo(ts->seq_no);
     state = WAIT_FOR_START_EVENT;
     updateLitmusTimestampObservers((ts->timestamp - currentTimestamp.timestamp),
 				   currentTimestamp.event );
