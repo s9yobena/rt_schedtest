@@ -36,6 +36,14 @@ void LitmusOverhead::setDefaultConfig() {
   schedTestParam = SchedTestParam::getInstance();
   litmusSchedTest = LitmusSchedTest::getInstance();
 
+  // When the tracign daemon starts executing, the maximum system overheads
+  // may not be 0 (if system was already running) in this case the daemon may 
+  // work with 0 overheads until litmus exports an overheads value that is a 
+  // maximum value with regard to litmus internal maximum overheads. 
+  // To avoid this gap, this call makes sure we start we 0 overheads.
+  reset_max_overheads();
+
+
   enableEvent("CXS_START");
   enableEvent("CXS_END");
 
