@@ -66,7 +66,9 @@ void LitmusSchedTest::initSchedTest(char *schedTestParamFile) {
 	strcpy(schedTestName, plugin_table[i].schedtestname);
       }
   }
+#ifdef PRINT_SCHED_OUTPUT
   printf("callign rt_schedtest with the following schedulability test: %s \n ",schedTestName);
+#endif
 
   strcpy(schedTestNameOption, "--");
   strcat(schedTestNameOption, schedTestName);

@@ -1,5 +1,7 @@
 #include "cmdlparser.h"
 
+// #define PRINT_ON
+
 CmdlParser::CmdlParser(int argc, char **argv) {
 
   this->cpmd = 5000;
@@ -69,12 +71,14 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	}
     }
 
-
+#ifdef PRINT_ON
   if (cpmd_flag)
     printf ("CPMD set to: %d \n ",this->cpmd);
   else
     printf ("CPMD set to default: %d \n",this->cpmd);
+#endif
 
+#ifdef PRINT_ON
   if (stf_flag)
     printf ("stf file set to: %s \n ",this->stfName);
   else {
@@ -82,6 +86,15 @@ CmdlParser::CmdlParser(int argc, char **argv) {
     fprintf(stderr, "%s", USAGE);
     exit(EXIT_FAILURE);
   }
+#else
+  if (!stf_flag) {
+    fprintf(stderr,"Please give a scheduling test input file \n");
+    fprintf(stderr, "%s", USAGE);
+    exit(EXIT_FAILURE);
+  }
+#endif
+
+
 
   if (density_test_flag) {
     this->schedTestName = DENSITY_TEST;
@@ -90,7 +103,9 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 
   if (g_edf_test_flag) {
     this->schedTestName = G_EDF_TEST;
+#ifdef PRINT_ON    
     printf("Setting G-EDF test \n");
+#endif
   }
 
   if (p_edf_test_flag) {

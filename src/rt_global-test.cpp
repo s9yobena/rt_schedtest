@@ -52,12 +52,12 @@ int main(int argc, char **argv) {
 	  
   } else  {
 
-	  FILE *non_sched_file;
-	  non_sched_file = fopen("non_sched_file","w");
-	  char buf[100];
-	  sprintf(buf,"TaskSetSchedulable\n");
-	  fputs(buf,non_sched_file);
-	  fclose(non_sched_file);
+  	  FILE *non_sched_file;
+  	  non_sched_file = fopen("non_sched_file","a");
+  	  char buf[100];
+  	  sprintf(buf,"TaskSetSchedulable\n");
+  	  fputs(buf,non_sched_file);
+  	  fclose(non_sched_file);
   }
 
   return 0;

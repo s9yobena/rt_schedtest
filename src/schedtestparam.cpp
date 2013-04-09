@@ -213,7 +213,7 @@ int SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
     currLineNbr++;
   }
   // we should not reach here
-  printf("Error parsing file; Correct input file format? \n");
+  printf("Error parsing file schedtestfile; Correct input file format? \n");
 }
 
 void SchedTestParam::setCacheTopParam(unsigned _cacheTopPos) {

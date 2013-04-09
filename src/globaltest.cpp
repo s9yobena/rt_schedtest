@@ -6,6 +6,7 @@
 #include <omp.h>
 #define PARALLEL
 
+// #define PRINT_SCHED_OUTPUT
 
 GlobalTest::GlobalTest() {
 }
@@ -142,6 +143,9 @@ int GlobalTest::makeDensityTest() {
     }
     sum_density += cur_density;    
   }
+
+#ifdef PRINT_SCHED_OUTPUT
+
   printf("\n");
   printf("******************************Testing schedulability********************************************\n");
 
@@ -187,16 +191,20 @@ int GlobalTest::makeDensityTest() {
 
   cout<<endl;
   taskSet->printParameters();
+
+#endif
   
   if (sum_density <= (long double)nbr_cpu-((long double)nbr_cpu-1)*max_density) {
+#ifdef PRINT_SCHED_OUTPUT
     printf("\n*******************Schedulability test result:***** TASK SET STILL SCHEDULABLE :-) ****************** \n");
+#endif
     return 1;
   } else {
+#ifdef PRINT_SCHED_OUTPUT
     printf("\n*******************Schedulability test result:***** TASK SET NO LONGER SCHEDULABLE :-( ************** \n");
+#endif
     return 0;
   }  
-  printf("\n");
-  printf("\n");
 
 }
 
@@ -370,7 +378,9 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
       breakKsiLoop      = 0;
       breakSelfSuspLoop = 0;
 
+#ifdef PRINT_SCHED_OUTPUT
       cout<<omp_get_num_threads()<<" executing this region,"<<endl;
+#endif
       pid_t lTaskId;
       Task *lTask;
       lTaskId = taskSet->getTaskId(l);
@@ -509,10 +519,14 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 #endif
 
   if (schedTestResult) {
+#ifdef PRINT_SCHED_OUTPUT
     printf("\n*******************Cong Schedulability test result:***** ALL TASKS SCHEDULABLE :-) ****************** \n");
+#endif    
     return 1;
   } else {
+#ifdef PRINT_SCHED_OUTPUT
     printf("\n*******************Cong Schedulability test result:***** TASK SET NON SCHEDULABLE :-( ****************** \n");
+#endif
     return 0;
 
   }   
