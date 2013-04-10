@@ -233,11 +233,15 @@ int SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
   printf("Error parsing file schedtestfile; Correct input file format? \n");
 }
 
+void SchedTestParam::initCacheTopParam() {
+  
+  cacheTop = new CacheTop();
+  cacheTop->drawCacheTop();
+  _cacheTop = cacheTop->getCacheTop();
+}
+
+
 void SchedTestParam::setCacheTopParam(unsigned _cacheTopPos) {
-  CacheTop cacheTop;
-  cacheTop.drawCacheTop();
-  vector<vector<int> > _cacheTop;
-  _cacheTop = cacheTop.getCacheTop();
 
   rewind(schedTestPramFile);
   char line[100];

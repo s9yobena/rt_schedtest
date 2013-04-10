@@ -10,6 +10,7 @@
 #include "cmdlparser.h"
 #include <sstream>
 
+
 using namespace std;
 
 // DO NOT CHANGE THE ORDER OF THE FOLLOWING ENUM
@@ -39,6 +40,7 @@ struct TaskParam {
 };
 
 class TaskSet;
+class CacheTop;
 
 class SchedTestParam {
 
@@ -66,6 +68,8 @@ private:
   overhead_t tick;
   TaskSet *taskSet;
 
+  CacheTop *cacheTop;
+  vector<vector<int> > _cacheTop;
   void setCacheTopParam(unsigned cacheTopPos);
   vector<vector<int> > getCacheTopParam(unsigned cacheTopPos);
   
@@ -87,6 +91,7 @@ private:
 public:
   static SchedTestParam* getInstance();
   void initSchedTestParam();  
+  void initCacheTopParam(); 
   void resetLocalParams();  
   
   void initOutputName();
