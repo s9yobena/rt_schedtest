@@ -8,6 +8,7 @@
 #include <cstring>
 #include <iostream>
 #include "cmdlparser.h"
+#include "rttypes.h" 		// for maxSTFname
 
 using namespace std;
 
@@ -19,7 +20,7 @@ private:
   ConfigSchedTest& operator= (const ConfigSchedTest&);
   static ConfigSchedTest* configSchedTestInstance;
   
-  char schedTestParamFile[20];
+  char schedTestParamFile[maxSTFname];
   SchedTestName schedTestName;
   void initSchedTest(char*);
 

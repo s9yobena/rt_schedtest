@@ -8,12 +8,9 @@
 #include "schedtrace.h"
 #include "rttypes.h"
 #include "cmdlparser.h"
-
-
+#include <sstream>
 
 using namespace std;
-
-#define MAX_STP_NAME 100
 
 // DO NOT CHANGE THE ORDER OF THE FOLLOWING ENUM
 enum ParamPos {
@@ -52,7 +49,11 @@ private:
   static SchedTestParam *schedTestParamInstance;
 
   FILE *schedTestPramFile;
-  char name[MAX_STP_NAME];
+  char name[maxSTFname];
+  stringstream ssname;
+  int suffI;			// suffix for name (intger)
+  long maxSTFiles;		// max number of active (i.e., concurrently used)
+			        //   stf files
 
   unsigned mhzCpuClock;
   vector<vector<int> > cache_top;
@@ -81,13 +82,17 @@ private:
   int endOfSchedTestParam(const char*);
   void addEndMark();
 
+  void deleteSTFile();
+
 public:
   static SchedTestParam* getInstance();
   void initSchedTestParam();  
   void resetLocalParams();  
-
+  
+  void initOutputName();
   void setOutputName(const char*);
   char* getOutputName();
+  void generateOutputName();
   void setTaskSet(TaskSet*);
 
   vector<TaskParam> taskParams;
@@ -102,6 +107,7 @@ public:
   void setTICK(overhead_t);
   void addTask(TaskParam taskParam);
   void makeSchedTestParam();
+  void writeSchedTestParams();
   
   unsigned getNbrCpus();
   unsigned getMHzCpuClock();  
@@ -117,6 +123,7 @@ public:
   void getSchedTestParam();
 
   void setParameters(const CmdlParser&);
+  
 };
 
 #endif

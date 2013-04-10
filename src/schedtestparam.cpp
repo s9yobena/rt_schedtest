@@ -14,9 +14,26 @@ SchedTestParam* SchedTestParam::getInstance() {
   return schedTestParamInstance;
 }
 
-void SchedTestParam::setOutputName(const char* name) {
-  strcpy(this->name, name);
+void SchedTestParam::initOutputName() {
+  ssname.str("schedtestfile.stf");
+  suffI = 0;
+  maxSTFiles = 10E6;
 }
+
+void SchedTestParam::setOutputName(const char *_name) {
+  strcpy(name,_name);
+}
+
+
+void SchedTestParam::generateOutputName() {
+  // Generate a new suffix for STF.
+  suffI = (suffI +1) % maxSTFiles;
+  // Form final STF name.
+  ssname.str("");
+  ssname<<"schedtestfile"<<suffI<<".stf";
+  strcpy(name,ssname.str().c_str());
+}
+
 
 char* SchedTestParam::getOutputName() {
   return name;
@@ -324,10 +341,7 @@ void SchedTestParam::addEndMark() {
   fclose(schedTestPramFile); 
 }
 
-// Do not modify this function unless you know 
-// very well what you are doing
-void SchedTestParam::makeSchedTestParam() {
-  schedTestPramFile = fopen(name,"w+");
+void SchedTestParam::writeSchedTestParams() {
   // DO NOT CHANGE THE ORDER OF THE FOLLOWING BLOCK
   // START
   setParam(mhzCpuClock, cpuClockPos);
@@ -341,8 +355,26 @@ void SchedTestParam::makeSchedTestParam() {
   setParam(tick, tickPos);
   addAllTasks();  
   // END
+}
+
+
+// Do not modify this function unless you know 
+// very well what you are doing
+void SchedTestParam::makeSchedTestParam() {
+  // This schedtestfile is kept for reference, as the previous
+  // one is consumed (deleted) by the schedulability tests.
+  setOutputName("schedtestfile.stf");
+  schedTestPramFile = fopen(name,"w+");
+  writeSchedTestParams();
   fclose(schedTestPramFile); 
   addEndMark();
+
+  generateOutputName();
+  schedTestPramFile = fopen(name,"w+");
+  writeSchedTestParams();
+  fclose(schedTestPramFile); 
+  addEndMark();
+  
 }
 
 void SchedTestParam::getSchedTestParam() {
@@ -366,6 +398,12 @@ void SchedTestParam::getSchedTestParam() {
   getAllTasks();
   // END  
   fclose(schedTestPramFile); 
+  deleteSTFile();
+}
+
+void SchedTestParam::deleteSTFile() {
+  if( remove(name) != 0 )     
+    perror( "Error deleting schedtestfile" );
 }
 
 void SchedTestParam::setParameters(const CmdlParser& cmdlParser) {

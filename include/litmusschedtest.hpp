@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include "cstring"
 #include <iostream>
+#include "rttypes.h" 		// for maxSTFname
 
 using namespace std;
 
@@ -19,7 +20,7 @@ private:
   static LitmusSchedTest* litmusSchedTestInstance;
   
   void initSchedTest(char*);
-  char schedTestName[20];
+  char schedTestName[maxSTFname];
   char schedTestNameOption[25];
 
 public:

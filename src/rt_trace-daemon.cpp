@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
   SchedTestParam *schedTestParam;
   schedTestParam = SchedTestParam::getInstance();
   schedTestParam->initSchedTestParam();
-  schedTestParam->setOutputName("schedtestfile.stf");
+  schedTestParam->initOutputName();
   schedTestParam->setTaskSet(taskSet);
   schedTestParam->setMHzCpuClock(CpuClock::getMHzCpuClock());
 

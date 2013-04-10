@@ -8,8 +8,6 @@
 #include <string.h>
 #include "rttypes.h"
 
-#define MAX_STF_NAME 100
-
 #define USAGE							\
 	"rt_schedtest [--timestamps] [--overheads] [--cpmd <CPMD>] [--stf <inputfilename.stf>]\n" \
 	"   --timestamps: print timestamps \n"			\
@@ -30,7 +28,7 @@ class CmdlParser {
   bool printOverheads;
   bool printSchedulingTraces;
   bool printExecutionTimes;
-  char stfName[MAX_STF_NAME];
+  char stfName[maxSTFname];
   SchedTestName schedTestName;
 
 
