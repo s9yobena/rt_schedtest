@@ -54,6 +54,9 @@ int main(int argc, char **argv) {
   signal(SIGUSR1, finishTesting);
   signal(SIGTERM, finishTesting);
 
+  // Remove the nonschedfile output by schedtest
+  remove("sched_log_file");
+
   setDevices();
   LitmusDevice::startTracingAllDevices();
   return 0;

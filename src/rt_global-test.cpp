@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
 	  non_sched_t = wctime();
 	  FILE *non_sched_file;
-	  non_sched_file = fopen("non_sched_file","a");
+	  non_sched_file = fopen("sched_log_file","a");
 	  char buf[100];
 	  sprintf(buf,"%f\n", non_sched_t);
 	  fputs(buf,non_sched_file);
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
   } else  {
 
   	  FILE *non_sched_file;
-  	  non_sched_file = fopen("non_sched_file","a");
+  	  non_sched_file = fopen("sched_log_file","a");
   	  char buf[100];
   	  sprintf(buf,"TaskSetSchedulable\n");
   	  fputs(buf,non_sched_file);
