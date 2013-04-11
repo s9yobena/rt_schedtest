@@ -72,6 +72,8 @@ private:
   vector<vector<int> > _cacheTop;
   void setCacheTopParam(unsigned cacheTopPos);
   vector<vector<int> > getCacheTopParam(unsigned cacheTopPos);
+  char cacheTopBuf[100];
+
   
   void setParam(unsigned value, unsigned pos);
   unsigned getParam(unsigned pos);

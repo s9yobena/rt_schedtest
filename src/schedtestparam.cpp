@@ -195,15 +195,19 @@ int SchedTestParam::endOfSchedTestParam(const char *line) {
 void SchedTestParam::setTaskParam(TaskParam taskParam, unsigned pos) {
   rewind(schedTestPramFile);
   char line[100];
-  char buf[100];
+  stringstream buf;
+  buf.str("");
   unsigned currLineNbr;
   currLineNbr = 0;
   do {
     if (currLineNbr == pos) {
-      sprintf(buf, "%u %u %llu %llu %llu %llu %llu \n", 
-	      taskParam.id, taskParam.cpu, taskParam.e, taskParam.d, taskParam.p, 
-	      taskParam.ss, taskParam.perJobMaxSelfSusp);
-      fputs (buf, schedTestPramFile);
+
+      buf<<taskParam.id<<" "<<taskParam.cpu<<" "<<taskParam.e<<" "
+	 <<taskParam.d<<" "<<taskParam.p<<" "<<taskParam.ss<<" "
+	 <<taskParam.perJobMaxSelfSusp
+	 <<endl;
+
+      fputs (buf.str().c_str(), schedTestPramFile);
       break;
     }
     currLineNbr++;
@@ -238,6 +242,19 @@ void SchedTestParam::initCacheTopParam() {
   cacheTop = new CacheTop();
   cacheTop->drawCacheTop();
   _cacheTop = cacheTop->getCacheTop();
+  cacheTopBuf[0] = '\0';
+  for (int i=0; i<_cacheTop.size(); i++) {
+	
+    for (int j=0; j<_cacheTop[i].size(); j++) {
+
+      stringstream tmpB;
+      tmpB.str("");
+      tmpB<<_cacheTop[i][j]<<",";
+      strncat(cacheTopBuf, tmpB.str().c_str(), strlen(tmpB.str().c_str()));
+    }
+    strcat(cacheTopBuf,"-");
+  }
+  strcat(cacheTopBuf,"\n");
 }
 
 
@@ -245,24 +262,11 @@ void SchedTestParam::setCacheTopParam(unsigned _cacheTopPos) {
 
   rewind(schedTestPramFile);
   char line[100];
-  char buf[100];
   unsigned currLineNbr;
   currLineNbr = 0;
   do {
     if (currLineNbr == _cacheTopPos) {
-      buf[0] = '\0';
-      for (int i=0; i<_cacheTop.size(); i++) {
-	
-	for (int j=0; j<_cacheTop[i].size(); j++) {
-
-	  char tmpB[4];
-	  sprintf(tmpB, "%d,", _cacheTop[i][j]);
-	  strncat(buf, tmpB, strlen(tmpB));
-	}
-	strcat(buf,"-");
-      }
-      strcat(buf,"\n");
-      fputs (buf, schedTestPramFile);
+      fputs (cacheTopBuf, schedTestPramFile);
       break;
     }
     currLineNbr++;
@@ -309,13 +313,20 @@ vector<vector<int> > SchedTestParam::getCacheTopParam(unsigned cacheTopPos) {
 void SchedTestParam::setParam(unsigned value, unsigned pos) {
   rewind(schedTestPramFile);
   char line[100];
-  char buf[100];
+  stringstream buf;
   unsigned currLineNbr;
   currLineNbr = 0;
+  buf.str("");
   do {
     if (currLineNbr == pos) {
-      sprintf(buf, "%d\n", value);
-      fputs (buf, schedTestPramFile);
+      try {
+	buf<<value
+	   <<endl;
+      } catch (...) {
+	cout<<"did throw an exception"
+	    <<endl;
+      }
+      fputs (buf.str().c_str(), schedTestPramFile);
       break;
     }
     currLineNbr++;
