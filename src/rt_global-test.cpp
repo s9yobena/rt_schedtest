@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 	  FILE *non_sched_file;
 	  non_sched_file = fopen("sched_log_file","a");
 	  char buf[100];
-	  sprintf(buf,"%f\n", non_sched_t);
+	  sprintf(buf,"TaskSet unschedulable at %f\n", non_sched_t);
 	  fputs(buf,non_sched_file);
 	  fclose(non_sched_file);
 	  
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
   	  FILE *non_sched_file;
   	  non_sched_file = fopen("sched_log_file","a");
   	  char buf[100];
-  	  sprintf(buf,"TaskSetSchedulable\n");
+  	  sprintf(buf,"TaskSet schedulable at %f\n", wctime());
   	  fputs(buf,non_sched_file);
   	  fclose(non_sched_file);
   }
