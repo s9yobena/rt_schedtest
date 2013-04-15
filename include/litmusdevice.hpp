@@ -11,6 +11,8 @@
 #include <sys/ioctl.h>
 #include<queue>
 #include<iostream>
+#include <pthread.h>
+#include <assert.h>
 using namespace std;
 
 #define ENABLE_CMD  0L
@@ -18,6 +20,19 @@ using namespace std;
 
 #define DEV_BUF_SIZE 4012
 #define MAX_EVENTS 128 
+
+enum buf_status_t {full,empty};
+
+struct dev_buf_t {
+  char devName[100];
+  int devFD;
+  char devBuffer[DEV_BUF_SIZE];
+  size_t size;
+  enum buf_status_t status;
+  pthread_cond_t full;
+  pthread_cond_t empty;
+  pthread_mutex_t mutex;
+};
 
 typedef unsigned int EventId;
 
@@ -29,9 +44,9 @@ protected:
   LitmusDevice(const LitmusDevice&);
   LitmusDevice & operator=(const LitmusDevice&);
  
-  char devName[100];
-  int devFD;
-  char devBuffer[DEV_BUF_SIZE];
+  pthread_t asynch_reader;
+  struct dev_buf_t dev_buf;
+  
   EventId devEvents[MAX_EVENTS];
   unsigned int nbrEvents;
 

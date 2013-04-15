@@ -70,25 +70,32 @@ void LitmusOverhead::setDefaultConfig() {
 
 void LitmusOverhead::trace() {
 
-  int rd;
   size_t size, count;
   struct timestamp *ts, *end;
 
-  if ((rd = read(devFD, devBuffer, DEV_BUF_SIZE)) > 0) {
+  if (dev_buf.status == empty) {
+    pthread_mutex_unlock(&dev_buf.mutex);
 
-    size = rd;
-    ts    = (struct timestamp*) devBuffer;
+    // no data read by our asynch_reader; in this case, we proceed to reading 
+    // from the next device, wihout blocking.
+    scheduleTrace();
+  } else if (dev_buf.status == full) {
+    
+    size = dev_buf.size;
+    ts    = (struct timestamp*) dev_buf.devBuffer;
     count = size / sizeof(struct timestamp);
     end   = ts + count;
 		
     for (; ts != end; ts++){
       timestampProcessor->processTimestamp(ts);
     }
-  }
-  
-  // the base class LitmusDevie has a queue of devices, from which another device is scheduled to trace
-  scheduleTrace();
 
+    dev_buf.status = empty;
+    pthread_cond_signal(&dev_buf.empty);
+
+    pthread_mutex_unlock(&dev_buf.mutex);
+    scheduleTrace();
+  }
 }
 
 int LitmusOverhead::eventStrToEventId(const char* eventStr, EventId *eventId) {
