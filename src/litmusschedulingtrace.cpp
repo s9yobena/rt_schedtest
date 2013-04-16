@@ -36,6 +36,7 @@ void LitmusSchedulingTrace::trace() {
 
     // no data read by our asynch_reader; in this case, we proceed to reading 
     // from the next device, wihout blocking.
+    sleep(1);
     scheduleTrace();
   } else if (dev_buf.status == full) {
     

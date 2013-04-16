@@ -52,10 +52,10 @@ int LitmusDevice::initDev(const char* devName) {
     return 1;
   }
 
-  pthread_create(&asynch_reader, NULL, dev_reader_func, (void*) &dev_buf);
-  
   nbrEvents = 0;
   setDefaultConfig();
+
+  pthread_create(&asynch_reader, NULL, dev_reader_func, (void*) &dev_buf);
 }
 
 void LitmusDevice::startTracing() {
