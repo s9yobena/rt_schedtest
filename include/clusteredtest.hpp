@@ -16,7 +16,7 @@ class Cluster {
 
 public:
   unsigned nbrCpus;
-  vector<int> cpus;
+  vector<unsigned> cpus;
   TaskSet taskSet;
   
   Cluster() {
@@ -29,7 +29,7 @@ public:
   }
 
   bool inCluster(Task *task) {
-    vector<int>::iterator it;
+    vector<unsigned>::iterator it;
     for (it=cpus.begin(); it!=cpus.end(); it++) {
       if (task->getCpu()==*it) {
 	return true;

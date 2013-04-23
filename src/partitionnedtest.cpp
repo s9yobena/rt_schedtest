@@ -9,7 +9,7 @@ PartitionnedTest::PartitionnedTest() {
 PartitionnedTest::~PartitionnedTest() {
 }
 
-void PartitionnedTest::setCpus(vector<int> _cpus) {
+void PartitionnedTest::setCpus(vector<unsigned> _cpus) {
   cpus = _cpus;
 }
 
@@ -61,7 +61,7 @@ int PartitionnedTest::makeSchedTest() {
 
   map<int,double> partitionsUtilization;
   map<int,double>::iterator puItr;
-  vector<int>::iterator cpuItr;
+  vector<unsigned>::iterator cpuItr;
   for (cpuItr = cpus.begin(); cpuItr != cpus.end(); cpuItr++) {
     partitionsUtilization.insert( pair<int,double>(*cpuItr,0.0) );
   }

@@ -97,10 +97,10 @@ void SchedTestParam::setRELEASE_LATENCY(overhead_t release_latency) {
 }
 
 unsigned SchedTestParam::getNbrCpus() {
-  int nbrcpus = 0;
+  unsigned nbrcpus = 0;
 
-  std::vector< std::vector<int> >::const_iterator row;
-  std::vector<int>::const_iterator col;
+  std::vector< std::vector<unsigned> >::const_iterator row;
+  std::vector<unsigned>::const_iterator col;
   for (row = cache_top.begin(); row != cache_top.end(); ++row) {
     for (col = row->begin(); col != row->end(); ++col) {
       nbrcpus++;
@@ -114,7 +114,7 @@ unsigned SchedTestParam::getMHzCpuClock() {
   return mhzCpuClock;
 }
 
-vector<vector<int> > SchedTestParam::getCacheTop() {
+vector<vector<unsigned> > SchedTestParam::getCacheTop() {
   return cache_top;
 }
 
@@ -176,7 +176,6 @@ void SchedTestParam::addAllTasks() {
 
 void SchedTestParam::getAllTasks() {
   vector<TaskParam>::iterator it;
-  unsigned taskParamPos = startTaskPos;
   TaskParam taskParam(0,0,0,0,0,0,0);
   int i=0;
   while(!getTaskParam(&taskParam,startTaskPos+i)) {
@@ -192,20 +191,23 @@ int SchedTestParam::endOfSchedTestParam(const char *line) {
     return 0;
 }
 
-void SchedTestParam::setTaskParam(TaskParam taskParam, unsigned pos) {
+void SchedTestParam::setTaskParam(const TaskParam &taskParam, unsigned pos) {
   rewind(schedTestPramFile);
   char line[100];
-  stringstream buf;
+  // stringstream buf;
   buf.str("");
+  buf.clear();
   unsigned currLineNbr;
   currLineNbr = 0;
   do {
     if (currLineNbr == pos) {
 
+      usleep(500);
       buf<<taskParam.id<<" "<<taskParam.cpu<<" "<<taskParam.e<<" "
 	 <<taskParam.d<<" "<<taskParam.p<<" "<<taskParam.ss<<" "
 	 <<taskParam.perJobMaxSelfSusp
 	 <<endl;
+      usleep(500);
 
       fputs (buf.str().c_str(), schedTestPramFile);
       break;
@@ -226,7 +228,7 @@ int SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
       if (endOfSchedTestParam(line)) {
       	return 1;
       }
-      sscanf(line,"%u %u %u %u %u %u %u",
+      sscanf(line,"%d %u %llu %llu %llu %llu %llu",
 	     &taskParam->id, &taskParam->cpu, &taskParam->e, &taskParam->d, &taskParam->p, 
 	     &taskParam->ss, &taskParam->perJobMaxSelfSusp);
       return 0;
@@ -235,6 +237,9 @@ int SchedTestParam::getTaskParam(TaskParam *taskParam, unsigned pos) {
   }
   // we should not reach here
   printf("Error parsing file schedtestfile; Correct input file format? \n");
+  cout<<"We should not reach here, error"<<endl;
+  exit(1);
+
 }
 
 void SchedTestParam::initCacheTopParam() {
@@ -243,9 +248,9 @@ void SchedTestParam::initCacheTopParam() {
   cacheTop->drawCacheTop();
   _cacheTop = cacheTop->getCacheTop();
   cacheTopBuf[0] = '\0';
-  for (int i=0; i<_cacheTop.size(); i++) {
+  for (unsigned i=0; i<_cacheTop.size(); i++) {
 	
-    for (int j=0; j<_cacheTop[i].size(); j++) {
+    for (unsigned j=0; j<_cacheTop[i].size(); j++) {
 
       stringstream tmpB;
       tmpB.str("");
@@ -274,12 +279,12 @@ void SchedTestParam::setCacheTopParam(unsigned _cacheTopPos) {
 
 }
 
-vector<vector<int> > SchedTestParam::getCacheTopParam(unsigned cacheTopPos) {
+vector<vector<unsigned> > SchedTestParam::getCacheTopParam(unsigned cacheTopPos) {
   rewind(schedTestPramFile);
   char line[100];
   unsigned currLineNbr;
-  vector<vector<int> > ret;
-  vector<int> tmp;
+  vector<vector<unsigned> > ret;
+  vector<unsigned> tmp;
  
   currLineNbr = 0;
   while (fgets (line, sizeof line, schedTestPramFile) != NULL) {
@@ -308,20 +313,27 @@ vector<vector<int> > SchedTestParam::getCacheTopParam(unsigned cacheTopPos) {
     }
     currLineNbr++;
   }
+  cout<<"We should not reach here in SchedTestParam::getCacheTopParam"<<endl;
+  exit(1);
+
 }
 
 void SchedTestParam::setParam(unsigned value, unsigned pos) {
   rewind(schedTestPramFile);
   char line[100];
-  stringstream buf;
+  // stringstream buf;
   unsigned currLineNbr;
   currLineNbr = 0;
   buf.str("");
+  buf.clear();
   do {
     if (currLineNbr == pos) {
       try {
+	
+	usleep(500);
 	buf<<value
 	   <<endl;
+	usleep(500);
       } catch (...) {
 	cout<<"did throw an exception"
 	    <<endl;
@@ -347,11 +359,19 @@ unsigned SchedTestParam::getParam(unsigned pos) {
     }
     currLineNbr++;
   }
+
+  cout<<"We should not reach here SchedTestParam::getParam"<<endl;
+  exit(1);
+    
 }
 
 void SchedTestParam::addEndMark() {
 
   schedTestPramFile = fopen(name,"a");
+  if (schedTestPramFile==NULL){
+    perror("could not open schedtestparam file");
+    exit(EXIT_FAILURE);
+  }
   fputs(endSchedTestParam,schedTestPramFile);
   fclose(schedTestPramFile); 
 }
@@ -380,12 +400,20 @@ void SchedTestParam::makeSchedTestParam() {
   // one is consumed (deleted) by the schedulability tests.
   setOutputName("schedtestfile.stf");
   schedTestPramFile = fopen(name,"w+");
+  if (schedTestPramFile==NULL){
+    perror("could not open schedtestparam file");
+    exit(EXIT_FAILURE);
+  }
   writeSchedTestParams();
   fclose(schedTestPramFile); 
   addEndMark();
 
   generateOutputName();
   schedTestPramFile = fopen(name,"w+");
+  if (schedTestPramFile==NULL){
+    perror("could not open schedtestparam file");
+    exit(EXIT_FAILURE);
+  }
   writeSchedTestParams();
   fclose(schedTestPramFile); 
   addEndMark();

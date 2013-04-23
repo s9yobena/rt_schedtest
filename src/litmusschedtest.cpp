@@ -61,7 +61,7 @@ void LitmusSchedTest::initSchedTest(char *schedTestParamFile) {
   active_plugin_f = fopen("/proc/litmus/active_plugin","r");
   fgets(active_plugin,sizeof active_plugin,active_plugin_f);
   
-  for (int i=0; i<(sizeof(plugin_table)/sizeof(plugin_table[0])); i++) {
+  for (unsigned i=0; i<(sizeof(plugin_table)/sizeof(plugin_table[0])); i++) {
     if (!strncmp(active_plugin, plugin_table[i].name, strlen(plugin_table[i].name))){
 	strcpy(schedTestName, plugin_table[i].schedtestname);
       }

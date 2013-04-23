@@ -19,7 +19,7 @@ void ClusteredTest::setCacheTop(CacheTop *_cacheTop) {
 
 void ClusteredTest::drawClusters(CacheTop & _cT) {
 
-  vector<int>::iterator cacheTopIt;
+  vector<unsigned>::iterator cacheTopIt;
   vector<Cluster*>::iterator clusterIt;
   Cluster *cluster;
   // cB is used to check if the new cluster is already added. i.e the same.
@@ -27,8 +27,8 @@ void ClusteredTest::drawClusters(CacheTop & _cT) {
 
   // first, for each cpu draw the corresponding cluster
   
-  std::vector<vector<int> >  cache_top = _cT.getCacheTop();
-  for (int i = 0; i< cache_top.size(); i++) {
+  std::vector<vector<unsigned> >  cache_top = _cT.getCacheTop();
+  for (unsigned i = 0; i< cache_top.size(); i++) {
     cluster = new Cluster();    
     cB = false;
 
@@ -48,7 +48,7 @@ void ClusteredTest::drawClusters(CacheTop & _cT) {
 
   // print clusters
   int i =0;
-  vector<int>::iterator intit;
+  vector<unsigned>::iterator intit;
   cout<<"printing available clusters: "<<endl;
   for (clusterIt = clustersVec.begin(); 
        clusterIt != clustersVec.end(); 
@@ -95,7 +95,7 @@ int ClusteredTest::makeSchedTest() {
   drawClusters(*cacheTop);
 
   vector<Cluster*>::iterator clusterIt;
-  vector<int>::iterator cpuIt;
+  vector<unsigned>::iterator cpuIt;
 
   for (clusterIt = clustersVec.begin() ;
        clusterIt != clustersVec.end();

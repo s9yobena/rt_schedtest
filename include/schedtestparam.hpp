@@ -58,7 +58,7 @@ private:
 			        //   stf files
 
   unsigned mhzCpuClock;
-  vector<vector<int> > cache_top;
+  vector<vector<unsigned> > cache_top;
   overhead_t cxs;
   overhead_t sched;
   overhead_t sched2;
@@ -68,17 +68,19 @@ private:
   overhead_t tick;
   TaskSet *taskSet;
 
+  stringstream buf;
+
   CacheTop *cacheTop;
-  vector<vector<int> > _cacheTop;
+  vector<vector<unsigned> > _cacheTop;
   void setCacheTopParam(unsigned cacheTopPos);
-  vector<vector<int> > getCacheTopParam(unsigned cacheTopPos);
+  vector<vector<unsigned> > getCacheTopParam(unsigned cacheTopPos);
   char cacheTopBuf[100];
 
   
   void setParam(unsigned value, unsigned pos);
   unsigned getParam(unsigned pos);
 
-  void setTaskParam(TaskParam taskParam, unsigned pos);
+  void setTaskParam(const TaskParam &taskParam, unsigned pos);
   int getTaskParam(TaskParam *taskParam, unsigned pos);
 
   void addAllTasks();
@@ -118,7 +120,7 @@ public:
   
   unsigned getNbrCpus();
   unsigned getMHzCpuClock();  
-  vector<vector<int> > getCacheTop();
+  vector<vector<unsigned> > getCacheTop();
   overhead_t getCXS();
   overhead_t getSCHED();
   overhead_t getSCHED2();

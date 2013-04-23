@@ -12,7 +12,7 @@ class SlidingWindow {
     
 private:
   list<T> slidingWindow;
-  int maxSize;
+  unsigned maxSize;
   int currSize;
   float percentile;
     

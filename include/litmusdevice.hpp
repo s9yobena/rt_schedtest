@@ -18,10 +18,13 @@ using namespace std;
 #define ENABLE_CMD  0L
 #define DISABLE_CMD 1L
 
-#define DEV_BUF_SIZE 4012
+// #define NO_EVENTS (1<<13)
+#define NO_EVENTS 100
+#define DEV_BUF_SIZE (25*NO_EVENTS)
 #define MAX_EVENTS 128 
 
 enum buf_status_t {full,empty};
+enum buf_work_t {busy,idle};
 
 struct dev_buf_t {
   char devName[100];
@@ -29,6 +32,7 @@ struct dev_buf_t {
   char devBuffer[DEV_BUF_SIZE];
   size_t size;
   enum buf_status_t status;
+  enum buf_work_t work;
   pthread_cond_t full;
   pthread_cond_t empty;
   pthread_mutex_t mutex;
@@ -52,7 +56,7 @@ protected:
 
   static queue<LitmusDevice*> devQueue;
   
-  int enableEvent(char* eventStr);
+  int enableEvent(const char* eventStr);
   // provide implementation when subclassing
   virtual int eventStrToEventId(const char* eventStr, EventId *eventId)=0;
   int disableAllEvents();

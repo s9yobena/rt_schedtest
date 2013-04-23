@@ -229,7 +229,7 @@ void TaskSet::addTask(Task *task) {
 }
 
 void TaskSet::removeTask(pid_t taskId) {
-  for (int i=0; i< tasksId.size(); i++) {
+  for (unsigned i=0; i< tasksId.size(); i++) {
     if (tasksId[i] == taskId) {
       tasksId.erase(tasksId.begin()+i);
       break;

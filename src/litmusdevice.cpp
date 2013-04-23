@@ -8,38 +8,58 @@ LitmusDevice::LitmusDevice() {
   devQueue.push(this);
 }
 
-void *dev_reader_func(void *_arg) {
-  int rd;
-  struct dev_buf_t *dev_buf;
-  dev_buf = (struct dev_buf_t*)_arg;
+extern "C" {
 
-  while (1) {
+  void *dev_reader_func(void *_arg) {
+    int rd;
+    struct dev_buf_t *dev_buf;
+    dev_buf = (struct dev_buf_t*)_arg;
+
+    while (1) {
 	
-    pthread_mutex_lock(&dev_buf->mutex);
+      pthread_mutex_lock(&dev_buf->mutex);
 	
-    while (dev_buf->status == full) {
-      // Wait for the daemon to read data from buffer.
-      pthread_cond_wait(&dev_buf->empty, &dev_buf->mutex);
+      while (dev_buf->status == full) {
+	// Wait for the daemon to read data from buffer.
+	pthread_cond_wait(&dev_buf->empty, &dev_buf->mutex);
+      }
+
+      // At this stage, the buffer is empty; flag is as busy, and start reading
+      // into it, however, make sure no lock is hold while executing read(), 
+      // because this will ultimately block the daemon.
+
+      dev_buf->work = busy;
+
+      pthread_mutex_unlock(&dev_buf->mutex);
+    
+      // If this call blocks, which is the case if there is no data available in 
+      //the device, the daemon is still able to read other devices.
+      rd = read(dev_buf->devFD, dev_buf->devBuffer, DEV_BUF_SIZE);
+
+      pthread_mutex_lock(&dev_buf->mutex);
+
+      dev_buf->work = idle;
+
+      if (rd > 0) {
+	dev_buf->status = full;
+	dev_buf->size = rd;
+      }
+    
+      // Notice that there is no pthread_cond_signal(&dev_buf->full), because the
+      // daemon does not block if there is no data read from this device.
+      pthread_mutex_unlock(&dev_buf->mutex);
     }
     
-    // If this call blocks, which is the case if there is no data available in 
-    //the device, the daemon is still able to read other devices.
-    if ((rd = read(dev_buf->devFD, dev_buf->devBuffer, DEV_BUF_SIZE)) > 0) {
-      dev_buf->status = full;
-      dev_buf->size = rd;
-    }
-    
-    // Notice that there is no pthread_cond_signal(&dev_buf->full), because the 
-    //daemon does not block if there is no data read from this device.
-    pthread_mutex_unlock(&dev_buf->mutex);
+    pthread_exit(NULL);
+
   }
-
 
 }
 
 int LitmusDevice::initDev(const char* devName) {
 
   dev_buf.status = empty;
+  dev_buf.work = idle;
   dev_buf.size = 0;
   assert(pthread_mutex_init(&dev_buf.mutex, 0)==0);
   assert(pthread_cond_init(&dev_buf.full, 0)==0);
@@ -56,6 +76,7 @@ int LitmusDevice::initDev(const char* devName) {
   setDefaultConfig();
 
   pthread_create(&asynch_reader, NULL, dev_reader_func, (void*) &dev_buf);
+  return 0;
 }
 
 void LitmusDevice::startTracing() {
@@ -82,7 +103,7 @@ void LitmusDevice::stopTracing() {
     fprintf(stderr, "disable_all: %m\n");
 }
 
-int LitmusDevice::enableEvent(char* eventStr) {
+int LitmusDevice::enableEvent(const char* eventStr) {
   EventId *eventId;
   int err;
   eventId = devEvents + nbrEvents;
@@ -99,12 +120,13 @@ int LitmusDevice::enableEvent(char* eventStr) {
 
     return err != 0;
   }
+  return 0;
 }
 
 int LitmusDevice::disableAllEvents() {
-  int disabled = 0;
+  unsigned disabled = 0;
   fprintf(stderr, "Disabling %u events.\n", nbrEvents);
-  for (int i = 0; i < nbrEvents; i++){
+  for (unsigned i = 0; i < nbrEvents; i++){
     if (ioctl(dev_buf.devFD, DISABLE_CMD, devEvents[i]) < 0)
       perror("ioctl(DISABLE_CMD)");
     else{

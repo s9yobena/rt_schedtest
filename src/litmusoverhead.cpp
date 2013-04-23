@@ -73,16 +73,21 @@ void LitmusOverhead::trace() {
   size_t size, count;
   struct timestamp *ts, *end;
 
+  // cout<<"Tracing device"<<dev_buf.devName<<endl;
+
   pthread_mutex_lock(&dev_buf.mutex);
 
-  if (dev_buf.status == empty) {
+  if (dev_buf.status == empty
+      || dev_buf.work == busy) {
+    
     pthread_mutex_unlock(&dev_buf.mutex);
 
     // no data read by our asynch_reader; in this case, we proceed to reading 
     // from the next device, wihout blocking.
     sleep(1);
     scheduleTrace();
-  } else if (dev_buf.status == full) {
+  } else if (dev_buf.status == full
+	     && dev_buf.work == idle) {
     
     size = dev_buf.size;
     ts    = (struct timestamp*) dev_buf.devBuffer;

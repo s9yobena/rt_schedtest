@@ -22,13 +22,13 @@ struct CacheLevelEntry {
 class CacheTop {
 
 private:
-  vector<vector<int> > cache_top;
+  vector<vector<unsigned> > cache_top;
 
 public:
 
   void updateCacheTop(SchedTestParam*);
 
-  vector<vector<int> > getCacheTop();
+  vector<vector<unsigned> > getCacheTop();
   int getCacheLevel();
   void drawCacheTop();
 };

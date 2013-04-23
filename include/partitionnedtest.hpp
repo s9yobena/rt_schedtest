@@ -10,7 +10,7 @@ class PartitionnedTest : public SchedTest{
 
 protected:
   
-  vector<int> cpus;
+  vector<unsigned> cpus;
   
   void drawTaskSetSafeApprox();
   
@@ -18,7 +18,7 @@ public :
   PartitionnedTest();
   ~PartitionnedTest();
 
-  void setCpus(vector<int>);
+  void setCpus(vector<unsigned>);
 
   int makeSchedTest();
 };

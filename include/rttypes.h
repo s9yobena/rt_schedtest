@@ -8,9 +8,7 @@
 enum SchedTestName {
   G_EDF_TEST,
   P_EDF_TEST,
-  C_EDF_TEST,
-  DENSITY_TEST,
-  BAKERS_TEST
+  C_EDF_TEST
 };
 
 typedef unsigned long long overhead_t;

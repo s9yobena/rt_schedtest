@@ -29,26 +29,42 @@ void LitmusSchedulingTrace::trace() {
   size_t size, count;
   struct st_event_record *st_er, *end;
 
+  // cout<<"Tracing device"<<dev_buf.devName<<endl;
+
   pthread_mutex_lock(&dev_buf.mutex);
 	
-  if (dev_buf.status == empty) {
+  if (dev_buf.status == empty
+      || dev_buf.work == busy) {
+
     pthread_mutex_unlock(&dev_buf.mutex);
 
     // no data read by our asynch_reader; in this case, we proceed to reading 
     // from the next device, wihout blocking.
     sleep(1);
     scheduleTrace();
-  } else if (dev_buf.status == full) {
+  } else if (dev_buf.status == full
+	     && dev_buf.work == idle) {
     
     size = dev_buf.size;
     st_er    = (struct st_event_record*) dev_buf.devBuffer;
     count = size / sizeof(struct st_event_record);
     end   = st_er + count;
     for (; st_er != end; st_er++){
-      schedulingTraceProcessor.processSchedulingTrace(st_er);
+      // schedulingTraceProcessor.processSchedulingTrace(st_er);
+
+      bool process;
+      process = true;
+
+      if (!schedulingTraceProcessor.isRegisteredSchedulingTrace(st_er))
+	schedulingTraceProcessor.registerSchedulingTrace(st_er) ? process = true: process = false;
+
+      if (process)
+	schedulingTraceProcessor.processRegisteredSchedulingTrace(st_er);
+
     }
 
     dev_buf.status = empty;
+    dev_buf.size = 0;
     pthread_cond_signal(&dev_buf.empty);
 
     pthread_mutex_unlock(&dev_buf.mutex);

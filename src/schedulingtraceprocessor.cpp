@@ -11,56 +11,65 @@ void SchedulingTraceProcessor::setTaskSet(TaskSet *_taskSet){
 
 void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* ster) {
 
-  if (printSchedulingTraces) {
   
-    std::cout<<"Printting info for st_event_record: \n"<<endl;
-    std::cout<<"type: "<<(int)ster->hdr.type<<"\t"
-	<<"cpu: "<<(int)ster->hdr.cpu<<"\t"
-	<<"pid: "<<(int)ster->hdr.pid<<"\t"
-	<<"job: "<<(int)ster->hdr.job<<"\t"
-	<<endl;
+  std::cout<<"Printting info for st_event_record: \n"<<endl;
+  std::cout<<"type: "<<(int)ster->hdr.type<<"\t"
+	   <<"cpu: "<<(int)ster->hdr.cpu<<"\t"
+	   <<"pid: "<<(int)ster->hdr.pid<<"\t"
+	   <<"job: "<<(int)ster->hdr.job<<"\t"
+	   <<endl;
 
-    switch(ster->hdr.type) {
-    case ST_RELEASE:
-      std::cout<<"job released at: "<<ster->data.release.release<<"\t"
-	  <<endl;
-      break;
-    case ST_COMPLETION:
-      std::cout<<"job completed at: "<<ster->data.completion.when<<"\t"
-	  <<endl;
-      break;
-    }
+  switch(ster->hdr.type) {
+  case ST_RELEASE:
+    std::cout<<"job released at: "<<ster->data.release.release<<"\t"
+	     <<endl;
+    break;
+  case ST_COMPLETION:
+    std::cout<<"job completed at: "<<ster->data.completion.when<<"\t"
+	     <<endl;
+    break;
   }
 
-  if (!isRegisteredSchedulingTrace(ster))
-    registerSchedulingTrace(ster);
 
-  processRegisteredSchedulingTrace(ster);
+  bool process;
+  process = true;
+
+  if (!isRegisteredSchedulingTrace(ster))
+    registerSchedulingTrace(ster) ? process = true: process = false;
+
+  if (process)
+    processRegisteredSchedulingTrace(ster);
 
 }
 
 bool SchedulingTraceProcessor::isRegisteredSchedulingTrace(struct st_event_record* ster) {
+  try {
+    if ((registeredTraceRecords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
+	 !=registeredTraceRecords.end()
+	 &&registeredInterArrivalTimeTraceRocords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
+	 !=registeredInterArrivalTimeTraceRocords.end())
 
-  if ((registeredTraceRecords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-       !=registeredTraceRecords.end()
-       &&registeredInterArrivalTimeTraceRocords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-       !=registeredInterArrivalTimeTraceRocords.end())
-
-      ||registeredSelfSuspensions.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-      !=registeredSelfSuspensions.end()
-      )
-    return true;
-  else if (ster->hdr.type == ST_TERMINATION)
-    // we do not need to register termination traces, we just process them
-    return true;
-  else
+	||registeredSelfSuspensions.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
+	!=registeredSelfSuspensions.end()
+	)
+      return true;
+    else if (ster->hdr.type == ST_TERMINATION)
+      // we do not need to register termination traces, we just process them
+      return true;
+    else
+      return false;
+  } catch (const exception &e) {
+    
+    cout<<"Exception at SchedulingTraceProcessor::isRegisteredSchedulingTrace: "
+	<<e.what()
+	<<endl;
     return false;
-}
+  }
+} 
 
 void SchedulingTraceProcessor::registerLitmusExecutionTime(struct st_event_record* ster) {
 
   LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
-  LitmusExecutionTime *litmusExecutionTime;
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusExecutionTime(ST_RELEASE);
@@ -79,7 +88,6 @@ void SchedulingTraceProcessor::registerLitmusExecutionTime(struct st_event_recor
 void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_record* ster) {
 
   LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
-  LitmusInterArrivalTime *litmusInterArrivalTime;
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusInterArrivalTime(ST_RELEASE);
@@ -99,7 +107,6 @@ void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_re
 void SchedulingTraceProcessor::registerLitmusSelfSuspension(struct st_event_record* ster) {
 
   LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
-  LitmusSelfSuspension *litmusSelfSuspension;
   map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusSelfSuspension(ST_BLOCK);
@@ -125,11 +132,13 @@ bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* s
   } else if (ster->hdr.type ==	ST_BLOCK || ster->hdr.type == ST_RESUME) {
     
     registerLitmusSelfSuspension(ster);
+    return true;
   } else {
     
     return false;
   }
-
+  cout<<"We should not reach here: SchedulingTraceProcessor::registerSchedulingTrace"<<endl;
+  exit(1);
 }
 void SchedulingTraceProcessor::processRegisteredSchedulingTrace(struct st_event_record* ster) {
   if (ster->hdr.type ==	ST_RELEASE || ster->hdr.type == ST_COMPLETION) {

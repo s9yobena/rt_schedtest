@@ -16,7 +16,7 @@ include ${LIBLITMUS}/inc/config.makefile
 # Set our configuration 
 CFLAGS     = -Wall -Werror -g
 LDFLAGS    +=  -fopenmp  	
-CPPFLAGS  += -Iinclude/ -fopenmp -g
+CPPFLAGS  += -Iinclude/ -fopenmp -g -Wall
 CC         = /usr/bin/g++
 
 

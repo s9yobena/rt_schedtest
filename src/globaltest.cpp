@@ -387,7 +387,7 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
       lTask = taskSet->getTask(lTaskId);
 
       // Make the test for all possible values of per-job self-suspensions
-      for (long perJobSelfSusp = 0; 
+      for (lt_t perJobSelfSusp = 0; 
 	   perJobSelfSusp < lTask->getPerJobMaxSelfSusp(); 
 	   perJobSelfSusp += deltaSelfSusp) {
 

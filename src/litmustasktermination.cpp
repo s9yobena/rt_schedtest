@@ -13,6 +13,7 @@ void LitmusTaskTermination::check(struct st_event_record* ster) {
 }
 
 void LitmusTaskTermination::updateTaskSet(lt_t termination, pid_t task_id) {
+  cout<<"Task termination of pid"<<task_id<<endl;
   taskSet->removeTask(task_id);
   schedTestParam->makeSchedTestParam();
   litmusSchedTest->callSchedTest(schedTestParam->getOutputName());

@@ -46,9 +46,6 @@ bool TimestampProcessor::isRegisteredTimestamp(struct timestamp* ts) {
 }
 void TimestampProcessor::registerTimestamp(struct timestamp* ts) {
 
-  LitmusTimestamp *litmusTimestamp;
-  SingleLitmusTimestamp* singleLitmusTimestamp;
-  PairLitmusTimestamp* pairLitmusTimestamp;
   map<pair<cmd_t,uint8_t>,LitmusTimestamp*>::iterator it;
 
   if (ts->event < SINGLE_RECORDS_RANGE) {
@@ -62,7 +59,6 @@ void TimestampProcessor::registerTimestamp(struct timestamp* ts) {
 
 void TimestampProcessor::registerPairLitmusTimestamp(struct timestamp* ts) {
   LitmusTimestamp *litmusTimestamp;
-  PairLitmusTimestamp* pairLitmusTimestamp;
   map<pair<cmd_t,uint8_t>,LitmusTimestamp*>::iterator it;
   bool proceedRegister = false;
 
@@ -109,7 +105,6 @@ void TimestampProcessor::registerPairLitmusTimestamp(struct timestamp* ts) {
 void TimestampProcessor::registerSingleLitmusTimestamp(struct timestamp* ts) {
   
   LitmusTimestamp *litmusTimestamp;
-  SingleLitmusTimestamp* singleLitmusTimestamp;
   map<pair<cmd_t,uint8_t>,LitmusTimestamp*>::iterator it;
     
   it = registeredLitmusTimestamps.begin();
