@@ -17,6 +17,8 @@ protected:
   SchedTestParam *schedTestParam;
   LitmusSchedTest *litmusSchedTest;
 
+  bool printDebug;
+
 public:
 
   LitmusSchedulingTraceRecord();

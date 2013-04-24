@@ -3,6 +3,7 @@
 TaskSet::TaskSet() {
   averageExecCost = 0;
   printExecutionTimes = false;
+  printDebug = false;
 }
 
 void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
@@ -24,6 +25,22 @@ void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
 }
 
 void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
+
+  if (printDebug) {
+    
+    cout<<"printing task set parameters before updating task "<<task_id<<"exec_cost"<<endl;
+    for (int i=0;i<getNbrTasks();i++){
+
+      pid_t taskId;
+      taskId = getTaskId(i);
+
+      printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
+	     taskId, 
+	     (int)getTaskExecCost(taskId), 
+	     (int)getTaskPeriod(taskId),
+	     (int)getTaskSelfSuspension(taskId));
+    }
+  }
   
   if (isNewTask(task_id))
     addTask(task_id);
@@ -36,23 +53,41 @@ void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
   
   // update task worst execution time
   updateMaxExecCost(exec_time, task_id);  
+
+  if (printDebug) {
+
+    cout<<"printing task set parameters after updating task "<<task_id<<"exec_cost"<<endl;
+    for (int i=0;i<getNbrTasks();i++){
+
+      pid_t taskId;
+      taskId = getTaskId(i);
+
+      printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
+	     taskId, 
+	     (int)getTaskExecCost(taskId), 
+	     (int)getTaskPeriod(taskId),
+	     (int)getTaskSelfSuspension(taskId));
+    }
+
+  }
+
 }
 
 void TaskSet::updateTaskInterArrivalTime(lt_t inter_arrival_time, pid_t task_id) {
 
-  if (isNewTask(task_id))
-    addTask(task_id);
+  if (!isNewTask(task_id)) {
 
-  updateMinInterArrivalTime(inter_arrival_time, task_id);  
+    updateMinInterArrivalTime(inter_arrival_time, task_id);  
+  }
 }
 
 void TaskSet::updateTaskSelfSuspension(lt_t self_suspension_time, pid_t task_id) {
 
-  if (isNewTask(task_id))
-    addTask(task_id);
-  
-  updatePerJobMaxSelfSusp(self_suspension_time, task_id);
-  updateSumSelfSuspension(self_suspension_time, task_id);
+  if (!isNewTask(task_id)) {
+    
+    updatePerJobMaxSelfSusp(self_suspension_time, task_id);
+    updateSumSelfSuspension(self_suspension_time, task_id);
+  }
 }
 
 bool TaskSet::isNewTask(pid_t taskId) {
@@ -229,6 +264,23 @@ void TaskSet::addTask(Task *task) {
 }
 
 void TaskSet::removeTask(pid_t taskId) {
+
+  if (printDebug) {
+    cout<<"printing task set parameters before removing task"<<taskId<<endl;
+    for (int i=0;i<getNbrTasks();i++){
+
+      pid_t taskId;
+      taskId = getTaskId(i);
+
+      printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
+	     taskId, 
+	     (int)getTaskExecCost(taskId), 
+	     (int)getTaskPeriod(taskId),
+	     (int)getTaskSelfSuspension(taskId));
+    }
+    cout<<endl;
+  }
+
   for (unsigned i=0; i< tasksId.size(); i++) {
     if (tasksId[i] == taskId) {
       tasksId.erase(tasksId.begin()+i);
@@ -236,6 +288,23 @@ void TaskSet::removeTask(pid_t taskId) {
     }
   }
   taskSet.erase(taskId);  
+
+
+  if (printDebug) {
+    cout<<"printing task set parameters after removing task"<<taskId<<endl;
+    for (int i=0;i<getNbrTasks();i++){
+
+      pid_t taskId;
+      taskId = getTaskId(i);
+
+      printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
+	     taskId, 
+	     (int)getTaskExecCost(taskId), 
+	     (int)getTaskPeriod(taskId),
+	     (int)getTaskSelfSuspension(taskId));
+    }
+    cout<<endl;
+  }
 }
 
 Task* TaskSet::getTask(pid_t taskId) {

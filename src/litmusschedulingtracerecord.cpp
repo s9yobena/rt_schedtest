@@ -1,6 +1,5 @@
 #include "litmusschedulingtracerecord.hpp"
 
-
 LitmusSchedulingTraceRecord::LitmusSchedulingTraceRecord() {
 
 }
@@ -17,3 +16,4 @@ LitmusSchedulingTraceRecord::LitmusSchedulingTraceRecord(ster_t schedulingTraceE
 void LitmusSchedulingTraceRecord::setTaskSet(TaskSet *_taskSet) {
   taskSet = _taskSet;
 }
+

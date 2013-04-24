@@ -42,9 +42,9 @@ void LitmusSchedTest::callSchedTest(char *schedTestParamFile) {
   if (pid == 0) {
     initSchedTest(schedTestParamFile);    
     execl( "./rt_schedtest","rt_schedtest", 
-	   schedTestNameOption,
-	   "--stf", schedTestParamFile,
-	   (char *) NULL );
+  	   schedTestNameOption,
+  	   "--stf", schedTestParamFile,
+  	   (char *) NULL );
     perror( "execl()" );
     exit(EXIT_FAILURE);
   } 

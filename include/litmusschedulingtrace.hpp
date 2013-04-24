@@ -4,7 +4,6 @@
 #include "cmdlparser.h"
 #include "schedtrace.h" 	// for struct st_event_record
 #include "litmusdevice.hpp"
-#include "schedulingtraceprocessor.hpp"
 
 class SchedulingTraceProcessor;
 class TaskSet;
@@ -13,7 +12,7 @@ class LitmusSchedulingTrace : public LitmusDevice {
 
 private:
 
-  SchedulingTraceProcessor schedulingTraceProcessor;
+  SchedulingTraceProcessor *schedulingTraceProcessor;
   TaskSet *taskSet;
   
   bool printSchedulingTraces;

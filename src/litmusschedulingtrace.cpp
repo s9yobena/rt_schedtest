@@ -1,4 +1,5 @@
 #include "litmusschedulingtrace.hpp"
+#include "schedulingtraceprocessor.hpp"
 
 LitmusSchedulingTrace::LitmusSchedulingTrace(TaskSet *_taskSet)
   :LitmusDevice() {
@@ -19,9 +20,11 @@ void LitmusSchedulingTrace::setDefaultConfig() {
   enableEvent("511");		// 508 enables event event 11 (ST_TERMINATION ?!!
 
 
-  schedulingTraceProcessor.setPrintSchedulingTraces(printSchedulingTraces);
-  schedulingTraceProcessor.setPrintExecutionTimes(printExecutionTimes);
-  schedulingTraceProcessor.setTaskSet(taskSet);
+  schedulingTraceProcessor = SchedulingTraceProcessor::getInstance();
+
+  schedulingTraceProcessor->setPrintSchedulingTraces(printSchedulingTraces);
+  schedulingTraceProcessor->setPrintExecutionTimes(printExecutionTimes);
+  schedulingTraceProcessor->setTaskSet(taskSet);
 }
 
 void LitmusSchedulingTrace::trace() {
@@ -50,17 +53,7 @@ void LitmusSchedulingTrace::trace() {
     count = size / sizeof(struct st_event_record);
     end   = st_er + count;
     for (; st_er != end; st_er++){
-      // schedulingTraceProcessor.processSchedulingTrace(st_er);
-
-      bool process;
-      process = true;
-
-      if (!schedulingTraceProcessor.isRegisteredSchedulingTrace(st_er))
-	schedulingTraceProcessor.registerSchedulingTrace(st_er) ? process = true: process = false;
-
-      if (process)
-	schedulingTraceProcessor.processRegisteredSchedulingTrace(st_er);
-
+      schedulingTraceProcessor->processSchedulingTrace(st_er);
     }
 
     dev_buf.status = empty;

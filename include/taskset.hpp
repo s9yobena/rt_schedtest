@@ -18,6 +18,7 @@ private:
   TaskSet(const TaskSet&);
   TaskSet& operator=(const TaskSet&);
   bool printExecutionTimes;
+  bool printDebug;
   
   vector<pid_t> tasksId;
   map<pid_t,Task> taskSet;
@@ -30,7 +31,7 @@ private:
   void updateMinInterArrivalTime(lt_t exec_time, pid_t task_id);  
   void updateSumSelfSuspension(lt_t self_suspension_time, pid_t task_id);
   void updatePerJobMaxSelfSusp(lt_t self_suspension_time, pid_t task_id);
-  
+
 public :  
   TaskSet();  
   void updateAllTasks(SchedTestParam*);

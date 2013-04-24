@@ -1,6 +1,18 @@
 #include "schedulingtraceprocessor.hpp"
 
+SchedulingTraceProcessor* 
+SchedulingTraceProcessor::schedulingTraceProcessorInstance = 0;
+
 SchedulingTraceProcessor::SchedulingTraceProcessor(){
+}
+
+SchedulingTraceProcessor* SchedulingTraceProcessor::getInstance() {
+
+  if (!schedulingTraceProcessorInstance) {
+    
+    schedulingTraceProcessorInstance = new SchedulingTraceProcessor();
+  }    
+  return schedulingTraceProcessorInstance;
 }
 
 void SchedulingTraceProcessor::setTaskSet(TaskSet *_taskSet){
@@ -11,25 +23,25 @@ void SchedulingTraceProcessor::setTaskSet(TaskSet *_taskSet){
 
 void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* ster) {
 
-  
-  std::cout<<"Printting info for st_event_record: \n"<<endl;
-  std::cout<<"type: "<<(int)ster->hdr.type<<"\t"
-	   <<"cpu: "<<(int)ster->hdr.cpu<<"\t"
-	   <<"pid: "<<(int)ster->hdr.pid<<"\t"
-	   <<"job: "<<(int)ster->hdr.job<<"\t"
-	   <<endl;
-
-  switch(ster->hdr.type) {
-  case ST_RELEASE:
-    std::cout<<"job released at: "<<ster->data.release.release<<"\t"
+  if (printSchedulingTraces) {
+    std::cout<<"Printting info for st_event_record: \n"<<endl;
+    std::cout<<"type: "<<(int)ster->hdr.type<<"\t"
+	     <<"cpu: "<<(int)ster->hdr.cpu<<"\t"
+	     <<"pid: "<<(int)ster->hdr.pid<<"\t"
+	     <<"job: "<<(int)ster->hdr.job<<"\t"
 	     <<endl;
-    break;
-  case ST_COMPLETION:
-    std::cout<<"job completed at: "<<ster->data.completion.when<<"\t"
-	     <<endl;
-    break;
-  }
 
+    switch(ster->hdr.type) {
+    case ST_RELEASE:
+      std::cout<<"job released at: "<<ster->data.release.release<<"\t"
+	       <<endl;
+      break;
+    case ST_COMPLETION:
+      std::cout<<"job completed at: "<<ster->data.completion.when<<"\t"
+	       <<endl;
+      break;
+    }
+  } 
 
   bool process;
   process = true;
@@ -83,6 +95,11 @@ void SchedulingTraceProcessor::registerLitmusExecutionTime(struct st_event_recor
   it = registeredTraceRecords.begin();
   registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
 				(pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
+
+  // register the termintation scheduling trace; notice that LitmusSchedulingTraceRecord is the same
+  it = registeredTraceRecords.begin();
+  registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
+				(pair<int,int>(ST_TERMINATION,ster->hdr.pid),litmusSchedulingTraceRecord));
 }
 
 void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_record* ster) {
@@ -151,12 +168,8 @@ void SchedulingTraceProcessor::processRegisteredSchedulingTrace(struct st_event_
     this->registeredSelfSuspensions[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
 
   } else if (ster->hdr.type ==	ST_TERMINATION) {
-    
-    LitmusTaskTermination *litmusTaskTermination;
-    litmusTaskTermination = new LitmusTaskTermination(ST_RELEASE);
-    litmusTaskTermination->setTaskSet(taskSet);
-    litmusTaskTermination->check(ster);
-    delete litmusTaskTermination;
+
+    this->registeredTraceRecords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);    
   }
 }
 
