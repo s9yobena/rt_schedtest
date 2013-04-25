@@ -9,6 +9,7 @@
 // #define PRINT_SCHED_OUTPUT
 
 GlobalTest::GlobalTest() {
+  dedicatedIH = true;
 }
 
 GlobalTest::~GlobalTest() {
@@ -100,6 +101,75 @@ void GlobalTest::drawTaskSetSafeApprox() {
 			     + (long double)(2.0
 					     *(long double)c_pre)
 			     + (long double)((long double)overhead->getSEND_RESCHED()
+					     *(long double)getNsPerCycle()));
+
+      
+    taskSet->setTaskExecCost(taskId, execCost);
+
+    // New period.
+    period = (long double)taskSet->getTaskPeriod(taskId);
+    period = (long double)(period 
+			   -(long double)((long double)overhead->getSEND_RESCHED()
+					  *(long double)getNsPerCycle()));
+
+    taskSet->setTaskPeriod(taskId, period);
+  }
+}
+
+void GlobalTest::drawTaskSetSafeApprox_DIH() {
+
+  // Preemption-centric interrupt accounting for global EDF 
+  // with Dedicated Interrupt Handling.
+
+  long double u0_tck;
+  long double e0_tck;
+  long double c_pre;
+
+  // We computer u_{0}^{tck}, e_{0}^{tck}.
+  u0_tck = 0.0;
+  u0_tck = (long double) ((long double) ((long double) ((long double)overhead->getTICK()*
+							(long double)getNsPerCycle())
+					 +(long double)overhead->getCPMD()) 
+			  / (long double)getNsTimerPeriod());      
+  e0_tck = 0.0;
+  e0_tck = (long double) ((long double) ( (long double)overhead->getTICK()
+					  * (long double)getNsPerCycle() )
+			  +(long double)overhead->getCPMD() );
+
+  // We compute c^{pre}, the cost of one preemption.
+  c_pre = 0;
+  c_pre = (long double) ((long double) ((long double)e0_tck 
+					+ ( (long double)((long double)(overhead->getRELEASE_LATENCY()) 
+							  * (long double)u0_tck)))
+			 
+			 / (long double) (1.0 - (long double)u0_tck));
+
+
+
+  for (int i=0; i< this->taskSet->getNbrTasks(); i++) {
+    
+    pid_t taskId;
+    long double execCost;
+    long double period;    
+    taskId = taskSet->getTaskId(i);
+    
+    // New execution cost.
+    execCost = (long double)taskSet->getTaskExecCost(taskId);
+    execCost = (long double)((long double)((long double)((long double)execCost
+							 +(long double)(2.0
+									*(long double)((long double)overhead->getSCHED()
+										       +(long double)overhead->getSCHED2()
+										       +(long double)overhead->getCXS())
+									*(long double)getNsPerCycle())
+							 +(long double)overhead->getCPMD())
+					     
+					     / (long double)((long double)1.0
+							     -(long double)u0_tck))
+			     + (long double)(2.0
+					     *(long double)c_pre)
+			     + (long double)((long double)overhead->getSEND_RESCHED()
+					     *(long double)getNsPerCycle())
+			     + (long double)((long double)overhead->getRELEASE()
 					     *(long double)getNsPerCycle()));
 
       
@@ -534,7 +604,16 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 
 int GlobalTest::makeSchedTest() {
 
-  drawTaskSetSafeApprox();
+  if (!dedicatedIH) {
+
+    drawTaskSetSafeApprox();
+  } else {
+    
+    if (nbr_cpu>1)
+      nbr_cpu--;
+
+    drawTaskSetSafeApprox_DIH();
+  }
 
   if (makeDensityTest())
     return 1;
