@@ -14,10 +14,12 @@ LIBLITMUS ?= ../liblitmus
 include ${LIBLITMUS}/inc/config.makefile
 
 # Set our configuration 
-CFLAGS     = -Wall -Werror -g
-LDFLAGS    +=  -fopenmp  	
-CPPFLAGS  += -Iinclude/ -fopenmp -g -Wall
+CFLAGS     = -Wall -Werror -g -pg
+LDFLAGS    +=  -fopenmp  -pg	
+CPPFLAGS  += -Iinclude/ -fopenmp -g -Wall -pg
 CC         = /usr/bin/g++
+LD	  += -lc_p
+LDLIBS    += -pg
 
 
 

@@ -156,18 +156,17 @@ void SchedTestParam::addTask(TaskParam taskParam) {
 
 void SchedTestParam::addAllTasks() {
   unsigned taskParamPos = startTaskPos;
-  for (int i=0; i<taskSet->getNbrTasks(); i++) {
 
-    pid_t taskId;
-    taskId = taskSet->getTaskId(i);
+  map<pid_t,Task>::iterator it;
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
-    setTaskParam(TaskParam(taskId,
-			   taskSet->getTaskCpu(taskId),
-			   taskSet->getTaskExecCost(taskId),
+    setTaskParam(TaskParam(it->first,
+			   it->second.getCpu(),
+			   it->second.getExecCost(), 
 			   0,
-			   taskSet->getTaskPeriod(taskId),
-			   taskSet->getTaskSelfSuspension(taskId),
-			   taskSet->getPerJobMaxSelfSusp(taskId)),
+			   it->second.getPeriod(),
+			   it->second.getSelfSuspension(),
+			   it->second.getPerJobMaxSelfSusp()),
 		 taskParamPos);
     taskParamPos++;
   }

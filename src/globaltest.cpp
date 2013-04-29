@@ -28,15 +28,13 @@ void GlobalTest::drawTaskSetSafeApprox() {
 
   // First we computer the sum u_{j}^{irq} as it we need it later.
   sum_u_irq = 0.0;
-  for (int i=0; i< taskSet->getNbrTasks(); i++) {
-
-    pid_t taskId;
-    taskId = taskSet->getTaskId(i);
+  map<pid_t,Task>::iterator it;
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     sum_u_irq += (long double) ((long double) ((long double)((long double)overhead->getTICK()
 							     * (long double) getNsPerCycle() )
 					       +(long double)overhead->getCPMD()) 
-				/ (long double)taskSet->getTaskPeriod(taskId));      
+				/ (long double)it->second.getPeriod());
   }
 
   // We computer u_{0}^{tck}, e_{0}^{tck}.
@@ -53,16 +51,13 @@ void GlobalTest::drawTaskSetSafeApprox() {
   // We compute c^{pre}, the cost of one preemption.
   // This requires first computing the following sum:
   tmp_sum = 0;
-  for (int i=0; i< taskSet->getNbrTasks(); i++) {
-
-    pid_t taskId;
-    taskId = taskSet->getTaskId(i);
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     tmp_sum += (long double)((long double) ( (long double) overhead->getRELEASE_LATENCY()
 					     * (long double) ((long double)((long double)((long double)overhead->getTICK()
 											  *(long double)getNsPerCycle() )
 									      +(long double)overhead->getCPMD()) 
-								/ (long double)taskSet->getTaskPeriod(taskId)))
+							      / (long double)it->second.getPeriod()))
 			     + (long double) ((long double) ((long double)overhead->getRELEASE()
 							     *(long double)getNsPerCycle())
 					      +(long double)overhead->getCPMD()));      
@@ -77,16 +72,13 @@ void GlobalTest::drawTaskSetSafeApprox() {
 			 / (long double) (1.0 - (long double)u0_tck - (long double)sum_u_irq));
 
 
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
-  for (int i=0; i< this->taskSet->getNbrTasks(); i++) {
-    
-    pid_t taskId;
     long double execCost;
     long double period;    
-    taskId = taskSet->getTaskId(i);
-    
+      
     // New execution cost.
-    execCost = (long double)taskSet->getTaskExecCost(taskId);
+    execCost = (long double)it->second.getExecCost();
     execCost = (long double)((long double)((long double)((long double)execCost
 							 +(long double)(2.0
 									*(long double)((long double)overhead->getSCHED()
@@ -104,15 +96,15 @@ void GlobalTest::drawTaskSetSafeApprox() {
 					     *(long double)getNsPerCycle()));
 
       
-    taskSet->setTaskExecCost(taskId, execCost);
+    taskSet->setTaskExecCost(it->first, execCost);
 
     // New period.
-    period = (long double)taskSet->getTaskPeriod(taskId);
+    period = (long double)it->second.getPeriod();
     period = (long double)(period 
 			   -(long double)((long double)overhead->getSEND_RESCHED()
 					  *(long double)getNsPerCycle()));
 
-    taskSet->setTaskPeriod(taskId, period);
+    taskSet->setTaskPeriod(it->first, period);
   }
 }
 
@@ -146,15 +138,14 @@ void GlobalTest::drawTaskSetSafeApprox_DIH() {
 
 
 
-  for (int i=0; i< this->taskSet->getNbrTasks(); i++) {
-    
-    pid_t taskId;
+  map<pid_t,Task>::iterator it;
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+
     long double execCost;
     long double period;    
-    taskId = taskSet->getTaskId(i);
     
     // New execution cost.
-    execCost = (long double)taskSet->getTaskExecCost(taskId);
+    execCost = (long double)it->second.getExecCost();
     execCost = (long double)((long double)((long double)((long double)execCost
 							 +(long double)(2.0
 									*(long double)((long double)overhead->getSCHED()
@@ -173,21 +164,20 @@ void GlobalTest::drawTaskSetSafeApprox_DIH() {
 					     *(long double)getNsPerCycle()));
 
       
-    taskSet->setTaskExecCost(taskId, execCost);
+    taskSet->setTaskExecCost(it->first, execCost);
 
     // New period.
-    period = (long double)taskSet->getTaskPeriod(taskId);
+    period = (long double)it->second.getPeriod();
     period = (long double)(period 
 			   -(long double)((long double)overhead->getSEND_RESCHED()
 					  *(long double)getNsPerCycle()));
 
-    taskSet->setTaskPeriod(taskId, period);
+    taskSet->setTaskPeriod(it->first, period);
   }
 }
 
 int GlobalTest::makeDensityTest() {
     
-  int i;
   long double sum_density;
   long double max_density;
   long double cur_density;
@@ -196,17 +186,15 @@ int GlobalTest::makeDensityTest() {
   max_density = 0.0;
   cur_density = 0.0;
 
-  for (i=0; i< this->taskSet->getNbrTasks(); i++) {
-    
-    pid_t taskId;
-    taskId = taskSet->getTaskId(i);
+  map<pid_t,Task>::iterator it;
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     cur_density = 0.0;
     cur_density =
-      (long double)( (long double) ( (long double)((this->taskSet->getTaskExecCost(taskId)))
-				     +(long double)((this->taskSet->getTaskSelfSuspension(taskId)))
+      (long double)( (long double) ( (long double)((it->second.getExecCost()))
+				     +(long double)((it->second.getSelfSuspension()))
 				     ) 
-		     /(long double)((this->taskSet->getTaskPeriod(taskId))));
+		     /(long double)((it->second.getPeriod())));
     
     if (cur_density > max_density) {
       max_density = cur_density;
@@ -394,22 +382,20 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
   sumTardiness   = 0.0;
   nbrCmpTasks    = 0.0;
 
-  for (int i=0; i< taskSet->getNbrTasks(); i++) {
+  map<pid_t,Task>::iterator it;
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
-    pid_t taskId;
-    taskId = taskSet->getTaskId(i);
-    
     // Compute the sum of the execution costs for all tasks.
-    sumExecCost += (long double)(taskSet->getTaskExecCost(taskId));
+    sumExecCost += (long double)(it->second.getExecCost());
 
     // Compute the utilization sum for all tasks.
-    sumUtilization += (long double)(taskSet->getTaskUtilization(taskId));
+    sumUtilization += (long double)(it->second.getUtilization());
 
     // Compute the tardiness sum for all tasks.
-    sumTardiness += (long double)(taskSet->getTaskTardiness(taskId));
+    sumTardiness += (long double)(it->second.getTardiness());
 
     // Compute the number of computational tasks (tasks that do not suspend).
-    if (taskSet->getTaskSelfSuspension(taskId) == 0)
+    if (it->second.getSelfSuspension() == 0)
       nbrCmpTasks++ ;
   }
 
@@ -424,7 +410,9 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 
     return 0;
   }
-  
+
+  it = taskSet->tasks.begin();  
+
 #ifdef PARALLEL  
 #pragma omp parallel shared(schedTestResult, sumExecCost, sumUtilization, sumTardiness, nbrCmpTasks)
   {
@@ -434,7 +422,7 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 #pragma omp for schedule(dynamic) nowait
 #endif
     // Make the test for each task.
-    for (int l=0; l< taskSet->getNbrTasks(); l++) {
+    for (int i = 0; i< taskSet->getNbrTasks(); i++) {
 
       long double ksi;
       long double lowerBoundKsi;
@@ -453,7 +441,7 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 #endif
       pid_t lTaskId;
       Task *lTask;
-      lTaskId = taskSet->getTaskId(l);
+      lTaskId = it->first;
       lTask = taskSet->getTask(lTaskId);
 
       // Make the test for all possible values of per-job self-suspensions
@@ -499,11 +487,11 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 	  tmpVec.clear();
 	  tmpV    = 0;
 	  
-	  for (int i=0; i< this->taskSet->getNbrTasks(); i++) {
-		 
+	  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+	    
 	    pid_t iTaskId;
 	    Task *iTask;
-	    iTaskId = taskSet->getTaskId(i);
+	    iTaskId = it->first;
 	    iTask = taskSet->getTask(iTaskId);
 	    
 	    tmpSum0 += max(W_nc(iTask, lTask, ksi, perJobSelfSusp)
@@ -581,7 +569,8 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 	if (breakSelfSuspLoop) 
 	  break;
       } // end for each self suspension
-
+      
+      it++;
     } // end for each lTask
 
 #ifdef PARALLEL

@@ -19,15 +19,14 @@ void PartitionnedTest::drawTaskSetSafeApprox() {
   // don't use dedicated interrupt handling.
 
 
-  for (int i=0; i< this->taskSet->getNbrTasks(); i++) {
-    
-    pid_t taskId;
+  map<pid_t,Task>::iterator it;
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+
     long double execCost;
     long double selfSusp;    
-    taskId = taskSet->getTaskId(i);
     
     // New execution cost.
-    execCost = (long double)taskSet->getTaskExecCost(taskId);
+    execCost = (long double)it->second.getExecCost();
     execCost = (long double)((long double)execCost
 			     +(long double)(2.0
 					    *(long double)((long double)overhead->getSCHED()
@@ -37,17 +36,17 @@ void PartitionnedTest::drawTaskSetSafeApprox() {
 			     +(long double)overhead->getCPMD());
 
       
-    taskSet->setTaskExecCost(taskId, execCost);
+    taskSet->setTaskExecCost(it->first, execCost);
 
     // New self suspension.
-    selfSusp = (long double)taskSet->getTaskSelfSuspension(taskId);
+    selfSusp = (long double)it->second.getSelfSuspension();
     selfSusp = (long double)((long double)selfSusp
 				 +(long double)((long double)((long double)overhead->getRELEASE()
 							      +(long double)overhead->getSEND_RESCHED())
 						*(long double)getNsPerCycle())
 			     +(long double)overhead->getRELEASE_LATENCY());
 				 
-    taskSet->setTaskSelfSuspension(taskId, selfSusp);
+    taskSet->setTaskSelfSuspension(it->first, selfSusp);
   }
 }
 
@@ -68,17 +67,14 @@ int PartitionnedTest::makeSchedTest() {
 
   drawTaskSetSafeApprox();
 
-  for (int i=0; i< this->taskSet->getNbrTasks(); i++) {
-    
-    pid_t taskId;
-    taskId = taskSet->getTaskId(i);
+  map<pid_t,Task>::iterator it;
+  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
-
-    partitionsUtilization[taskSet->getTaskCpu(taskId)] +=
-      (long double)( (long double) ( (long double)((this->taskSet->getTaskExecCost(taskId)))
-				     +(long double)((this->taskSet->getTaskSelfSuspension(taskId)))
+    partitionsUtilization[it->second.getCpu()] +=
+      (long double)( (long double) ( (long double)((it->second.getExecCost()))
+				     +(long double)((it->second.getSelfSuspension()))
 				     ) 
-		     /(long double)((this->taskSet->getTaskPeriod(taskId))));
+		     /(long double)((it->second.getPeriod())));
   }
   printf("\n");
   printf("******************************Testing schedulability********************************************\n");

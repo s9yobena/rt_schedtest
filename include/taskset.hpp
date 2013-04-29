@@ -20,9 +20,6 @@ private:
   bool printExecutionTimes;
   bool printDebug;
   
-  vector<pid_t> tasksId;
-  map<pid_t,Task> taskSet;
-  
   lt_t averageExecCost;
   
   bool isNewTask(pid_t task_id);
@@ -33,6 +30,9 @@ private:
   void updatePerJobMaxSelfSusp(lt_t self_suspension_time, pid_t task_id);
 
 public :  
+
+  map<pid_t,Task> tasks;
+
   TaskSet();  
   void updateAllTasks(SchedTestParam*);
   void updateTaskExecCost(lt_t exec_time, pid_t task_id);
@@ -42,7 +42,6 @@ public :
   void printParameters();
 
   int getNbrTasks();
-  pid_t getTaskId(int);
   unsigned getTaskCpu(pid_t);
   lt_t getTaskExecCost(pid_t);
   lt_t getTaskAvrgExecCost(pid_t);
