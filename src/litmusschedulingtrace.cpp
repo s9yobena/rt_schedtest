@@ -44,7 +44,6 @@ void LitmusSchedulingTrace::trace() {
     // no data read by our asynch_reader; in this case, we proceed to reading 
     // from the next device, wihout blocking.
     sleep(1);
-    scheduleTrace();
   } else if (dev_buf.status == full
 	     && dev_buf.work == idle) {
     
@@ -61,7 +60,6 @@ void LitmusSchedulingTrace::trace() {
     pthread_cond_signal(&dev_buf.empty);
 
     pthread_mutex_unlock(&dev_buf.mutex);
-    scheduleTrace();
   }
 }
 

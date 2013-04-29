@@ -1,11 +1,12 @@
 #include "litmusdevice.hpp"
 
 // This queue holds all the devices for scheduling
-queue<LitmusDevice*> LitmusDevice::devQueue;
+list<LitmusDevice*> LitmusDevice::devList;
+bool LitmusDevice::doTrace = false;
 
 LitmusDevice::LitmusDevice() {
 
-  devQueue.push(this);
+  devList.push_back(this);
 }
 
 extern "C" {
@@ -83,19 +84,6 @@ void LitmusDevice::startTracing() {
   trace();
 }
 
-// Performs a round-robin scheduling among all the devices
-void LitmusDevice::scheduleTrace() {
-  
-  // put the current device at the end of the queue
-  devQueue.push(devQueue.front());
-  
-  // remove the current device from the front of the queue
-  devQueue.pop();
-
-  // schedules a trace on the oldest device that run trace()
-  devQueue.front()->trace();
-}
-
 void LitmusDevice::stopTracing() {
   int ok;
   ok = disableAllEvents();
@@ -138,15 +126,15 @@ int LitmusDevice::disableAllEvents() {
 
 void LitmusDevice::startTracingAllDevices() {
 
-  // notice that starting to trace on one device
-  // is enough since it will eventually call scheduleTrace()
-  devQueue.front()->startTracing();
+  doTrace = true;
+  list<LitmusDevice*>::iterator it;
+  do {
+    for (it = devList.begin(); it != devList.end(); it++) {
+      (*it)->trace();
+    }    
+  } while (doTrace);
 }
 
 void  LitmusDevice::stopAllDevices() {
-  do {
-    devQueue.front()->stopTracing();
-    delete devQueue.front();
-    devQueue.pop();
-  } while(devQueue.size()!=0);
+  doTrace = false;
 }

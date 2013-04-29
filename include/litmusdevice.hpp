@@ -9,7 +9,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include<queue>
+#include<list>
 #include<iostream>
 #include <pthread.h>
 #include <assert.h>
@@ -54,7 +54,8 @@ protected:
   EventId devEvents[MAX_EVENTS];
   unsigned int nbrEvents;
 
-  static queue<LitmusDevice*> devQueue;
+  static list<LitmusDevice*> devList;
+  static bool doTrace;
   
   int enableEvent(const char* eventStr);
   // provide implementation when subclassing
@@ -69,7 +70,6 @@ public:
   virtual void setDefaultConfig()=0;
   void startTracing();
   void stopTracing();
-  void scheduleTrace();
 
   virtual void setParameters(const CmdlParser&)=0;
 
