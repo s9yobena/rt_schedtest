@@ -105,7 +105,11 @@ void LitmusExecutionTime::updateTaskSet(lt_t exec_time, unsigned _cpu, pid_t tas
   if (avrgExecCost > taskSet->getAverageExecCost() 
       || _cpu != taskSet->getTaskCpu(task_id) ){
 
-    taskSet->setAverageExecCost(avrgExecCost);
+    // Uncomment the following instruction to enable computing a task's average
+    // execution cost. Be careful, however, as this increases the response time 
+    // of the tracing-daemon.
+    // taskSet->setAverageExecCost(avrgExecCost);
+
     taskSet->setTaskCpu(task_id, _cpu);
     schedTestParam->makeSchedTestParam();
     litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
