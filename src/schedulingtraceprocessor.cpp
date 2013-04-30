@@ -56,16 +56,25 @@ void SchedulingTraceProcessor::processSchedulingTrace(struct st_event_record* st
 
 bool SchedulingTraceProcessor::isRegisteredSchedulingTrace(struct st_event_record* ster) {
   try {
-    if ((registeredTraceRecords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-	 !=registeredTraceRecords.end()
-	 &&registeredInterArrivalTimeTraceRocords.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-	 !=registeredInterArrivalTimeTraceRocords.end())
+    if (ster->hdr.type == ST_RELEASE || ster->hdr.type == ST_COMPLETION) {
+      
+      if ((registeredTraceRecords.find(ster->hdr.pid)
+	   !=registeredTraceRecords.end()
+	   &&registeredInterArrivalTimeTraceRocords.find(ster->hdr.pid)
+	   !=registeredInterArrivalTimeTraceRocords.end()))
+	return true;
+      else 
+	return false;
+    
+    } else if (ster->hdr.type == ST_BLOCK || ster->hdr.type == ST_RESUME) {
+      
+      if (registeredSelfSuspensions.find(ster->hdr.pid)
+	  !=registeredSelfSuspensions.end())
+	return true;
+      else 
+	return false;
 
-	||registeredSelfSuspensions.find(pair<int,int>(ster->hdr.type,ster->hdr.pid))
-	!=registeredSelfSuspensions.end()
-	)
-      return true;
-    else if (ster->hdr.type == ST_TERMINATION)
+    }  else if (ster->hdr.type == ST_TERMINATION)
       // we do not need to register termination traces, we just process them
       return true;
     else
@@ -82,61 +91,38 @@ bool SchedulingTraceProcessor::isRegisteredSchedulingTrace(struct st_event_recor
 void SchedulingTraceProcessor::registerLitmusExecutionTime(struct st_event_record* ster) {
 
   LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
-  map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusExecutionTime(ST_RELEASE);
   litmusSchedulingTraceRecord->setTaskSet(taskSet);
 
-  it = registeredTraceRecords.begin();
-  registeredTraceRecords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				(pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
-
-  // register the completion scheduling trace; notice that LitmusSchedulingTraceRecord is the same
-  it = registeredTraceRecords.begin();
-  registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				(pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
-
-  // register the termintation scheduling trace; notice that LitmusSchedulingTraceRecord is the same
-  it = registeredTraceRecords.begin();
-  registeredTraceRecords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				(pair<int,int>(ST_TERMINATION,ster->hdr.pid),litmusSchedulingTraceRecord));
+  // Registers ST_RELEASE, ST_COMPLETION, ST_TERMINATION.
+  registeredTraceRecords.insert(pair<int,LitmusSchedulingTraceRecord*>
+				(ster->hdr.pid,litmusSchedulingTraceRecord));
 }
 
 void SchedulingTraceProcessor::registerLitmusInterArrivalTime(struct st_event_record* ster) {
 
   LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
-  map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusInterArrivalTime(ST_RELEASE);
   litmusSchedulingTraceRecord->setTaskSet(taskSet);
 
-  it = registeredInterArrivalTimeTraceRocords.begin();
-  registeredInterArrivalTimeTraceRocords.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-  				(pair<int,int>(ST_COMPLETION,ster->hdr.pid),litmusSchedulingTraceRecord));
-
-  // register the release scheduling trace; notice that LitmusSchedulingTraceRecord is the same
-  it = registeredInterArrivalTimeTraceRocords.begin();
-  registeredInterArrivalTimeTraceRocords.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-  				(pair<int,int>(ST_RELEASE,ster->hdr.pid),litmusSchedulingTraceRecord));
+  // Registers ST_RELEASE.
+  registeredInterArrivalTimeTraceRocords.insert(pair<int,LitmusSchedulingTraceRecord*>
+						  (ster->hdr.pid,litmusSchedulingTraceRecord));
 
 }
 
 void SchedulingTraceProcessor::registerLitmusSelfSuspension(struct st_event_record* ster) {
 
   LitmusSchedulingTraceRecord *litmusSchedulingTraceRecord;
-  map<pair<int,int>,LitmusSchedulingTraceRecord*>::iterator it;
 
   litmusSchedulingTraceRecord = new LitmusSelfSuspension(ST_BLOCK);
   litmusSchedulingTraceRecord->setTaskSet(taskSet);
 
-  it = registeredSelfSuspensions.begin();
-  registeredSelfSuspensions.insert(it, pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				(pair<int,int>(ST_BLOCK,ster->hdr.pid),litmusSchedulingTraceRecord));
-
-  // register the completion scheduling trace; notice that LitmusSchedulingTraceRecord is the same
-  it = registeredSelfSuspensions.begin();
-  registeredSelfSuspensions.insert(it,pair<pair<int,int>,LitmusSchedulingTraceRecord*>
-				(pair<int,int>(ST_RESUME,ster->hdr.pid),litmusSchedulingTraceRecord));
+  // Registers ST_BLOCK, ST_RESUME.
+  registeredSelfSuspensions.insert(pair<int,LitmusSchedulingTraceRecord*>
+				     (ster->hdr.pid,litmusSchedulingTraceRecord));
 }
 
 bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* ster) {
@@ -160,16 +146,16 @@ bool SchedulingTraceProcessor::registerSchedulingTrace(struct st_event_record* s
 void SchedulingTraceProcessor::processRegisteredSchedulingTrace(struct st_event_record* ster) {
   if (ster->hdr.type ==	ST_RELEASE || ster->hdr.type == ST_COMPLETION) {
  
-    this->registeredTraceRecords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
-    this->registeredInterArrivalTimeTraceRocords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
+    this->registeredTraceRecords[ster->hdr.pid]->check(ster);
+    this->registeredInterArrivalTimeTraceRocords[ster->hdr.pid]->check(ster);
   
   } else if (ster->hdr.type ==	ST_BLOCK || ster->hdr.type == ST_RESUME) {
 
-    this->registeredSelfSuspensions[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);
+    this->registeredSelfSuspensions[ster->hdr.pid]->check(ster);
 
   } else if (ster->hdr.type ==	ST_TERMINATION) {
 
-    this->registeredTraceRecords[pair<int,int>(ster->hdr.type, ster->hdr.pid)]->check(ster);    
+    this->registeredTraceRecords[ster->hdr.pid]->check(ster);    
   }
 }
 

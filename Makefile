@@ -14,9 +14,9 @@ LIBLITMUS ?= ../liblitmus
 include ${LIBLITMUS}/inc/config.makefile
 
 # Set our configuration 
-CFLAGS     = -Wall -Werror -g -pg
+CFLAGS     = -Wall -Werror -pg   -g
 LDFLAGS    +=  -fopenmp  -pg	
-CPPFLAGS  += -Iinclude/ -fopenmp -std=c++0x -g -Wall -pg
+CPPFLAGS  += -Iinclude/ -fopenmp -std=c++0x -Wall -pg  -g
 CC         = /usr/bin/g++
 LD	  += -lc_p
 LDLIBS    += -pg

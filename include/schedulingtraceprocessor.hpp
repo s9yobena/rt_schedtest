@@ -8,7 +8,7 @@
 #include "litmusselfsuspension.hpp"
 #include <inttypes.h>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 using namespace std;
 
 class LitmusSchedulingTraceRecord;
@@ -27,9 +27,9 @@ private:
 
   bool printSchedulingTraces;
   bool printExecutionTimes;
-  map<pair<int,int>,LitmusSchedulingTraceRecord*> registeredTraceRecords;
-  map<pair<int,int>,LitmusSchedulingTraceRecord*> registeredInterArrivalTimeTraceRocords;  
-  map<pair<int,int>,LitmusSchedulingTraceRecord*> registeredSelfSuspensions;  
+  unordered_map<int,LitmusSchedulingTraceRecord*> registeredTraceRecords;
+  unordered_map<int,LitmusSchedulingTraceRecord*> registeredInterArrivalTimeTraceRocords;  
+  unordered_map<int,LitmusSchedulingTraceRecord*> registeredSelfSuspensions;  
 
   bool isRegisteredSchedulingTrace(struct st_event_record*);
   bool registerSchedulingTrace(struct st_event_record*);
