@@ -28,8 +28,7 @@ void GlobalTest::drawTaskSetSafeApprox() {
 
   // First we computer the sum u_{j}^{irq} as it we need it later.
   sum_u_irq = 0.0;
-  map<pid_t,Task>::iterator it;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     sum_u_irq += (long double) ((long double) ((long double)((long double)overhead->getTICK()
 							     * (long double) getNsPerCycle() )
@@ -51,7 +50,7 @@ void GlobalTest::drawTaskSetSafeApprox() {
   // We compute c^{pre}, the cost of one preemption.
   // This requires first computing the following sum:
   tmp_sum = 0;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     tmp_sum += (long double)((long double) ( (long double) overhead->getRELEASE_LATENCY()
 					     * (long double) ((long double)((long double)((long double)overhead->getTICK()
@@ -72,7 +71,7 @@ void GlobalTest::drawTaskSetSafeApprox() {
 			 / (long double) (1.0 - (long double)u0_tck - (long double)sum_u_irq));
 
 
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     long double execCost;
     long double period;    
@@ -138,8 +137,7 @@ void GlobalTest::drawTaskSetSafeApprox_DIH() {
 
 
 
-  map<pid_t,Task>::iterator it;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     long double execCost;
     long double period;    
@@ -186,8 +184,7 @@ int GlobalTest::makeDensityTest() {
   max_density = 0.0;
   cur_density = 0.0;
 
-  map<pid_t,Task>::iterator it;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     cur_density = 0.0;
     cur_density =
@@ -382,8 +379,7 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
   sumTardiness   = 0.0;
   nbrCmpTasks    = 0.0;
 
-  map<pid_t,Task>::iterator it;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     // Compute the sum of the execution costs for all tasks.
     sumExecCost += (long double)(it->second.getExecCost());
@@ -411,7 +407,7 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
     return 0;
   }
 
-  it = taskSet->tasks.begin();  
+  auto it = taskSet->tasks.begin();  
 
 #ifdef PARALLEL  
 #pragma omp parallel shared(schedTestResult, sumExecCost, sumUtilization, sumTardiness, nbrCmpTasks)

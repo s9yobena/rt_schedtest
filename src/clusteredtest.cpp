@@ -66,9 +66,7 @@ void ClusteredTest::drawClusters(CacheTop & _cT) {
 #endif
 
   // add tasks to their corresponding cluster
-
-  map<pid_t,Task>::iterator it;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
     
     Task *task;
     task = taskSet->getTask(it->first);
@@ -103,12 +101,9 @@ int ClusteredTest::makeSchedTest() {
 #ifdef PRINT_DEBUG_MSG    
 
     cout<<"Cluster has: "<<endl;
-    // for (int i=0; i< (*clusterIt)->taskSet.getNbrTasks(); i++) {
-
-      map<pid_t,Task>::iterator it;
-      for (it = (*clusterIt)->taskSet.tasks.begin(); 
-	   it != (*clusterIt)->taskSet.tasks.end(); 
-	   it++) {
+    for (auto it = (*clusterIt)->taskSet.tasks.begin(); 
+	 it != (*clusterIt)->taskSet.tasks.end(); 
+	 it++) {
 
       cout<<"task id:"<<it->first<<";"<<"task cpu:"<<it->second.getCpu()<<";"<<endl;;
     }

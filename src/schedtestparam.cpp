@@ -157,8 +157,7 @@ void SchedTestParam::addTask(TaskParam taskParam) {
 void SchedTestParam::addAllTasks() {
   unsigned taskParamPos = startTaskPos;
 
-  map<pid_t,Task>::iterator it;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     setTaskParam(TaskParam(it->first,
 			   it->second.getCpu(),

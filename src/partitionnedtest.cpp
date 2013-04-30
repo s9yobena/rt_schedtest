@@ -19,8 +19,7 @@ void PartitionnedTest::drawTaskSetSafeApprox() {
   // don't use dedicated interrupt handling.
 
 
-  map<pid_t,Task>::iterator it;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     long double execCost;
     long double selfSusp;    
@@ -67,8 +66,7 @@ int PartitionnedTest::makeSchedTest() {
 
   drawTaskSetSafeApprox();
 
-  map<pid_t,Task>::iterator it;
-  for (it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
+  for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
 
     partitionsUtilization[it->second.getCpu()] +=
       (long double)( (long double) ( (long double)((it->second.getExecCost()))

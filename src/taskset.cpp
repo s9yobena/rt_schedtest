@@ -81,7 +81,7 @@ void TaskSet::updateTaskSelfSuspension(lt_t self_suspension_time, pid_t task_id)
 
 bool TaskSet::isNewTask(pid_t taskId) {
   
-  map<pid_t,Task>::iterator it;
+  unordered_map<pid_t,Task>::const_iterator it;
   it = tasks.find(taskId);
   return (it == tasks.end() ? true : false);
 }
@@ -107,8 +107,7 @@ void TaskSet::addTask(pid_t taskId) {
 
 void TaskSet::updateMaxExecCost(lt_t exec_time, pid_t taskId) {
 
-  map<pid_t,Task>::iterator it;
-  it = tasks.find(taskId);
+  auto it = tasks.find(taskId);
   if (exec_time > it->second.getExecCost()) {
     it->second.setExecCost(exec_time);
     if (printExecutionTimes)
@@ -120,8 +119,7 @@ void TaskSet::updateMaxExecCost(lt_t exec_time, pid_t taskId) {
 
 void TaskSet::updateMinInterArrivalTime(lt_t inter_arrival_time, pid_t taskId) {
 
-  map<pid_t,Task>::iterator it;
-  it = tasks.find(taskId);
+  auto it = tasks.find(taskId);
   if (inter_arrival_time < it->second.getPeriod()) {
     it->second.setPeriod(inter_arrival_time);
     if (printExecutionTimes)
@@ -133,8 +131,7 @@ void TaskSet::updateMinInterArrivalTime(lt_t inter_arrival_time, pid_t taskId) {
 
 void TaskSet::updateSumSelfSuspension(lt_t self_suspension_time, pid_t taskId) {
 
-  map<pid_t,Task>::iterator it;
-  it = tasks.find(taskId);
+  auto it = tasks.find(taskId);
   it->second.addSelfSuspension(self_suspension_time);
   if (printExecutionTimes)  
     printf("rt_task %d: Sum. Self Suspension = %d \n",
@@ -144,8 +141,7 @@ void TaskSet::updateSumSelfSuspension(lt_t self_suspension_time, pid_t taskId) {
 
 void TaskSet::updatePerJobMaxSelfSusp(lt_t self_suspension_time, pid_t taskId) {
 
-  map<pid_t,Task>::iterator it;
-  it = tasks.find(taskId);
+  auto it = tasks.find(taskId);
 
   if (self_suspension_time > it->second.getPerJobMaxSelfSusp()) {
     it->second.setPerJobMaxSelfSusp(self_suspension_time);
@@ -168,8 +164,7 @@ void TaskSet::printParameters() {
   if (printExecutionTimes)  {
     printf("printing task set parameters \n");
     
-    map<pid_t,Task>::iterator it;
-    for (it = tasks.begin(); it != tasks.end(); it++) {
+    for (auto it = tasks.begin(); it != tasks.end(); it++) {
 
       printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
 	     it->first, 
@@ -246,8 +241,7 @@ void TaskSet::removeTask(pid_t taskId) {
   if (printDebug) {
     cout<<"printing task set parameters before removing task"<<taskId<<endl;
 
-    map<pid_t,Task>::iterator it;
-    for (it = tasks.begin(); it != tasks.end(); it++) {
+    for (auto it = tasks.begin(); it != tasks.end(); it++) {
 
       printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
 	     it->first, 
@@ -263,8 +257,7 @@ void TaskSet::removeTask(pid_t taskId) {
   if (printDebug) {
     cout<<"printing task set parameters after removing task"<<taskId<<endl;
 
-    map<pid_t,Task>::iterator it;
-    for (it = tasks.begin(); it != tasks.end(); it++) {
+    for (auto it = tasks.begin(); it != tasks.end(); it++) {
 
       printf("rt_task %d: worst_e = %d, p = %d  sum self-suspension %d\n",
 	     it->first, 
@@ -281,9 +274,8 @@ Task* TaskSet::getTask(pid_t taskId) {
 }
 
 lt_t TaskSet::computeAverageExecCost() {
-  map<pid_t,Task>::iterator it;
   lt_t sumExecCost = 0;
-  for (it = tasks.begin(); it != tasks.end(); it++) {
+  for (auto it = tasks.begin(); it != tasks.end(); it++) {
     sumExecCost += it->second.getExecCost();
   }  
   return sumExecCost/getNbrTasks();

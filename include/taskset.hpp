@@ -8,6 +8,7 @@
 #include "cmdlparser.h"
 #include <map>
 #include <vector>
+#include <unordered_map>
 #include "schedtrace.h"
 #include "schedtestparam.hpp"
 
@@ -31,7 +32,7 @@ private:
 
 public :  
 
-  map<pid_t,Task> tasks;
+  unordered_map<pid_t,Task> tasks;
 
   TaskSet();  
   void updateAllTasks(SchedTestParam*);
