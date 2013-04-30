@@ -97,19 +97,22 @@ void LitmusExecutionTime::check(struct st_event_record* ster) {
 void LitmusExecutionTime::updateTaskSet(lt_t exec_time, unsigned _cpu, pid_t task_id) {
 
   exec_time = SafetyMargin::makeSM(exec_time);
-  taskSet->updateTaskExecCost(exec_time, task_id);
-  lt_t avrgExecCost = taskSet->computeAverageExecCost();
 
-  // Whenever a task migrates to another cpu or if the taskset exhibits a 
-  // larger average execution time, a new schedulability test is performed.
-  if (avrgExecCost > taskSet->getAverageExecCost() 
-      || _cpu != taskSet->getTaskCpu(task_id) ){
+  // Uncomment the following instruction to enable computing a task's average
+  // execution cost. Be careful, however, as this increases the response time 
+  // of the tracing-daemon.
+  // taskSet->setAverageExecCost(avrgExecCost);
+  // lt_t avrgExecCost = taskSet->computeAverageExecCost();
 
-    // Uncomment the following instruction to enable computing a task's average
-    // execution cost. Be careful, however, as this increases the response time 
-    // of the tracing-daemon.
-    // taskSet->setAverageExecCost(avrgExecCost);
+  // Whenever a task migrates to another cpu or  exhibits a 
+  // larger execution time, a new schedulability test is performed.
 
+  // Warning: in case of clustered or partitioned scheduling, uncomment the cpu 
+  // check, as task migrations may affect schedulability.
+  if ((taskSet->getTaskExecCost(task_id) < exec_time)) {
+      // || _cpu != taskSet->getTaskCpu(task_id) ){
+
+    taskSet->updateTaskExecCost(exec_time, task_id);
     taskSet->setTaskCpu(task_id, _cpu);
     schedTestParam->makeSchedTestParam();
     litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
