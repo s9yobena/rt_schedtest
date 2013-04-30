@@ -121,54 +121,60 @@ void LitmusOverhead::setParameters(const CmdlParser& cmdlParser) {
 void LitmusOverhead::checkMaxCXS(overhead_t cxsOverhead) {
   if (this->maxCXS < cxsOverhead){
     this->maxCXS = cxsOverhead;
-    schedTestParam->setCXS(this->maxCXS);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->setCXS(this->maxCXS);
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    litmusSchedTest->doSchedTest();
   }
 }
 
 void LitmusOverhead::checkMaxSCHED(overhead_t schedOverhead) {
   if (this->maxSCHED < schedOverhead){
     this->maxSCHED = schedOverhead;
-    schedTestParam->setSCHED(this->maxSCHED);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->setSCHED(this->maxSCHED);
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    litmusSchedTest->doSchedTest();
   }
 }
 
 void LitmusOverhead::checkMaxSCHED2(overhead_t sched2Overhead) {
   if (this->maxSCHED2 < sched2Overhead){
     this->maxSCHED2 = sched2Overhead;
-    schedTestParam->setSCHED2(this->maxSCHED2);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->setSCHED2(this->maxSCHED2);
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    litmusSchedTest->doSchedTest();
   }
 }
 
 void LitmusOverhead::checkMaxRELEASE(overhead_t releaseOverhead) {
   if (this->maxRELEASE < releaseOverhead){
     this->maxRELEASE = releaseOverhead;
-    schedTestParam->setRELEASE(this->maxRELEASE);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->setRELEASE(this->maxRELEASE);
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    litmusSchedTest->doSchedTest();
   }
 }
 
 void LitmusOverhead::checkMaxSEND_RESCHED(overhead_t send_reschedOverhead) {
   if (this->maxSEND_RESCHED < send_reschedOverhead){
     this->maxSEND_RESCHED = send_reschedOverhead;
-    schedTestParam->setSEND_RESCHED(this->maxSEND_RESCHED);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->setSEND_RESCHED(this->maxSEND_RESCHED);
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    litmusSchedTest->doSchedTest();
   }
 }
 
 void LitmusOverhead::checkMaxRELEASE_LATENCY(overhead_t release_latencyOverhead) {
   if (this->maxRELEASE_LATENCY < release_latencyOverhead){
     this->maxRELEASE_LATENCY = release_latencyOverhead;
-    schedTestParam->setRELEASE_LATENCY(this->maxRELEASE_LATENCY);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->setRELEASE_LATENCY(this->maxRELEASE_LATENCY);
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    litmusSchedTest->doSchedTest();
   }
 }
 
@@ -179,9 +185,10 @@ void LitmusOverhead::updateSumSelfSuspension(overhead_t selfSuspension) {
 void LitmusOverhead::checkMaxTICK(overhead_t tickOverhead) {
   if (this->maxTICK < tickOverhead){
     this->maxTICK = tickOverhead;
-    schedTestParam->setTICK(this->maxTICK);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->setTICK(this->maxTICK);
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    litmusSchedTest->doSchedTest();
   }
 }
 

@@ -603,7 +603,8 @@ int GlobalTest::makeSchedTest() {
   if (makeDensityTest())
     return 1;
   else
-    return makeCong12Test(20,20);
+    return 0;
+    // return makeCong12Test(20,20);
 }
 
 

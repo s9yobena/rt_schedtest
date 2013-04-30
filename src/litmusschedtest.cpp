@@ -1,4 +1,8 @@
 #include "litmusschedtest.hpp"
+#include "globaltest.hpp"
+#include "cpuclock.hpp"
+#include "overhead.hpp"
+
 #include <cstdio>
 #include <cstring>
 
@@ -73,4 +77,44 @@ void LitmusSchedTest::initSchedTest(char *schedTestParamFile) {
   strcpy(schedTestNameOption, "--");
   strcat(schedTestNameOption, schedTestName);
 }
+
+void LitmusSchedTest::doSchedTest() {
+
+  GlobalTest globalTest;
+  double non_sched_t;
+
+  globalTest.setTaskSet(taskSet);
+  globalTest.setOverhead(Overhead::getInstance());
+
+  globalTest.setMHzCpuClock(CpuClock::getMHzCpuClock());
+  globalTest.setNbrCpus(sysconf(_SC_NPROCESSORS_ONLN));
+
+  if (!globalTest.makeSchedTest()) {
+
+	  non_sched_t = wctime();
+	  FILE *non_sched_file;
+	  non_sched_file = fopen("sched_log_file","a");
+	  char buf[100];
+	  sprintf(buf,"TaskSet unschedulable at %f\n", non_sched_t);
+	  fputs(buf,non_sched_file);
+	  fclose(non_sched_file);
+	  // printf("TaskSet unschedulable at %f\n", non_sched_t);
+	  
+  } // else  {
+
+  // 	  FILE *non_sched_file;
+  // 	  non_sched_file = fopen("sched_log_file","a");
+  // 	  char buf[100];
+  // 	  sprintf(buf,"TaskSet schedulable at %f\n", wctime());
+  // 	  fputs(buf,non_sched_file);
+  // 	  fclose(non_sched_file);
+  // }
+
+}
+
+void LitmusSchedTest::setTaskSet(TaskSet *_taskSet) {
+
+  taskSet = _taskSet;
+}
+
 

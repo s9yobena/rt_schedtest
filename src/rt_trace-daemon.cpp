@@ -7,6 +7,7 @@
 #include "schedtestparam.hpp"
 #include "taskset.hpp"
 #include "cpuclock.hpp"
+#include "litmusschedtest.hpp"
 
 #include <cstdlib>
 #include <cstdio>
@@ -36,20 +37,23 @@ static void setDevices() {
 }
 void finishTesting(int sig)
 {
-  LitmusDevice::stopAllDevices();
+  // LitmusDevice::stopAllDevices();
   exit(0);
 }
 
 int main(int argc, char **argv) {
 
   taskSet = new TaskSet();
-  SchedTestParam *schedTestParam;
-  schedTestParam = SchedTestParam::getInstance();
-  schedTestParam->initSchedTestParam();
-  schedTestParam->initCacheTopParam();
-  schedTestParam->initOutputName();
-  schedTestParam->setTaskSet(taskSet);
-  schedTestParam->setMHzCpuClock(CpuClock::getMHzCpuClock());
+  // SchedTestParam *schedTestParam;
+  // schedTestParam = SchedTestParam::getInstance();
+  // schedTestParam->initSchedTestParam();
+  // schedTestParam->initCacheTopParam();
+  // schedTestParam->initOutputName();
+  // schedTestParam->setTaskSet(taskSet);
+  // schedTestParam->setMHzCpuClock(CpuClock::getMHzCpuClock());
+  LitmusSchedTest *litmusSchedTest;
+  litmusSchedTest = LitmusSchedTest::getInstance();
+  litmusSchedTest->setTaskSet(taskSet);
 
   signal(SIGINT, finishTesting);
   signal(SIGUSR1, finishTesting);

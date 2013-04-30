@@ -11,6 +11,8 @@
 
 using namespace std;
 
+class TaskSet;
+
 class LitmusSchedTest {
   
 private:
@@ -23,9 +25,14 @@ private:
   char schedTestName[maxSTFname];
   char schedTestNameOption[25];
 
+  TaskSet *taskSet;
+
 public:
   static LitmusSchedTest* getInstance();
   void callSchedTest(char*);
+  void doSchedTest();
+
+  void setTaskSet(TaskSet*);
 };
 
 #endif

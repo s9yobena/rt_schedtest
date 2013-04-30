@@ -71,8 +71,9 @@ void LitmusExecutionTime::check(struct st_event_record* ster) {
 
     state = TASK_TERMINATED;
     taskSet->removeTask(ster->hdr.pid);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    litmusSchedTest->doSchedTest();
 
   }
 
@@ -112,8 +113,10 @@ void LitmusExecutionTime::updateTaskSet(lt_t exec_time, unsigned _cpu, pid_t tas
   if (taskSet->updateTaskExecCost(exec_time, task_id)) {
   // || _cpu != taskSet->getTaskCpu(task_id) ){
     taskSet->setTaskCpu(task_id, _cpu);
-    schedTestParam->makeSchedTestParam();
-    litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+    // schedTestParam->makeSchedTestParam();
+    // litmusSchedTest->callSchedTest(schedTestParam->getOutputName());
+  
+    litmusSchedTest->doSchedTest();
   }
 }
 

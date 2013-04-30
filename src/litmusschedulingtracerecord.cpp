@@ -11,6 +11,7 @@ LitmusSchedulingTraceRecord::LitmusSchedulingTraceRecord(ster_t schedulingTraceE
 
   schedTestParam = SchedTestParam::getInstance();
   litmusSchedTest = LitmusSchedTest::getInstance();
+
 }
 
 void LitmusSchedulingTraceRecord::setTaskSet(TaskSet *_taskSet) {
