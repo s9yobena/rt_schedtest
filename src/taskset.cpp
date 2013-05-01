@@ -24,8 +24,10 @@ void TaskSet::updateAllTasks(SchedTestParam* schedTestParam) {
   }
 }
 
-void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
+// Returns true if exec_time is larger than the older exec_time, false otherwise.
+bool TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
 
+  bool ret;
   if (printDebug) {
     
     cout<<"printing task set parameters before updating task "<<task_id<<"exec_cost"<<endl;
@@ -36,6 +38,7 @@ void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
 	     (int)getTaskPeriod(task_id),
 	     (int)getTaskSelfSuspension(task_id));
   }
+
   
   if (isNewTask(task_id))
     addTask(task_id);
@@ -43,11 +46,11 @@ void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
   // update task average execution time
   tasks[task_id].updateAvrgExecTime(exec_time);
   if (printExecutionTimes) {
-    cout<<"task id:"<<task_id<<" average exec time is "<<tasks[task_id].getAvrgExecTime() <<endl;
+	  cout<<"task id:"<<task_id<<" average exec time is "<<tasks[task_id].getAvrgExecTime() <<endl;
   }
   
   // update task worst execution time
-  updateMaxExecCost(exec_time, task_id);  
+  ret = updateMaxExecCost(exec_time, task_id);  
 
   if (printDebug) {
 
@@ -59,7 +62,7 @@ void TaskSet::updateTaskExecCost(lt_t exec_time, pid_t task_id) {
 	     (int)getTaskPeriod(task_id),
 	     (int)getTaskSelfSuspension(task_id));
   }
-
+  return ret;
 }
 
 void TaskSet::updateTaskInterArrivalTime(lt_t inter_arrival_time, pid_t task_id) {
@@ -105,16 +108,21 @@ void TaskSet::addTask(pid_t taskId) {
   tasks.insert(pair<pid_t,Task>(taskId,tmpTask));
 }
 
-void TaskSet::updateMaxExecCost(lt_t exec_time, pid_t taskId) {
+// Returns true if exec_time is larger than the older exec_time, false otherwise.
+bool TaskSet::updateMaxExecCost(lt_t exec_time, pid_t taskId) {
 
+  bool ret;
+  ret = false;
   auto it = tasks.find(taskId);
   if (exec_time > it->second.getExecCost()) {
     it->second.setExecCost(exec_time);
+    ret = true;
     if (printExecutionTimes)
       printf("rt_task %d: Max. exec_time = %d \n",taskId, 
 	     (int)exec_time);
       
   }
+  return ret;
 }
 
 void TaskSet::updateMinInterArrivalTime(lt_t inter_arrival_time, pid_t taskId) {

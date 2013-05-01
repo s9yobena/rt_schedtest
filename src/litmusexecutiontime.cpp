@@ -101,18 +101,16 @@ void LitmusExecutionTime::updateTaskSet(lt_t exec_time, unsigned _cpu, pid_t tas
   // Uncomment the following instruction to enable computing a task's average
   // execution cost. Be careful, however, as this increases the response time 
   // of the tracing-daemon.
-  // taskSet->setAverageExecCost(avrgExecCost);
   // lt_t avrgExecCost = taskSet->computeAverageExecCost();
+  // taskSet->setAverageExecCost(avrgExecCost);
 
   // Whenever a task migrates to another cpu or  exhibits a 
   // larger execution time, a new schedulability test is performed.
-
+  
   // Warning: in case of clustered or partitioned scheduling, uncomment the cpu 
   // check, as task migrations may affect schedulability.
-  if ((taskSet->getTaskExecCost(task_id) < exec_time)) {
-      // || _cpu != taskSet->getTaskCpu(task_id) ){
-
-    taskSet->updateTaskExecCost(exec_time, task_id);
+  if (taskSet->updateTaskExecCost(exec_time, task_id)) {
+  // || _cpu != taskSet->getTaskCpu(task_id) ){
     taskSet->setTaskCpu(task_id, _cpu);
     schedTestParam->makeSchedTestParam();
     litmusSchedTest->callSchedTest(schedTestParam->getOutputName());

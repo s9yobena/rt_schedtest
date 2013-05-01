@@ -25,7 +25,7 @@ private:
   
   bool isNewTask(pid_t task_id);
   void addTask(pid_t task_id);
-  void updateMaxExecCost(lt_t exec_time, pid_t task_id); // exec_time in NS
+  bool updateMaxExecCost(lt_t exec_time, pid_t task_id); // exec_time in NS
   void updateMinInterArrivalTime(lt_t exec_time, pid_t task_id);  
   void updateSumSelfSuspension(lt_t self_suspension_time, pid_t task_id);
   void updatePerJobMaxSelfSusp(lt_t self_suspension_time, pid_t task_id);
@@ -36,7 +36,7 @@ public :
 
   TaskSet();  
   void updateAllTasks(SchedTestParam*);
-  void updateTaskExecCost(lt_t exec_time, pid_t task_id);
+  bool updateTaskExecCost(lt_t exec_time, pid_t task_id);
   void updateTaskInterArrivalTime(lt_t inter_arrival_time, pid_t task_id);
   void updateTaskSelfSuspension(lt_t self_suspension_time, pid_t task_id);
   void setParameters(const CmdlParser&);
