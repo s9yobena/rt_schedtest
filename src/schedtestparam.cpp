@@ -439,7 +439,7 @@ void SchedTestParam::getSchedTestParam() {
   getAllTasks();
   // END  
   fclose(schedTestPramFile); 
-  deleteSTFile();
+  // deleteSTFile();
 }
 
 void SchedTestParam::deleteSTFile() {

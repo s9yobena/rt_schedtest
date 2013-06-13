@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
 
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
+  globalTest.setParameters(cmdlParser);
 
   globalTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
   globalTest.setNbrCpus(schedTestParam->getNbrCpus());

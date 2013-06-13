@@ -14,6 +14,10 @@ private:
   long double W_nc(Task *_iTask, Task *_lTask, long double _lKsi, long double _lPerJobSelfSusp);
   long double W_c(Task *_iTask, Task *_lTask, long double _lKsi, long double _lPerJobSelfSusp);
 
+	// Liu and Anderson's self-suspension and ksi time granularity parameter.
+	long la_delta_susp;	
+	long la_delta_ksi;
+
 protected:
   void drawTaskSetSafeApprox();
   void drawTaskSetSafeApprox_DIH();
@@ -26,6 +30,8 @@ public :
   int makeSchedTest(); 
   int makeDensityTest();
   int makeCong12Test(long,long);
+
+	int setParameters(const CmdlParser&);
 
 };
 

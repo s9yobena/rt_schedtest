@@ -1,4 +1,7 @@
 #include "cmdlparser.h"
+#include <iostream>
+
+using namespace std;
 
 // #define PRINT_ON
 
@@ -9,8 +12,8 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   this->printOverheads = false;
   this->printSchedulingTraces = false;
   this->printExecutionTimes = false;
-
-  
+  this->la_delta_susp = 20;
+  this->la_delta_ksi = 20;  
 
   int c;
   int cpmd_flag = 0;
@@ -22,6 +25,9 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   int printOverheads_flag = 0;
   int printSchedulingTraces_flag = 0;
   int printExecutionTimes_flag = 0;
+  int la_delta_susp_flag = 0;
+  int la_delta_ksi_flag = 0;  
+
   
   while (1)
     {
@@ -36,12 +42,14 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	  {"overheads", no_argument, &printOverheads_flag, 1 },
 	  {"schedtraces", no_argument, &printSchedulingTraces_flag, 1 },
 	  {"exectimes", no_argument, &printExecutionTimes_flag, 1 },
+	  {"la-delta-susp", required_argument, NULL,'p' },
+	  {"la-delta-ksi", required_argument, NULL,'k' },
 	  {0, 0, 0, 0}
 	};
       /* getopt_long stores the option index here. */
       int option_index = 0;
      
-      c = getopt_long (argc, argv, "c:s:tode", long_options, &option_index);
+      c = getopt_long (argc, argv, "c:s:todep:k:", long_options, &option_index);
       
       /* Detect the end of the options. */
       if (c == -1)
@@ -60,6 +68,18 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	    stf_flag = 1;
 	  }
 	  break;
+	case 'p':
+		if (optarg) {
+			this->la_delta_susp = atoi(optarg);
+			la_delta_susp_flag = 1;
+		}
+		break;
+	case 'k':
+		if (optarg) {
+			this->la_delta_ksi = atoi(optarg);
+			la_delta_ksi_flag = 1;
+		}
+		break;
 	  
 	case '?':
 	  /* getopt_long already printed an error message. */
@@ -129,6 +149,15 @@ CmdlParser::CmdlParser(int argc, char **argv) {
     this->printExecutionTimes = true;
     printf("Printing execution times \n");
   }
+
+  if (la_delta_susp_flag) {
+	  cout<<"Setting delta self-susp for Liu and Anderson's test to"<<la_delta_susp<<endl;
+  }
+
+  if (la_delta_ksi_flag) {
+	  cout<<"Setting delta Ksi for Liu and Anderson's test to:"<<la_delta_ksi<<endl;
+  }
+
 }
 
 CmdlParser::~CmdlParser() {

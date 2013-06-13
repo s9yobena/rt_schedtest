@@ -433,7 +433,7 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
       breakSelfSuspLoop = 0;
 
 #ifdef PRINT_SCHED_OUTPUT
-      cout<<omp_get_num_threads()<<" executing this region,"<<endl;
+      // cout<<omp_get_num_threads()<<" executing this region,"<<endl;
 #endif
       pid_t lTaskId;
       Task *lTask;
@@ -462,6 +462,7 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 						     +(long double)(sumExecCost))
 				      /(long double) ( (long double)(nbr_cpu)
 						       - (long double) (sumUtilization)));
+	cout<<"the upper bound value of ksi is "<<upperBoundKsi<<endl;
 
 	// Make the test for all possible values of KSI
 	ksi = lowerBoundKsi;
@@ -600,10 +601,17 @@ int GlobalTest::makeSchedTest() {
     drawTaskSetSafeApprox_DIH();
   }
 
-  if (makeDensityTest())
-    return 1;
-  else
-    return makeCong12Test(20,20);
+  // if (makeDensityTest())
+  //   return 1;
+  // else
+    return makeCong12Test(la_delta_susp,la_delta_ksi);
+}
+
+int GlobalTest::setParameters(const CmdlParser& _cmdlParser) {
+
+	la_delta_susp = _cmdlParser.la_delta_susp;
+	la_delta_ksi  = _cmdlParser.la_delta_ksi;
+	return 0;
 }
 
 
