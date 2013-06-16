@@ -151,11 +151,11 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   }
 
   if (la_delta_susp_flag) {
-	  cout<<"Setting delta self-susp for Liu and Anderson's test to"<<la_delta_susp<<endl;
+	  cout<<"Setting delta self-susp for Liu and Anderson's test to: "<<la_delta_susp<<" ns."<<endl;
   }
 
   if (la_delta_ksi_flag) {
-	  cout<<"Setting delta Ksi for Liu and Anderson's test to:"<<la_delta_ksi<<endl;
+	  cout<<"Setting delta Ksi for Liu and Anderson's test to: "<<la_delta_ksi<<" ns."<<endl;
   }
 
 }

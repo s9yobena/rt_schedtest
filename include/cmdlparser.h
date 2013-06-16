@@ -31,9 +31,9 @@ class CmdlParser {
   char stfName[maxSTFname];
   SchedTestName schedTestName;
 
-		// Liu and Anderson's self-suspension and ksi time granularity parameter.
-	long la_delta_susp;	
-	long la_delta_ksi;
+	// Liu and Anderson's self-suspension and ksi time granularity parameter.
+	lt_t la_delta_susp;	
+	lt_t la_delta_ksi;
 
   CmdlParser(int, char**);
   ~CmdlParser();

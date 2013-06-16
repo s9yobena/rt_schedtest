@@ -7,6 +7,7 @@
 // #define PARALLEL
 
 #define PRINT_SCHED_OUTPUT
+// #define PRINT_LA_SCHED_OUTPUT
 
 
 GlobalTest::GlobalTest() {
@@ -431,16 +432,16 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 		// Make the test for each task.
 		for (int i = 0; i< taskSet->getNbrTasks(); i++) {
 
-			long double ksi;
-			long double lowerBoundKsi;
-			long double upperBoundKsi;
+			lt_t ksi;
+			lt_t lowerBoundKsi;
+			lt_t upperBoundKsi;
 			int breakKsiLoop;
 			int breakSelfSuspLoop;
 			int breakEachTaskLoop;
 
-			ksi               = 0.0;
-			lowerBoundKsi     = 0.0;
-			upperBoundKsi     = 0.0;
+			ksi               = 0;
+			lowerBoundKsi     = 0;
+			upperBoundKsi     = 0;
 			breakKsiLoop      = 0;
 			breakSelfSuspLoop = 0;
 			breakEachTaskLoop = 0;
@@ -452,20 +453,21 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 			Task *lTask;
 			lTaskId = pid_tasks[i];
 			lTask = taskSet->getTask(lTaskId);
+#ifdef PRINT_LA_SCHED_OUTPUT
 			cout<<"Making the test for task: "<<lTaskId<<endl;
+#endif
 
 			// Make the test for all possible values of per-job self-suspensions
 			for (lt_t perJobSelfSusp = 0; 
 			     perJobSelfSusp <= lTask->getPerJobMaxSelfSusp(); 
 			     perJobSelfSusp += deltaSelfSusp) {
-				
+#ifdef PRINT_LA_SCHED_OUTPUT				
 				cout<<"Making the test for self-susp: "<<perJobSelfSusp<<endl;
-
+#endif
 				// Under this litmus version, implicit deadlines are assumed. 
 				// FIXME: add tardiness threshold when adding SRT support
-				lowerBoundKsi = min ((long double)((long double)(lTask->getDeadline())
-								   +  (long double)(lTask->getTardiness()))
-						     ,(long double)(lTask->getPeriod()));
+				lowerBoundKsi = min ((lTask->getDeadline() + lTask->getTardiness())
+						     ,(lTask->getPeriod()));
 
 				upperBoundKsi =(long double)( (long double) ((long double)( (long double)(nbr_cpu)
 											    *(long double)( (long double) (lTask->getExecCost()) 
@@ -477,13 +479,16 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 									     +(long double)(sumExecCost))
 							      /(long double) ( (long double)(nbr_cpu)
 									       - (long double) (sumUtilization)));
-				cout<<"the upper bound value of ksi is "<<upperBoundKsi<<endl;
-				cout<<"the lower bound value of ksi is "<<lowerBoundKsi<<endl;
+#ifdef PRINT_LA_SCHED_OUTPUT
+				cout<<"Ksi [lower bound, upper bound] is: "<<lowerBoundKsi<<"\t"<<upperBoundKsi<<endl;
+#endif
 
 				// Make the test for all possible values of KSI
 				ksi = lowerBoundKsi;
 				do {
+#ifdef PRINT_LA_SCHED_OUTPUT
 					cout<<"Making the test for ksi: "<<ksi<<endl;
+#endif
 
 					// make the schedulability test on the task lTaksId; This requires
 					// taking all the tasks into account.
@@ -507,14 +512,16 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 						Task *iTask;
 						iTaskId = it->first;
 						iTask = taskSet->getTask(iTaskId);
-
+#ifdef PRINT_LA_SCHED_OUTPUT						
 						cout<<"Making the test for iTask: "<<iTaskId<<endl;
-	    
-						tmpSum0 += max(W_nc(iTask, lTask, ksi, perJobSelfSusp)
-							       , W_c(iTask, lTask, ksi, perJobSelfSusp));
-						
+#endif
 						// The schedulability test distinguished between self suspending
 						// tasks and computational tasks (which do not suspend).
+						if (iTask->getSelfSuspension() > 0) {
+							tmpSum0 += max(W_nc(iTask, lTask, ksi, perJobSelfSusp)
+								       , W_c(iTask, lTask, ksi, perJobSelfSusp));
+						}
+						
 						if (iTask->getSelfSuspension() == 0) {
 							tmpSum1 += W_nc(iTask, lTask, ksi, perJobSelfSusp);
 
@@ -542,14 +549,17 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 						     ,compF);
 					for (tmpIt=tmpVec.begin(); tmpIt!=tmpVec.begin()+tmpV; ++tmpIt) {
 						tmpSum2 += *tmpIt;
+#ifdef PRINT_LA_SCHED_OUTPUT
 						cout<<*tmpIt<<endl;
+#endif
 					}
 	
 					// And there we go, the schedulability test.
-					double long LHS;
-					double long RHS;
+					lt_t LHS;
+					lt_t RHS;
 
 					LHS = tmpSum0 + tmpSum1 + tmpSum2;
+#ifdef PRINT_LA_SCHED_OUTPUT
 					cout<<"Sum0= "<<tmpSum0<<"\t"<<"Sum1= "<<tmpSum1<<"\t"<<"Sum2= "<<tmpSum2<<"\t"<<endl;
 
 					cout<<"Computing the right hand side"<<endl;
@@ -557,11 +567,9 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 					    <<"lTask WCET: "<<lTask->getExecCost()<<endl
 					    <<"per job self-susp: "<< perJobSelfSusp<<endl
 					    <<"nbr cpus: "<<nbr_cpu<<endl;
+#endif
 
-					RHS = (double long)((unsigned long)(nbr_cpu)
-							    *(unsigned long)(ksi
-									     -(long double)(lTask->getExecCost())
-									     -perJobSelfSusp));
+					RHS = nbr_cpu *(ksi - lTask->getExecCost() - perJobSelfSusp);
 
 					if (LHS > RHS) {						
 #ifdef PARALLEL

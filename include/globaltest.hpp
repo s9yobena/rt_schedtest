@@ -15,8 +15,8 @@ private:
   long double W_c(Task *_iTask, Task *_lTask, long double _lKsi, long double _lPerJobSelfSusp);
 
 	// Liu and Anderson's self-suspension and ksi time granularity parameter.
-	long la_delta_susp;	
-	long la_delta_ksi;
+	lt_t la_delta_susp;	
+	lt_t la_delta_ksi;
 
 protected:
   void drawTaskSetSafeApprox();
