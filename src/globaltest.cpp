@@ -373,12 +373,14 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 	long double sumExecCost;
 	long double sumUtilization;
 	long double sumTardiness;
+	long double sum__Ui_times_Tard;
 	unsigned nbrCmpTasks;		
 
 	schedTestResult = 1;
 	sumExecCost    = 0.0;
 	sumUtilization = 0.0;
 	sumTardiness   = 0.0;
+	sum__Ui_times_Tard = 0.0;
 	nbrCmpTasks    = 0.0;
 
 	for (auto it = taskSet->tasks.begin(); it != taskSet->tasks.end(); it++) {
@@ -391,6 +393,9 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 
 		// Compute the tardiness sum for all tasks.
 		sumTardiness += (long double)(it->second.getTardiness());
+
+		sum__Ui_times_Tard += (long double)((long double)(it->second.getTardiness())
+						    *(long double)(it->second.getUtilization()));
 
 		// Compute the number of computational tasks (tasks that do not suspend).
 		if (it->second.getSelfSuspension() == 0)
@@ -474,8 +479,7 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 													    + (long double)(perJobSelfSusp)))
 									     -(long double)( (long double)(lTask->getTardiness()) 
 											     *(long double)(sumUtilization))
-									     +(long double)((long double)(lTask->getTardiness()) 
-											    *(long double)(lTask->getUtilization())) 
+									     + sum__Ui_times_Tard
 									     +(long double)(sumExecCost))
 							      /(long double) ( (long double)(nbr_cpu)
 									       - (long double) (sumUtilization)));
