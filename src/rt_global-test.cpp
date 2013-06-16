@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 
   TaskSet *taskSet;
   Overhead *overhead;
-  GlobalTest globalTest;
+  GlobalTest *globalTest;
   SchedTestParam *schedTestParam;
   CmdlParser cmdlParser(argc, argv);    
 
@@ -21,10 +21,11 @@ int main(int argc, char **argv) {
 
   overhead = Overhead::getInstance();
   taskSet = new TaskSet();
+  globalTest = new GlobalTest();
   schedTestParam = SchedTestParam::getInstance();
 
-  globalTest.setTaskSet(taskSet);
-  globalTest.setOverhead(overhead);
+  globalTest->setTaskSet(taskSet);
+  globalTest->setOverhead(overhead);
 
   schedTestParam->initSchedTestParam();
   schedTestParam->setParameters(cmdlParser);
@@ -36,12 +37,12 @@ int main(int argc, char **argv) {
 
   taskSet->setParameters(cmdlParser);
   overhead->setParameters(cmdlParser);
-  globalTest.setParameters(cmdlParser);
+  globalTest->setParameters(cmdlParser);
 
-  globalTest.setMHzCpuClock(schedTestParam->getMHzCpuClock());
-  globalTest.setNbrCpus(schedTestParam->getNbrCpus());
+  globalTest->setMHzCpuClock(schedTestParam->getMHzCpuClock());
+  globalTest->setNbrCpus(schedTestParam->getNbrCpus());
 
-  if (!globalTest.makeSchedTest()) {
+  if (!globalTest->makeSchedTest()) {
 
 	  non_sched_t = wctime();
 	  FILE *non_sched_file;
