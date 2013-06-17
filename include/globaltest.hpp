@@ -7,6 +7,8 @@ class GlobalTest : public SchedTest{
 
 private:
 
+
+
   bool dedicatedIH;
   
   long double DBF(Task *_task, lt_t _t);
@@ -26,12 +28,15 @@ protected:
 public :
   GlobalTest();
   ~GlobalTest();
-  
-  int makeSchedTest(); 
+
+	enum do_test_t {ALL=1, DENSITY_TEST, LIU_ANDERSON_TEST} do_test;
+	int makeSchedTest(); 
+  int makeSchedTest(enum do_test_t); 
   int makeDensityTest();
   int makeCong12Test(long,long);
 
 	int setParameters(const CmdlParser&);
+
 
 };
 

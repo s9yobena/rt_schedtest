@@ -12,6 +12,7 @@
 
 GlobalTest::GlobalTest() {
 	dedicatedIH = true;
+	do_test = ALL;
 }
 
 GlobalTest::~GlobalTest() {
@@ -640,6 +641,10 @@ int GlobalTest::makeCong12Test(long deltaSelfSusp, long deltaKsi) {
 }
 
 int GlobalTest::makeSchedTest() {
+	return makeSchedTest(do_test);
+}
+
+int GlobalTest::makeSchedTest(enum do_test_t _do_test) {
 
 	if (!dedicatedIH) {
 
@@ -652,16 +657,45 @@ int GlobalTest::makeSchedTest() {
 		drawTaskSetSafeApprox_DIH();
 	}
 
-	// if (makeDensityTest())
-	//   return 1;
-	// else
-	return makeCong12Test(la_delta_susp,la_delta_ksi);
+	switch (_do_test) {
+	
+	case ALL:
+		if (makeDensityTest())
+			return 1;
+		else
+			return makeCong12Test(la_delta_susp,la_delta_ksi);
+		break;
+	case DENSITY_TEST:
+		if (makeDensityTest())
+			return 1;
+		else
+			return 0;
+		break;
+	case LIU_ANDERSON_TEST:
+		if (makeCong12Test(la_delta_susp,la_delta_ksi))
+			return 1;
+		else
+			return 0;
+		break;
+	default:
+		if (makeDensityTest())
+			return 1;
+		else
+			return makeCong12Test(la_delta_susp,la_delta_ksi);
+		break;
+	}
 }
 
 int GlobalTest::setParameters(const CmdlParser& _cmdlParser) {
 
 	la_delta_susp = _cmdlParser.la_delta_susp;
 	la_delta_ksi  = _cmdlParser.la_delta_ksi;
+	if (_cmdlParser.density_test) {
+		do_test = DENSITY_TEST;
+	}		
+	if (_cmdlParser.la_test) {
+		do_test = LIU_ANDERSON_TEST;
+	}		
 	return 0;
 }
 

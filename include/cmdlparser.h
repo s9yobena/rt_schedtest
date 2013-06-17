@@ -31,9 +31,12 @@ class CmdlParser {
   char stfName[maxSTFname];
   SchedTestName schedTestName;
 
+	bool density_test; 	// if true, only conduct density test
+
 	// Liu and Anderson's self-suspension and ksi time granularity parameter.
 	lt_t la_delta_susp;	
 	lt_t la_delta_ksi;
+	bool la_test;		// if true, only conduct Liu and Anderson's test
 
   CmdlParser(int, char**);
   ~CmdlParser();

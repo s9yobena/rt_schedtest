@@ -12,8 +12,10 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   this->printOverheads = false;
   this->printSchedulingTraces = false;
   this->printExecutionTimes = false;
+  this->density_test = false;  
   this->la_delta_susp = 20;
   this->la_delta_ksi = 20;  
+  this->la_test = false;  
 
   int c;
   int cpmd_flag = 0;
@@ -25,9 +27,10 @@ CmdlParser::CmdlParser(int argc, char **argv) {
   int printOverheads_flag = 0;
   int printSchedulingTraces_flag = 0;
   int printExecutionTimes_flag = 0;
+  int density_test_flag = 0;  
   int la_delta_susp_flag = 0;
   int la_delta_ksi_flag = 0;  
-
+  int la_test_flag = 0;
   
   while (1)
     {
@@ -42,8 +45,10 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	  {"overheads", no_argument, &printOverheads_flag, 1 },
 	  {"schedtraces", no_argument, &printSchedulingTraces_flag, 1 },
 	  {"exectimes", no_argument, &printExecutionTimes_flag, 1 },
+	  {"density-test", no_argument, &density_test_flag,1 },
 	  {"la-delta-susp", required_argument, NULL,'p' },
 	  {"la-delta-ksi", required_argument, NULL,'k' },
+	  {"la-test", no_argument, &la_test_flag,1 },
 	  {0, 0, 0, 0}
 	};
       /* getopt_long stores the option index here. */
@@ -150,6 +155,11 @@ CmdlParser::CmdlParser(int argc, char **argv) {
     printf("Printing execution times \n");
   }
 
+  if (density_test_flag) {
+	  cout<<"Conducting only the density test."<<endl;
+	  this->density_test = true;
+  }
+
   if (la_delta_susp_flag) {
 	  cout<<"Setting delta self-susp for Liu and Anderson's test to: "<<la_delta_susp<<" ns."<<endl;
   }
@@ -158,6 +168,10 @@ CmdlParser::CmdlParser(int argc, char **argv) {
 	  cout<<"Setting delta Ksi for Liu and Anderson's test to: "<<la_delta_ksi<<" ns."<<endl;
   }
 
+  if (la_test_flag) {
+	  cout<<"Conducting only Liu and Anderson's test."<<endl;
+	  this->la_test = true;
+  }
 }
 
 CmdlParser::~CmdlParser() {
